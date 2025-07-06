@@ -4,6 +4,10 @@ import ContactView from '../views/ContactView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
 import DashboardView from '../views/DashboardView.vue'
+import FeedbackFormView from '../views/FeedbackFormView.vue'
+import ManageWorkersView from '../views/ManageWorkersView.vue'
+import AdminPanel from '../views/AdminPanel.vue'
+import AdminMomentsView from '../views/AdminMomentsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +16,12 @@ const router = createRouter({
     { path: '/contact', name: 'contact', component: ContactView },
     { path: '/login', name: 'Login', component: LoginView },
     { path: '/signup', name: 'signup', component: SignupView },
-    { path: '/dashboard', name: 'Dashboard', component: DashboardView }
+    { path: '/dashboard', name: 'Dashboard', component: DashboardView },
+    { path: '/feedback', name: 'feedback', component: FeedbackFormView },
+    { path: '/manage-workers', name: 'ManageWorkers', component: ManageWorkersView },
+    { path: '/admin', name: 'admin', component: AdminPanel },
+    { path: '/admin-moments', name: 'AdminMoments', component: AdminMomentsView},
+    { path: '/admin-analysis', name: 'AdminAnlysis', component: () => import('../views/AdminAnalysisView.vue'), meta: { requiresAuth: true}}
   ],
 })
 

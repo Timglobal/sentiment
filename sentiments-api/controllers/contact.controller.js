@@ -11,3 +11,12 @@ export const submitMessage = async (req, res) => {
     res.status(500).json({ message: 'Error submitting message' })
   }
 }
+
+export const getAllMessages = async (req, res) => {
+  try {
+    const messages = await Contact.find().sort({ createdAt: -1 })
+    res.json(messages)
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to retrieve messages' })
+  }
+}

@@ -11,9 +11,9 @@ export const loginUser = async (req, res) => {
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '2d' })
+    const token = jwt.sign({ id: user._id, role: user.role, email: user.email }, process.env.JWT_SECRET, { expiresIn: '2d' })
 
-    res.json({ token, user: { id: user._id, email: user.email, name: user.name } })
+    res.json({ token, user: { id: user._id, email: user.email, name: user.name , role: user.role} })
   } catch (err) {
     res.status(500).json({ message: 'Server error' })
   }
@@ -34,5 +34,15 @@ export const registerUser = async (req, res) => {
     res.status(201).json({ message: 'User created' })
     } catch (err) {
     res.status(500).json({ message: 'Error registering user' })
+  }
+}
+
+
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find({}, '-password') // exclude passwords
+    res.json(users)
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch users' })
   }
 }

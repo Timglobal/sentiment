@@ -8,6 +8,11 @@
       <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
       <RouterLink v-if="!isLoggedIn" to="/signup">Signup</RouterLink>
       <RouterLink v-if="isLoggedIn" to="/dashboard">Dashboard</RouterLink>
+      <RouterLink v-if="isLoggedIn" to="/feedback">Feedback</RouterLink>
+      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/manage-workers">Workers </RouterLink>
+      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin">Admin Panel</RouterLink>
+      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-moments">Moments</RouterLink>
+      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-analysis">Analysis</RouterLink>
       <button v-if="isLoggedIn" @click="logout" class="text-red-600">Logout</button>
       <p class="text-sm text-gray-500">Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
     </nav>
@@ -25,7 +30,7 @@ import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const auth = useAuthStore()
-const { isLoggedIn } = storeToRefs(auth)
+const { isLoggedIn, user } = storeToRefs(auth)
 
 function logout() {
   auth.logout()
