@@ -1,9 +1,17 @@
 <!-- src/App.vue -->
 <template>
   <header class="p-4 shadow flex justify-between items-center">
-    <h1 class="text-xl font-bold text-blue-700">TG Global</h1>
-    <nav class="space-x-4">
+    <div class="flex items-center space-x-3">
+      <RouterLink to="/">
+        <img src="/logo.png" alt="Tim Global Logo" style="height: 4.5rem;width: 4.5rem;" />
+      </RouterLink>
+      <div>
+        <h1 style=" font-size: 1.2rem;font-weight: 800; color: black ;  margin: 0; ">Timglobal</h1>
+      </div>
+      </div>
+    <nav class="space-x-4 text-sm">
       <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/about">About us</RouterLink>
       <RouterLink to="/contact">Contact</RouterLink>
       <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
       <RouterLink v-if="!isLoggedIn" to="/signup">Signup</RouterLink>
@@ -13,8 +21,8 @@
       <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin">Admin Panel</RouterLink>
       <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-moments">Moments</RouterLink>
       <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-analysis">Analysis</RouterLink>
-      <button v-if="isLoggedIn" @click="logout" class="text-red-600">Logout</button>
-      <p class="text-sm text-gray-500">Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
+      <button v-if="isLoggedIn" @click="logout" class="text-red-600">Logout</button><br>
+      <p style="text-align: center;" class="text-sm text-gray-500"> Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
     </nav>
   </header>
 
@@ -57,7 +65,7 @@ nav {
 }
 
 nav a.router-link-exact-active {
-  color: var(--color-text);
+  color: blue;
 }
 
 nav a.router-link-exact-active:hover {

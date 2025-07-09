@@ -1,43 +1,69 @@
 <template>
-  <div class="max-w-4xl mx-auto">
-    <h2 class="text-2xl font-bold text-blue-700 mb-6">Manage Workers</h2>
+  <div style="max-width: 900px; margin: 3rem auto; padding: 0 1rem;">
+    <!-- Title -->
+    <h2 style="font-size: 1.75rem; font-weight: 700; color: #10B981; margin-bottom: 2rem;">
+      🛠️ Manage Workers
+    </h2>
 
-    <!-- Add Worker Form -->
-    <form @submit.prevent="handleSubmit" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-      <input v-model="form.name" placeholder="Name" class="border px-3 py-2 rounded" required />
-      <input v-model="form.role" placeholder="Role (e.g. Nurse, Doctor)" class="border px-3 py-2 rounded" required />
-      <input v-model="form.position" placeholder="Position (e.g. Senior, Assistant)" class="border px-3 py-2 rounded" required />
-      <input v-model="form.strengths" placeholder="Strengths" class="border px-3 py-2 rounded" />
-      <input v-model="form.weaknesses" placeholder="Weaknesses" class="border px-3 py-2 rounded" />
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded col-span-full">
+    <!-- Add/Edit Worker Form -->
+    <form
+      @submit.prevent="handleSubmit"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;"
+    >
+      <input v-model="form.name" placeholder="Name" :style="inputStyle" required />
+      <input v-model="form.role" placeholder="Role (e.g. Nurse, Doctor)" :style="inputStyle" required />
+      <input v-model="form.position" placeholder="Position (e.g. Senior)" :style="inputStyle" required />
+      <input v-model="form.strengths" placeholder="Strengths" :style="inputStyle" />
+      <input v-model="form.weaknesses" placeholder="Weaknesses" :style="inputStyle" />
+
+      <button
+        type="submit"
+        :style="buttonStyle"
+        style="grid-column: 1 / -1; margin-top: 0.5rem;"
+      >
         {{ isEditing ? 'Update Worker' : 'Add Worker' }}
       </button>
     </form>
 
-    <!-- Workers Table -->
-    <table class="w-full border">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="p-2 text-left">Name</th>
-          <th class="p-2 text-left">Role</th>
-          <th class="p-2 text-left">Position</th>
-          <th class="p-2 text-left">Actions</th>
+    <!-- Worker List Table -->
+    <table style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+      <thead>
+        <tr style="background-color: #F9FAFB; color: #374151;">
+          <th style="padding: 0.75rem; text-align: left;">Name</th>
+          <th style="padding: 0.75rem; text-align: left;">Role</th>
+          <th style="padding: 0.75rem; text-align: left;">Position</th>
+          <th style="padding: 0.75rem; text-align: left;">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="worker in workers" :key="worker._id">
-          <td class="p-2">{{ worker.name }}</td>
-          <td class="p-2">{{ worker.role }}</td>
-          <td class="p-2">{{ worker.position }}</td>
-          <td class="p-2 space-x-2">
-            <button @click="editWorker(worker)" class="text-blue-600 hover:underline">Edit</button>
-            <button @click="deleteWorker(worker._id)" class="text-red-600 hover:underline">Delete</button>
+        <tr
+          v-for="worker in workers"
+          :key="worker._id"
+          style="border-bottom: 1px solid #E5E7EB;"
+        >
+          <td style="padding: 0.75rem;">{{ worker.name }}</td>
+          <td style="padding: 0.75rem;">{{ worker.role }}</td>
+          <td style="padding: 0.75rem;">{{ worker.position }}</td>
+          <td style="padding: 0.75rem;">
+            <button
+              @click="editWorker(worker)"
+              style="color: #10B981; margin-right: 1rem; font-weight: 500;"
+            >
+              Edit
+            </button>
+            <button
+              @click="deleteWorker(worker._id)"
+              style="color: #DC2626; font-weight: 500;"
+            >
+              Delete
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
@@ -57,6 +83,29 @@ const form = ref({
 const isEditing = ref(false)
 const editId = ref<string | null>(null)
 
+const inputStyle = `
+  width: 100%;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background: white;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s ease;
+`
+
+const buttonStyle = `
+  background-color: #10B981;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+`
 async function fetchWorkers() {
   const token = localStorage.getItem('token')
   const res = await fetch(`${API_BASE_URL}/workers`, {

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import AboutView from '../views/AboutView.vue'
 import ContactView from '../views/ContactView.vue'
 import LoginView from '../views/LoginView.vue'
 import SignupView from '../views/SignupView.vue'
@@ -13,6 +14,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     { path: '/', name: 'home', component: HomeView, },
+    { path: '/about', name: 'about', component: AboutView },
     { path: '/contact', name: 'contact', component: ContactView },
     { path: '/login', name: 'Login', component: LoginView },
     { path: '/signup', name: 'signup', component: SignupView },
@@ -21,7 +23,10 @@ const router = createRouter({
     { path: '/manage-workers', name: 'ManageWorkers', component: ManageWorkersView },
     { path: '/admin', name: 'admin', component: AdminPanel },
     { path: '/admin-moments', name: 'AdminMoments', component: AdminMomentsView},
-    { path: '/admin-analysis', name: 'AdminAnlysis', component: () => import('../views/AdminAnalysisView.vue'), meta: { requiresAuth: true}}
+    { path: '/admin-analysis', name: 'AdminAnlysis', component: () => import('../views/AdminAnalysisView.vue'), meta: { requiresAuth: true}},
+    { path: '/reset-password', name: 'ResetPassword', component: () => import('@/views/ResetPasswordView.vue'),},
+    { path: '/forgot-password', name: 'ForgotPassword', component: () => import('@/views/ForgotPasswordView.vue'),},
+
   ],
 })
 

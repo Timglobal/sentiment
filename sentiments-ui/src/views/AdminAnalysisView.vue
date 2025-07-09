@@ -1,39 +1,63 @@
 <template>
-  <div class="max-w-5xl mx-auto p-6">
+  <div style="max-width: 1024px; margin: 3rem auto; padding: 0 1rem;">
+
+    <!-- Run Analysis Button -->
     <button
-        @click="runAnalysis"
-        class="mb-4 px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
-        >
-        🧠 Run AI Analysis
+      @click="runAnalysis"
+      style="
+        background-color: #10B981;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+      "
+    >
+      🧠 Run AI Analysis
     </button>
 
-    <h2 class="text-3xl font-bold text-green-700 mb-6">📊 Staff Analysis Dashboard</h2>
+    <!-- Page Heading -->
+    <h2 style="font-size: 1.75rem; font-weight: 700; color: #047857; margin-bottom: 2rem;">
+      📊 Staff Analysis Dashboard
+    </h2>
 
-    <div v-if="analyses.length === 0" class="text-gray-600">No analysis data yet.</div>
+    <div v-if="analyses.length === 0" style="color: #6B7280;">No analysis data yet.</div>
 
-    <div v-for="entry in analyses" :key="entry.workerId._id" class="bg-white shadow rounded-xl p-5 mb-5 border border-gray-200">
-      <h3 class="text-xl font-semibold text-blue-800">{{ entry.workerId.name }} ({{ entry.workerId.role }})</h3>
+    <!-- Analysis Cards -->
+    <div v-for="entry in analyses" :key="entry.workerId._id"
+      style="background: white; border: 1px solid #E5E7EB; border-radius: 0.75rem; padding: 1.5rem; margin-bottom: 2rem;">
 
-      <div class="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm text-gray-700">
+      <!-- Staff Name -->
+      <h3 style="font-size: 1.25rem; font-weight: 600; color: #1D4ED8; margin-bottom: 1rem;">
+        {{ entry.workerId.name }} ({{ entry.workerId.role }})
+      </h3>
+
+      <!-- Core Stats -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; font-size: 0.95rem; color: #374151;">
         <div><strong>Sentiment Score:</strong> {{ entry.sentimentScore }}%</div>
-        <div><strong>Risk Level:</strong> 
-          <span :class="riskColor(entry.riskLevel)">
-            {{ entry.riskLevel }}
-          </span>
-        </div>
+        <div><strong>Risk Level:</strong> <span :class="riskColor(entry.riskLevel)">{{ entry.riskLevel }}</span></div>
         <div><strong>Trend:</strong> 📈 {{ entry.trend }}</div>
         <div><strong>Last Analysis:</strong> {{ new Date(entry.lastAnalysis).toLocaleDateString() }}</div>
       </div>
 
-      <div class="mt-4 text-sm text-gray-700">
+      <!-- Breakdown Stats -->
+      <div style="margin-top: 1.5rem; font-size: 0.95rem; color: #374151;">
         <p><strong>📌 Feedback Count:</strong> {{ entry.stats.feedbackCount }}</p>
         <p><strong>🎥 Moment Count:</strong> {{ entry.stats.momentCount }}</p>
         <p><strong>🎬 Video Count:</strong> {{ entry.stats.videoCount }}</p>
-        <p><strong>📝 Keywords:</strong> <span v-if="entry.stats.keywordSummary?.length">{{ entry.stats.keywordSummary.join(', ') }}</span><span v-else>-</span></p>
+        <p><strong>📝 Keywords:</strong> 
+          <span v-if="entry.stats.keywordSummary?.length">{{ entry.stats.keywordSummary.join(', ') }}</span>
+          <span v-else>-</span>
+        </p>
       </div>
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'

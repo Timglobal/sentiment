@@ -1,47 +1,91 @@
 <template>
-  <div class="max-w-3xl mx-auto p-4">
-    <h2 class="text-2xl font-bold mb-4 text-green-700">🎥 Upload Staff Moment</h2>
+  <div style="max-width: 900px; margin: 3rem auto; padding: 0 1rem;">
+    <!-- Title -->
+    <h2 style="font-size: 1.75rem; font-weight: 700; color: #10B981; margin-bottom: 2rem;">
+      🎥 Upload Staff Moment
+    </h2>
 
-    <form @submit.prevent="submitMoment" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-      <select v-model="form.workerId" class="border px-3 py-2 rounded" required>
+    <!-- Upload Form -->
+    <form @submit.prevent="submitMoment"
+      style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;"
+    >
+      <select v-model="form.workerId" :style="inputStyle" required>
         <option disabled value="">-- Select Worker --</option>
         <option v-for="w in workers" :key="w._id" :value="w._id">
           {{ w.name }} ({{ w.role }})
         </option>
       </select>
 
-      <select v-model="form.mediaType" class="border px-3 py-2 rounded" required>
+      <select v-model="form.mediaType" :style="inputStyle" required>
         <option disabled value="">-- Media Type --</option>
         <option value="image">Image</option>
         <option value="video">Video</option>
       </select>
 
-      <input type="file" @change="handleFileChange" class="col-span-2" required />
+      <input type="file" @change="handleFileChange" required :style="inputStyle" style="grid-column: 1 / -1;" />
 
-      <textarea v-model="form.description" placeholder="Description" class="border px-3 py-2 rounded col-span-2" required />
+      <textarea
+        v-model="form.description"
+        placeholder="Description"
+        required
+        rows="3"
+        :style="inputStyle"
+        style="grid-column: 1 / -1; resize: none;"
+      ></textarea>
 
-      <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded col-span-2">
-        Upload Moment
+      <button
+        type="submit"
+        :style="buttonStyle"
+        style="grid-column: 1 / -1; margin-top: 0.5rem;"
+      >
+        ✅ Upload Moment
       </button>
     </form>
-    <div class="mb-6">
-        <input
-            v-model="searchTerm"
-            type="text"
-            placeholder="🔍 Search by worker name or description..."
-            class="w-full px-3 py-2 border rounded"
-        />
+
+    <!-- Search -->
+    <div style="margin-bottom: 2.5rem;">
+      <input
+        v-model="searchTerm"
+        type="text"
+        placeholder="🔍 Search by worker name or description..."
+        :style="inputStyle"
+        style="width: 100%;"
+      />
     </div>
 
-    <h3 class="text-xl font-semibold mb-3">📂 Uploaded Moments</h3>
-    <div v-if="moments.length === 0" class="text-gray-500">No moments found.</div>
-    <div v-for="m in filteredMoments" :key="m._id" class="...">
-      <p class="text-sm text-gray-600">👤 {{ m.workerId?.name }} ({{ m.workerId?.role }})</p>
-      <p class="text-sm">{{ m.description }}</p>
-      <p class="text-xs text-gray-400">Uploaded: {{ new Date(m.timestamp).toLocaleString() }}</p>
-      <div class="mt-2">
-        <img v-if="m.mediaType === 'image'" :src="m.mediaUrl" class="w-full max-w-sm rounded" />
-        <video v-if="m.mediaType === 'video'" :src="m.mediaUrl" class="w-full max-w-sm rounded" controls></video>
+    <!-- Uploaded Moments -->
+    <h3 style="font-size: 1.25rem; font-weight: 600; color: #111827; margin-bottom: 1rem;">
+      📂 Uploaded Moments
+    </h3>
+
+    <div v-if="moments.length === 0" style="color: #6B7280;">No moments found.</div>
+
+    <div
+      v-for="m in filteredMoments"
+      :key="m._id"
+      style="background: #fff; border: 1px solid #E5E7EB; border-radius: 0.75rem; padding: 1rem; margin-bottom: 1.5rem;"
+    >
+      <p style="font-size: 0.875rem; color: #4B5563; margin-bottom: 0.25rem;">
+        👤 {{ m.workerId?.name }} ({{ m.workerId?.role }})
+      </p>
+      <p style="font-size: 0.9rem; color: #111827;">{{ m.description }}</p>
+      <p style="font-size: 0.75rem; color: #9CA3AF; margin-top: 0.25rem;">
+        🕒 {{ new Date(m.timestamp).toLocaleString() }}
+      </p>
+
+      <div style="margin-top: 1rem;">
+        <img
+          v-if="m.mediaType === 'image'"
+          :src="m.mediaUrl"
+          alt="Uploaded Image"
+          style="max-width: 300px; border-radius: 0.5rem; border: 1px solid #E5E7EB;"
+        />
+        <video
+          v-else-if="m.mediaType === 'video'"
+          :src="m.mediaUrl"
+          controls
+          style="max-width: 300px; border-radius: 0.5rem; border: 1px solid #E5E7EB;"
+        ></video>
       </div>
     </div>
   </div>
@@ -61,6 +105,30 @@ const form = ref({
   mediaType: '',
   submittedBy: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')!).email : 'admin'
 })
+
+const inputStyle = `
+  width: 100%;
+  border: 1px solid #D1D5DB;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background: white;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.2s ease;
+`
+
+const buttonStyle = `
+  background-color: #10B981;
+  color: white;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+`
 
 interface Worker {
   _id: string

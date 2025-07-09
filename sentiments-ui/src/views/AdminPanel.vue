@@ -1,78 +1,95 @@
-
 <template>
-  <div class="mb-8">
-    <h3 class="text-2xl font-semibold mb-4">📋 Feedback Submissions</h3>
+  <div style="max-width: 1024px; margin: 3rem auto; padding: 0 1rem;">
 
-    <div v-if="feedbacks.length === 0" class="text-gray-600">No feedback yet.</div>
+    <!-- FEEDBACK SUBMISSIONS -->
+    <section style="margin-bottom: 4rem;">
+      <h2 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+        📋 Feedback Submissions
+      </h2>
+      <p style="color: #6B7280; margin-bottom: 1.5rem;">Feedback submitted by users and colleagues</p>
 
-    <table v-else class="w-full table-auto border">
-        <thead class="bg-gray-100">
-        <tr>
-            <th class="p-2 text-left">Sender</th>
-            <th class="p-2 text-left">Role</th>
-            <th class="p-2 text-left">About</th>
-            <th class="p-2 text-left">Message</th>
-            <th class="p-2 text-left">Date</th>
-        </tr>
+      <div v-if="feedbacks.length === 0" style="color: #6B7280;">No feedback yet.</div>
+
+      <table v-else style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+        <thead style="background-color: #F9FAFB;">
+          <tr>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Sender</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Role</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">About</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Message</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Date</th>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="fb in feedbacks" :key="fb._id">
-            <td class="p-2">{{ fb.senderName }}</td>
-            <td class="p-2">{{ fb.source }}</td>
-            <td class="p-2">{{ fb.workerName || fb.workerId?.name }}</td>
-            <td class="p-2">{{ fb.message }}</td>
-            <td class="p-2">{{ new Date(fb.timestamp).toLocaleString() }}</td>
-        </tr>
+          <tr v-for="fb in feedbacks" :key="fb._id" style="border-top: 1px solid #E5E7EB;">
+            <td style="padding: 0.75rem;">{{ fb.senderName }}</td>
+            <td style="padding: 0.75rem;">{{ fb.source }}</td>
+            <td style="padding: 0.75rem;">{{ fb.workerName || fb.workerId?.name }}</td>
+            <td style="padding: 0.75rem;">{{ fb.message }}</td>
+            <td style="padding: 0.75rem;">{{ new Date(fb.timestamp).toLocaleString() }}</td>
+          </tr>
         </tbody>
-    </table>
-    </div>
-    <!-- Contact Messages -->
-    <div class="mt-12">
-    <h3 class="text-2xl font-semibold mb-4">📬 Contact Messages</h3>
+      </table>
+    </section>
 
-    <div v-if="contacts.length === 0" class="text-gray-600">No messages submitted yet.</div>
+    <!-- CONTACT MESSAGES -->
+    <section style="margin-bottom: 4rem;">
+      <h2 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+        📬 Contact Messages
+      </h2>
+      <p style="color: #6B7280; margin-bottom: 1.5rem;">Messages sent from the contact form</p>
 
-    <table v-else class="w-full table-auto border">
-        <thead class="bg-gray-100">
-        <tr>
-            <th class="p-2 text-left">Name</th>
-            <th class="p-2 text-left">Email</th>
-            <th class="p-2 text-left">Message</th>
-            <th class="p-2 text-left">Date</th>
-        </tr>
+      <div v-if="contacts.length === 0" style="color: #6B7280;">No messages submitted yet.</div>
+
+      <table v-else style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+        <thead style="background-color: #F9FAFB;">
+          <tr>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Name</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Email</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Message</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Date</th>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="msg in contacts" :key="msg._id">
-            <td class="p-2">{{ msg.name }}</td>
-            <td class="p-2">{{ msg.email }}</td>
-            <td class="p-2">{{ msg.message }}</td>
-            <td class="p-2">{{ new Date(msg.createdAt).toLocaleString() }}</td>
-        </tr>
+          <tr v-for="msg in contacts" :key="msg._id" style="border-top: 1px solid #E5E7EB;">
+            <td style="padding: 0.75rem;">{{ msg.name }}</td>
+            <td style="padding: 0.75rem;">{{ msg.email }}</td>
+            <td style="padding: 0.75rem;">{{ msg.message }}</td>
+            <td style="padding: 0.75rem;">{{ new Date(msg.createdAt).toLocaleString() }}</td>
+          </tr>
         </tbody>
-    </table>
-    </div>
-    <div class="mt-12">
-    <h3 class="text-2xl font-semibold mb-4">👥 Registered Users</h3>
-    <table v-if="users.length" class="w-full table-auto border">
-        <thead class="bg-gray-100">
-        <tr>
-            <th class="p-2 text-left">Name</th>
-            <th class="p-2 text-left">Email</th>
-            <th class="p-2 text-left">Role</th>
-        </tr>
+      </table>
+    </section>
+
+    <!-- REGISTERED USERS -->
+    <section>
+      <h2 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+        👥 Registered Users
+      </h2>
+      <p style="color: #6B7280; margin-bottom: 1.5rem;">These are your registered users</p>
+
+      <div v-if="users.length === 0" style="color: #6B7280;">No users yet.</div>
+
+      <table v-else style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+        <thead style="background-color: #F9FAFB;">
+          <tr>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Name</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Email</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Role</th>
+          </tr>
         </thead>
         <tbody>
-        <tr v-for="u in users" :key="u._id">
-            <td class="p-2">{{ u.name }}</td>
-            <td class="p-2">{{ u.email }}</td>
-            <td class="p-2">{{ u.role }}</td>
-        </tr>
+          <tr v-for="u in users" :key="u._id" style="border-top: 1px solid #E5E7EB;">
+            <td style="padding: 0.75rem;">{{ u.name }}</td>
+            <td style="padding: 0.75rem;">{{ u.email }}</td>
+            <td style="padding: 0.75rem;">{{ u.role }}</td>
+          </tr>
         </tbody>
-    </table>
-    <div v-else class="text-gray-600">No users yet.</div>
-    </div>
-
+      </table>
+    </section>
+  </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
