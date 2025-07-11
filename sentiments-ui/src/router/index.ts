@@ -15,6 +15,7 @@ const router = createRouter({
   routes: [
     { path: '/', name: 'home', component: HomeView, },
     { path: '/about', name: 'about', component: AboutView },
+    { path: '/product', name: 'Product', component: () => import('../views/ProductView.vue'),},
     { path: '/contact', name: 'contact', component: ContactView },
     { path: '/login', name: 'Login', component: LoginView },
     { path: '/signup', name: 'signup', component: SignupView },
@@ -32,7 +33,7 @@ const router = createRouter({
 
 // ⬇ Add after router is created
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/', '/login', '/signup', '/contact']
+  const publicPages = ['/','/about','/product', '/login', '/signup', '/contact']
   const authRequired = !publicPages.includes(to.path)
   const token = localStorage.getItem('token')
 

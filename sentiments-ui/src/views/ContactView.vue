@@ -157,7 +157,7 @@
 
         <!-- Copyright -->
         <div style="margin-top: 1.5rem; text-align: center; color: #6b7280; font-size: 12px;">
-            © 2025 <span style="color: #374151; font-weight: 500;">Tim Global Technologies Ltd.</span> All rights reserved.
+            © 2025 <span style="color: #374151; font-weight: 500;">Timglobal</span> All rights reserved.
         </div>
 
         </footer>

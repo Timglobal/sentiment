@@ -1,131 +1,128 @@
 <template>
-  <div class="about-page font-sans text-gray-800">
+  <div style="font-family: 'Segoe UI', sans-serif; color: #333;">
     
-    <!-- WHO WE ARE -->
-    <section class="bg-blue-100 py-16 px-4 text-center">
-      <h2 class="text-3xl font-semibold mb-4">Who We Are</h2>
-      <p class="max-w-3xl mx-auto text-base">
+    <!-- WHO WE ARE (on image background) -->
+    <section
+      style="
+        background-image: url('/medical background.png');
+        background-size: cover;
+        background-position: center;
+        padding: 100px 20px;
+        text-align: center;
+        color: white;
+      "
+    >
+      <h2 style="font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem;">
+        Who We Are
+      </h2>
+      <p style="max-width: 800px; margin: auto; font-size: 1rem; line-height: 1.7;">
         At Tim Global Technologies Ltd, we are dedicated to bridging the gap between clinical care and artificial intelligence. Our mission is to empower healthcare professionals with cutting-edge AI solutions that enhance patient outcomes and streamline workflows.
       </p>
     </section>
 
-    <!-- OUR MISSION & VISION -->
-    <section class="py-16 px-4 bg-white">
-      <h2 class="text-center text-2xl font-semibold mb-12">Our Mission & Vision</h2>
-      <div class="flex flex-col md:flex-row justify-center items-center gap-10 max-w-6xl mx-auto">
+    <!-- MISSION & VISION (side by side) -->
+    <section style="padding: 80px 20px; background-color: white;">
+      <h2 style="text-align: center; font-size: 1.8rem; font-weight: 600; margin-bottom: 3rem;">
+        Our Mission & Vision
+      </h2>
+      <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 60px;">
         <!-- Mission -->
-        <div class="flex-1 text-center">
-          <img src="/HOSPITAL AI.png" alt="Mission Image" class="w-40 h-40 mx-auto mb-4" />
-          <h3 class="text-lg font-semibold">Our Mission</h3>
-          <p class="text-sm mt-2 px-2">
-            To revolutionize healthcare through the ethical and responsible application of artificial intelligence, creating a future where technology seamlessly integrates with human expertise o ddeliver exceptional patient care.
+        <div style="flex: 1; max-width: 400px; text-align: center;">
+          <img src="/HOSPITAL AI.png" alt="Mission" style="width: 150px; height: 150px; margin-bottom: 1rem;" />
+          <h3 style="font-size: 1.2rem; font-weight: bold;">Our Mission</h3>
+          <p style="font-size: 0.95rem; margin-top: 0.5rem;">
+            To revolutionize healthcare through ethical and responsible AI, seamlessly integrating technology with human expertise to deliver exceptional patient care.
           </p>
         </div>
 
         <!-- Vision -->
-        <div class="flex-1 text-center">
-          <img src="/doctor Ai.png" alt="Vision Image" class="w-40 h-40 mx-auto mb-4" />
-          <h3 class=" text-lg font-semibold">Our Vision</h3>
-          <p class="text-sm mt-2 px-2">
-            To be the leading provider of AI-powered healthcare solutions recognised for our commiment to innovation, integrity, and improving the lives of patients and healthcare providers worldwide. 
+        <div style="flex: 1; max-width: 400px; text-align: center;">
+          <img src="/doctor Ai.png" alt="Vision" style="width: 150px; height: 150px; margin-bottom: 1rem;" />
+          <h3 style="font-size: 1.2rem; font-weight: bold;">Our Vision</h3>
+          <p style="font-size: 0.95rem; margin-top: 0.5rem;">
+            To be the leading provider of AI-powered healthcare solutions, known for innovation, integrity, and improving lives globally.
           </p>
         </div>
       </div>
     </section>
 
-    <!-- OUR CORE VALUES -->
-    <section class="bg-gray-100 py-16 px-4 text-center">
-      <h2 class="text-2xl font-semibold mb-8">Our Core Values</h2>
-      <div class="flex flex-wrap justify-center gap-4 max-w-4xl mx-auto">
-        <span class="bg-white border border-gray-400 px-4 py-2 rounded-full text-sm">Innovation</span>
-        <span class="bg-white border border-gray-400 px-4 py-2 rounded-full text-sm">Integrity</span>
-        <span class="bg-white border border-gray-400 px-4 py-2 rounded-full text-sm">Patient-Centricity</span>
-        <span class="bg-white border border-gray-400 px-4 py-2 rounded-full text-sm">Collaboration</span>
+    <!-- CORE VALUES (boxed with emojis) -->
+    <section style="background-color: #f7f7f7; padding: 80px 20px; text-align: center;">
+      <h2 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem;">Our Core Values</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; max-width: 800px; margin: auto;">
+        <div style="padding: 12px 24px; border: 1px solid #ccc; border-radius: 20px; font-size: 0.75rem; background-color: white;">💡 Innovation</div>
+        <div style="padding: 12px 24px; border: 1px solid #ccc; border-radius: 20px; font-size: 0.75rem; background-color: white;">🧭 Integrity</div>
+        <div style="padding: 12px 24px; border: 1px solid #ccc; border-radius: 20px; font-size: 0.75rem; background-color: white;">❤️ Patient-Centricity</div>
+        <div style="padding: 12px 24px; border: 1px solid #ccc; border-radius: 20px; font-size: 0.75rem; background-color: white;">🤝 Collaboration</div>
       </div>
     </section>
 
-    <!-- OUR JOURNEY -->
-    <section class="py-16 px-4 bg-white text-center">
-      <h2 class="text-2xl font-semibold mb-8">Our Journey</h2>
-      <div class="flex flex-col gap-4 max-w-md mx-auto text-left">
-        <div class="flex items-center gap-3">
-          <span>📍</span><p>Company Founded - 2018</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <span>🚀</span><p>First NHS Pilot - 2019</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <span>💡</span><p>Sentiment AI Launch - 2020</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <span>🔐</span><p>ISO 27001 Certification - 2021</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <span>📈</span><p>Scaling Operations - 2022</p>
-        </div>
+    <!-- JOURNEY (timeline-style with arrows) -->
+    <section style="background-color: white; padding: 80px 20px; text-align: center;">
+      <h2 style="font-size: 1.8rem; font-weight: 600; margin-bottom: 2rem;">Our Journey</h2>
+      <div style="border-left: 3px solid #10b981; max-width: 400px; margin: auto; padding-left: 1.5rem;">
+        <p>📍 <strong>2018:</strong> Company Founded</p>
+        <p style="margin: 1rem 0;">⬇️</p>
+        <p>🚀 <strong>2019:</strong> First NHS Pilot</p>
+        <p style="margin: 1rem 0;">⬇️</p>
+        <p>💡 <strong>2020:</strong> Sentiment AI Launch</p>
+        <p style="margin: 1rem 0;">⬇️</p>
+        <p>🔐 <strong>2021:</strong> ISO 27001 Certification</p>
+        <p style="margin: 1rem 0;">⬇️</p>
+        <p>📈 <strong>2022:</strong> Scaling Operations</p>
       </div>
     </section>
 
-    <!-- CTA SECTION -->
-    <section class="bg-blue-800 text-white py-16 text-center px-4">
-      <h2 class="text-2xl md:text-3xl font-semibold mb-6">
+    <!-- CTA Section -->
+    <section style="background-color: #1e40af; color: white; padding: 80px 20px; text-align: center;">
+      <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1.5rem;">
         Ready To Transform Healthcare Environments
       </h2>
-      <div class="flex justify-center gap-6">
-        <button class="bg-white text-blue-800 px-6 py-2 rounded-full font-semibold">
+      <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <button style="background-color: white; color: #1e40af; padding: 10px 24px; border-radius: 9999px; font-weight: 600; border: none;">
           Request a Demo
         </button>
-        <button class="border border-white px-6 py-2 rounded-full font-semibold">
+        <button style="border: 2px solid white; background: transparent; color: white; padding: 10px 24px; border-radius: 9999px; font-weight: 600;">
           Get in Touch
         </button>
       </div>
     </section>
 
     <!-- FOOTER -->
-    <footer class="bg-gray-900 text-white py-10 px-4">
-      <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-8">
-        
+    <footer style="background-color: #111827; color: white; padding: 60px 20px;">
+      <div style="max-width: 1200px; margin: auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem;">
         <!-- Company Info -->
-        <div class="text-sm">
-          <h3 class="font-semibold mb-2">Timglobal</h3>
-          <p>A modern solution for monitoring staff well-being and professional sentiment within healthcare environments.</p>
-          <div class="flex space-x-4 mt-3">
-            <a href="#">🔗</a>
-            <a href="#">🐦</a>
-            <a href="#">📸</a>
+        <div style="flex: 1; min-width: 250px;">
+          <h3 style="font-weight: bold; margin-bottom: 1rem;">Timglobal</h3>
+          <p style="font-size: 0.9rem;">
+            A modern solution for monitoring staff well-being and professional sentiment within healthcare environments.
+          </p>
+          <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+            <a href="https://twitter.com/yourhandle" target="_blank"><img src="/twitter-icon.png" alt="Twitter" style="width: 24px;" /></a>
+            <a href="https://linkedin.com/company/timglobal" target="_blank"><img src="/linkedin-icon.png" alt="LinkedIn" style="width: 24px;" /></a>
+            <a href="https://instagram.com/yourhandle" target="_blank"><img src="/instagram-icon.png" alt="Instagram" style="width: 24px;" /></a>
           </div>
         </div>
 
         <!-- Contact -->
-        <div class="text-sm">
-          <h4 class="font-semibold mb-2">Contact us</h4>
-          <p>1B Shaolford Road, B92 7NF, Solihull, Birmingham, UK</p>
-          <p>info@timglobal.uk</p>
-          <p>+44 7352 310353</p>
+        <div style="flex: 1; min-width: 250px;">
+          <h4 style="font-weight: bold; margin-bottom: 1rem;">Contact Us</h4>
+          <p style="font-size: 0.9rem;">1B Shaolford Road, B92 7NF, Solihull, Birmingham, UK</p>
+          <p style="font-size: 0.9rem;">info@timglobal.uk</p>
+          <p style="font-size: 0.9rem;">+44 7352 310353</p>
         </div>
 
         <!-- Links -->
-        <div class="text-sm">
-          <h4 class="font-semibold mb-2">Useful links</h4>
-          <ul>
-            <li><a href="#" class="hover:underline">About us</a></li>
-            <li><a href="#" class="hover:underline">Product</a></li>
-            <li><a href="#" class="hover:underline">Contact us</a></li>
-          </ul>
+        <div style="flex: 1; min-width: 250px;">
+          <h4 style="font-weight: bold; margin-bottom: 1rem;">Useful Links</h4>
+          <p><a href="#" style="color: white; text-decoration: none;">About Us</a></p>
+          <p><a href="#" style="color: white; text-decoration: none;">Product</a></p>
+          <p><a href="#" style="color: white; text-decoration: none;">Contact Us</a></p>
         </div>
       </div>
-      <div class="text-center text-xs mt-6 text-gray-400">
-        © 2025 Tim Global Technologies Ltd. All rights reserved.
+      <div style="text-align: center; font-size: 0.75rem; margin-top: 2rem; color: #9ca3af;">
+        © 2025 Timglobal. All rights reserved.
       </div>
     </footer>
-
   </div>
 </template>
-
-<script setup>
-// You can use static images or import them if you're bundling assets
-</script>
-
-<style scoped>
-/* Add any scoped styles if needed */
-</style>

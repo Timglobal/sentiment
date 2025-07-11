@@ -1,30 +1,36 @@
 <!-- src/App.vue -->
 <template>
-  <header class="p-4 shadow flex justify-between items-center">
-    <div class="flex items-center space-x-3">
-      <RouterLink to="/">
-        <img src="/logo.png" alt="Tim Global Logo" style="height: 4.5rem;width: 4.5rem;" />
-      </RouterLink>
-      <div>
-        <h1 style=" font-size: 1.2rem;font-weight: 800; color: black ;  margin: 0; ">Timglobal</h1>
-      </div>
-      </div>
-    <nav class="space-x-4 text-sm">
-      <RouterLink to="/">Home</RouterLink>
-      <RouterLink to="/about">About us</RouterLink>
-      <RouterLink to="/contact">Contact</RouterLink>
-      <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
-      <RouterLink v-if="!isLoggedIn" to="/signup">Signup</RouterLink>
-      <RouterLink v-if="isLoggedIn" to="/dashboard">Dashboard</RouterLink>
-      <RouterLink v-if="isLoggedIn" to="/feedback">Feedback</RouterLink>
-      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/manage-workers">Workers </RouterLink>
-      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin">Admin Panel</RouterLink>
-      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-moments">Moments</RouterLink>
-      <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-analysis">Analysis</RouterLink>
-      <button v-if="isLoggedIn" @click="logout" class="text-red-600">Logout</button><br>
-      <p style="text-align: center;" class="text-sm text-gray-500"> Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
-    </nav>
-  </header>
+  <header class="bg-white shadow-md px-4 py-3 flex flex-wrap justify-between items-center">
+  <div class="flex items-center gap-3">
+    <RouterLink to="/">
+      <img src="/logo.png" alt="Tim Global Logo" class="w-14 h-14" />
+    </RouterLink>
+    <h1 class="text-lg font-bold text-gray-800">Timglobal</h1>
+  </div>
+
+  <nav class="flex flex-wrap items-center gap-3 text-sm">
+    <RouterLink to="/" class="hover:text-blue-600">Home</RouterLink>
+    <RouterLink to="/about" class="hover:text-blue-600">About us</RouterLink>
+    <RouterLink to="/contact" class="hover:text-blue-600">Contact</RouterLink>
+    <RouterLink to="/product" class="hover:text-blue-600">Product</RouterLink>
+
+    <RouterLink v-if="!isLoggedIn" to="/login" class="hover:text-blue-600">Login</RouterLink>
+    <RouterLink v-if="!isLoggedIn" to="/signup" class="hover:text-blue-600">Signup</RouterLink>
+
+    <RouterLink v-if="isLoggedIn" to="/dashboard" class="hover:text-blue-600">Dashboard</RouterLink>
+    <RouterLink v-if="isLoggedIn" to="/feedback" class="hover:text-blue-600">Feedback</RouterLink>
+
+    <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/manage-workers" class="hover:text-blue-600">Workers</RouterLink>
+    <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin" class="hover:text-blue-600">Admin Panel</RouterLink>
+    <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-moments" class="hover:text-blue-600">Moments</RouterLink>
+    <RouterLink v-if="isLoggedIn && user?.role === 'admin'" to="/admin-analysis" class="hover:text-blue-600">Analysis</RouterLink>
+
+    <button v-if="isLoggedIn" @click="logout" class="text-red-600 font-semibold">Logout</button>
+  </nav>
+
+  <p class="text-xs text-gray-500 mt-2 w-full text-center sm:w-auto sm:mt-0">Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
+</header>
+
 
   <main class="p-4">
     <RouterView />
