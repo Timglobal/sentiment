@@ -60,6 +60,39 @@
         </tbody>
       </table>
     </section>
+    <!-- WAITLIST ENTRIES -->
+    <section style="margin-top: 4rem;">
+      <h2 style="font-size: 1.5rem; font-weight: 600; color: #111827; margin-bottom: 0.5rem;">
+        📝 Waitlist Entries
+      </h2>
+      <p style="color: #6B7280; margin-bottom: 1.5rem;">People who requested early access or a demo</p>
+
+      <div v-if="waitlist.length === 0" style="color: #6B7280;">No one on the waitlist yet.</div>
+
+      <table v-else style="width: 100%; border-collapse: collapse; font-size: 0.95rem;">
+        <thead style="background-color: #F9FAFB;">
+          <tr>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Name</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Email</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Company</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Purpose</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Feedback</th>
+            <th style="text-align: left; padding: 0.75rem; color: #374151;">Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="entry in waitlist" :key="entry._id" style="border-top: 1px solid #E5E7EB;">
+            <td style="padding: 0.75rem;">{{ entry.name }}</td>
+            <td style="padding: 0.75rem;">{{ entry.email }}</td>
+            <td style="padding: 0.75rem;">{{ entry.company || '-' }}</td>
+            <td style="padding: 0.75rem;">{{ entry.purpose || '-' }}</td>
+            <td style="padding: 0.75rem;">{{ entry.feedback || '-' }}</td>
+            <td style="padding: 0.75rem;">{{ new Date(entry.createdAt).toLocaleString() }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
 
     <!-- REGISTERED USERS -->
     <section>
@@ -131,6 +164,19 @@ interface UserEntry {
   email: string
   role: string
 }
+
+interface WaitlistEntry {
+  _id: string
+  name: string
+  email: string
+  company?: string
+  purpose?: string
+  feedback?: string
+  createdAt: string
+}
+
+const waitlist = ref<WaitlistEntry[]>([])
+
 const users = ref<UserEntry[]>([])
 
 const feedbacks = ref<FeedbackEntry[]>([])
@@ -179,11 +225,25 @@ async function fetchUsers() {
     toast.error(err.message || 'Failed to fetch users')
   }
 }
+async function fetchWaitlist() {
+  try {
+    const res = await fetch(`${API_BASE_URL}/waitlist`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    if (!res.ok) throw new Error('Failed to load waitlist')
+    waitlist.value = await res.json()
+  } catch (err: any) {
+    toast.error(err.message || 'Failed to fetch waitlist')
+  }
+}
 
 onMounted(() => {
   fetchFeedbacks()
   fetchContacts()
   fetchUsers()
+  fetchWaitlist()
 })
 
 </script>

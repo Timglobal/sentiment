@@ -13,7 +13,7 @@ export const getUploader = (folderName = '') => {
 
     const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/') // Ensure this folder exists
+        cb(null, fullPath) 
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + path.extname(file.originalname))

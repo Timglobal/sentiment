@@ -2,7 +2,7 @@
   <div class="max-w-6xl mx-auto px-4 py-10">
     <!-- Welcome Text -->
     <div class="text-center mb-10">
-            <h2 style="font-size: 2rem; font-weight: 700; color: #10B981; margin-bottom: 1rem; font-family: sans-serif;">
+            <h2 style="font-size: 2rem; font-weight: 700; color: blue; margin-bottom: 1rem; font-family: sans-serif;">
         Welcome {{ user?.name }}
         </h2>
         <p style="font-size: 1.125rem; color: #4B5563; font-family: sans-serif;">
@@ -64,6 +64,26 @@
       >
         <img src="/Admin panel.png" alt="Admin Panel" class="card-img" />
         <div class="card-text">Admin Panel</div>
+      </div>
+
+      <!-- Create Room (Admin only) -->
+      <div
+        v-if="user?.role === 'admin'"
+        @click="goTo('/create-room')"
+        class="dashboard-card"
+      >
+        <img src="/healthcare room.png" alt="Create Room" class="card-img" />
+        <div class="card-text">Create Room</div>
+      </div>
+
+      <!-- View Rooms (Admin only) -->
+      <div
+        v-if="user?.role === 'admin'"
+        @click="goTo('/rooms')"
+        class="dashboard-card"
+      >
+        <img src="/room.png" alt="View Rooms" class="card-img" />
+        <div class="card-text">View Rooms</div>
       </div>
     </div>
   </div>

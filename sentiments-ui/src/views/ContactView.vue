@@ -3,15 +3,13 @@
 <template>
   
     <div class="max-w-6xl mx-auto">
-      <!-- Header with logo would go here -->
       
       <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mt-12">
-        <!-- Left Column - Contact Form -->
         <div>
           <h2 style="font-size: 2rem; font-weight: 700; color: #111827; margin-bottom: 1rem; line-height: 1.3;">Let's Build the Future of Healthcare Together</h2>
           <p style="font-size: 1rem; font-weight: 400; color: #6B7280; line-height: 1.7; margin-bottom: 2rem;">We're excited to learn more about your needs and how Tim Global Technologies Ltd. can help. Please fill out the form below, and we'll get back to you promptly.</p>
           
-          <form style="background-color: white; padding: 2rem; border-radius: 0.75rem; max-width: 500px; margin: auto;">
+          <form @submit.prevent="submitForm" style="background-color: white; padding: 2rem; border-radius: 0.75rem; max-width: 500px; margin: auto;">
   
             <!-- Name -->
             <div style="margin-bottom: 1.25rem;">
@@ -62,9 +60,9 @@
             <div style="margin-bottom: 1rem;">
                 <button 
                 type="submit"
-                style="width: 100%; background-color: #10B981; color: white; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s ease;"
+                style="width: 100%; background-color: blue; color: white; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.2s ease;"
                 onmouseover="this.style.backgroundColor='#059669';"
-                onmouseout="this.style.backgroundColor='#10B981';"
+                onmouseout="this.style.backgroundColor='blue';"
                 >
                 Send Message
                 </button>
@@ -88,7 +86,7 @@
           <div style="max-width: 700px; margin: 0 auto;">
             <div>
               <h4 style="font-size: 1.125rem;font-weight: 500;color: #111827;margin-bottom: 0.5rem;">Chat us</h4>
-              <a href="mailto:info@timglobal.uk" style=" font-size: 1rem;color: #10B981;text-decoration: none;transition: color 0.2s ease;"onmouseover="this.style.color='#065F46'; this.style.textDecoration='underline';
+              <a href="mailto:info@timglobal.uk" style=" font-size: 1rem;color: blue;text-decoration: none;transition: color 0.2s ease;"onmouseover="this.style.color='#065F46'; this.style.textDecoration='underline';
               "onmouseout="this.style.color='#10B981'; this.style.textDecoration='none';">info@timglobal.uk</a>
             </div>
             
@@ -103,64 +101,59 @@
                 08085688274
             </p>
         </div>
-            <div style="padding-top: 1.5rem; max-width: 700px; margin: auto;">
-              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <img 
-                  src="/logo.png" 
-                  alt="Tim Global Logo"
-                  style="height: 3.5rem; width: 3.5rem; border-radius: 65%; display: block;"
-                >
-                <div style="line-height: 1.1;">
-                <h2 style=" font-size: 1rem; font-weight: 600;color: #111827; margin: 0;">Timglobal</h2>
-                </div>
-              </div>
-              <p style="font-size: 0.875rem;color: #6B7280;margin-top: 0.75rem;line-height: 1.5;">A modern solution for monitoring staff well-being and professional sentiment within healthcare environments</p>
-              
-              <!-- Absolute smallest social icons (2.5×2.5px with hover effects) -->
-                <div class="flex space-x-2 mt-2">
-                    <a href="#" class="text-gray-400 hover:text-green-500 block">
-                        <img src="/twitter-icon.png" alt="Twitter" class="block" style="height: 1.5rem; width: 1.5rem;">
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-green-500 block">
-                        <img src="/linkedin-icon.png" alt="LinkedIn" class="block" style="height: 1.5rem; width: 1.5rem;">
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-green-500 block">
-                        <img src="/instagram-icon.png" alt="Instagram" class="block" style="height: 1.5rem; width: 1.5rem;">
-                    </a>
-                    <a href="#" class="text-gray-400 hover:text-green-500 block">
-                        <img src="/youtube-icon.png" alt="YouTube" class="block" style="height: 1.5rem; width: 1.5rem;">
-                    </a>
-                </div>
-            </div>
+            
           </div>
         </div>
     </div>
 
-      <footer style="background-color: #f0fdf4; color: #374151; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 14px; padding: 2rem 1.5rem; margin-top: 4rem;">
-  
-        <!-- Main footer flex container -->
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 1rem; max-width: 1200px; margin: 0 auto;">
-            
-            <!-- Navigation links -->
-            <div style="display: flex; gap: 1.5rem;">
-            <a href="#" style="color: #4b5563; text-decoration: none; transition: color 0.2s ease;" onmouseover="this.style.color='#059669'" onmouseout="this.style.color='#4b5563'">About us</a>
-            <a href="#" style="color: #4b5563; text-decoration: none; transition: color 0.2s ease;" onmouseover="this.style.color='#059669'" onmouseout="this.style.color='#4b5563'">Product</a>
-            <a href="#" style="color: #4b5563; text-decoration: none; transition: color 0.2s ease;" onmouseover="this.style.color='#059669'" onmouseout="this.style.color='#4b5563'">Contact us</a>
-            </div>
+      <footer style="background-color: #e0f2fe; color: #1f2937; padding: 40px 20px; font-family: Arial, sans-serif;">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; max-width: 1000px; margin: 0 auto;">
 
-            <!-- Legal links -->
-            <div style="display: flex; gap: 1.5rem;">
-            <a href="#" style="color: #4b5563; text-decoration: none; font-size: 13px; transition: color 0.2s ease;" onmouseover="this.style.color='#059669'" onmouseout="this.style.color='#4b5563'">Privacy Policy</a>
-            <a href="#" style="color: #4b5563; text-decoration: none; font-size: 13px; transition: color 0.2s ease;" onmouseover="this.style.color='#059669'" onmouseout="this.style.color='#4b5563'">Terms of Service</a>
-            </div>
+        <!-- LOGO + DESCRIPTION + SOCIAL -->
+        <div style="flex: 1 1 22%; min-width: 180px; margin-top: 12px;">
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+            <img src="/removebg-preview.png" alt="Logo" style="width: 90px; height: 29px;" />
+          </div>
+          <p style="font-size: 9.5px; line-height: 1.4; margin-bottom: 8px;">
+            Healthcare innovation through AI-powered orchestration.<br />
+            Based in Birmingham, UK.
+          </p>
+          <div style="display: flex; gap: 8px;">
+            <a href="https://linkedin.com"><img src="/linkedin.png" alt="LinkedIn" style="width: 16px;" /></a>
+            <a href="https://twitter.com"><img src="/Twitter.png" alt="Twitter" style="width: 16px;" /></a>
+            <a href="https://youtube.com"><img src="/youtube.png" alt="YouTube" style="width: 16px;" /></a>
+          </div>
         </div>
 
-        <!-- Copyright -->
-        <div style="margin-top: 1.5rem; text-align: center; color: #6b7280; font-size: 12px;">
-            © 2025 <span style="color: #374151; font-weight: 500;">Timglobal</span> All rights reserved.
+        <!-- COMPANY -->
+        <div style="flex: 1 1 22%; min-width: 140px;">
+          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Company</h4>
+          <p style="margin: 2px 0;"><a href="/about" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">About Us</a></p>
+          <p style="margin: 2px 0;"><a href="/product" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Product</a></p>
+          <p style="margin: 2px 0;"><a href="/contact" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Contact Us</a></p>
         </div>
 
-        </footer>
+        <!-- USEFUL LINKS -->
+        <div style="flex: 1 1 22%; min-width: 140px;">
+          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Useful Links</h4>
+          <p style="margin: 2px 0;"><a href="/privacy-policy" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Privacy Policy</a></p>
+          <p style="margin: 2px 0;"><a href="/terms-of-service" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Terms of Service</a></p>
+        </div>
+
+        <!-- CONTACT -->
+        <div style="flex: 1 1 22%; min-width: 140px;">
+          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Contact</h4>
+          <p style="font-size: 9.5px; margin: 2px 0;">1B Shaftes Rd, B92 7NF, Solihull, UK</p>
+          <p style="font-size: 9.5px; margin: 2px 0;">info@timglobal.uk</p>
+          <p style="font-size: 9.5px; margin: 2px 0;">+44 7352 310353</p>
+        </div>
+
+      </div>
+
+      <p style="text-align: center; margin-top: 25px; font-size: 10px; color: #6b7280;">
+        © 2025 Timglobal. All rights reserved.
+      </p>
+    </footer>
 
     </div>
   

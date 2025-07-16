@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
+import waitlistRoutes from './routes/waitlist.routes.js'
 
 dotenv.config()
 
@@ -9,13 +10,15 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Routes (we'll create them shortly)
 import authRoutes from './routes/auth.routes.js'
 import contactRoutes from './routes/contact.routes.js'
 import analysisRoutes from './routes/analysis.routes.js'
 import feedbackRoutes from './routes/feedback.routes.js'
 import workerRoutes from './routes/worker.routes.js'
 import momentRoutes from './routes/moment.routes.js'
+import roomRoutes from './routes/room.routes.js'
+import tenantRoutes from './routes/tenants.routes.js'
+import { startRoomMonitor } from './utils/scheduler.js'
 import path from 'path'
 
 app.use('/api/auth', authRoutes)
@@ -25,12 +28,24 @@ app.use('/api/workers', workerRoutes)
 app.use('/api/moments', momentRoutes)
 app.use('/api/analysis', analysisRoutes)
 app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
+app.use('/api/rooms', roomRoutes);
+app.use('/api/tenants', tenantRoutes)
+app.use('/api', waitlistRoutes)
+
+
+app.use((req, res, next) => {
+  console.log(`❌ Route not found: ${req.method} ${req.originalUrl}`);
+  res.status(404).json({ message: 'Route not found' });
+});
+
 
 const PORT = process.env.PORT || 8000
+
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('✅ MongoDB connected')
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
+    startRoomMonitor();
   })
   .catch(err => console.error('❌ DB Connection Error:', err))
