@@ -39,7 +39,7 @@ export const startRoomMonitor = () => {
             if (room.roomType === 'healthcare') {
               message = `Your healthcare room ${room.roomNumber} will soon become available.`
             } else {
-              const baseURL = 'https://localhost:5173'; // change to your real frontend base URL
+              const baseURL = 'https://sentiment-tg-globaluk.onrender.com';
 
                 message = `
                 Hello,
