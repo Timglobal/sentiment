@@ -137,7 +137,6 @@ function logout() {
   flex-grow: 1;
   padding: 20px;
   width: 100%;
-  max-width: 1200px;
   margin: 0 auto;
   box-sizing: border-box;
 }

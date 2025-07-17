@@ -5,10 +5,11 @@
 
 /* App container styling */
 #app {
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
+  margin: 0 ;
   padding: 2rem;
   font-weight: normal;
+  box-sizing: border-box;
 }
 
 /* Custom link styling */
@@ -26,16 +27,10 @@ a,
   }
 }
 
-/* Desktop grid layout */
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+:global(html, body) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
 }

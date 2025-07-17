@@ -2,6 +2,7 @@
 import Waitlist from '../models/Waitlist.js'
 import { sendRoomNotification } from '../utils/email.js'
 
+console.log('🔔 joinWaitlist API HIT');
 
 export const joinWaitlist = async (req, res) => {
   const { name, email, company, purpose, feedback } = req.body
@@ -13,10 +14,19 @@ export const joinWaitlist = async (req, res) => {
   try {
     const newEntry = new Waitlist({ name, email, company, purpose, feedback })
     await newEntry.save()
+    console.log('🧾 Saved to DB: ', newEntry)
+
+    console.log('✅ New waitlist entry saved, preparing to send email...');
 
     const subject = "You're on the Timglobal Waitlist!"
     const message = `Hello ${name},\n\nThanks for joining the Timglobal waitlist! We’ll let you know as soon as our app is ready.\n\n— The Timglobal Team`
-    await sendRoomNotification(email, subject, message)
+
+    try { 
+        await sendRoomNotification(email, subject, message)
+        console.log('📧 Email sent (probably)');
+    } catch (emailErr) {
+    console.error('❌ Email sending failed:', emailErr);
+    }
 
     res.status(201).json({ message: 'Successfully added to waitlist!' })
   } catch (err) {
