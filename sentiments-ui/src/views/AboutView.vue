@@ -97,16 +97,15 @@
       </div>
     </section>
 
-
     <footer style="background-color: #e0f2fe; color: #1f2937; padding: 40px 20px; font-family: Arial, sans-serif;">
       <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 16px; max-width: 1000px; margin: 0 auto;">
 
         <!-- LOGO + DESCRIPTION + SOCIAL -->
         <div style="flex: 1 1 22%; min-width: 180px; margin-top: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <img src="/removebg-preview.png" alt="Logo" style="width: 90px; height: 29px;" />
+            <img src="/removebg-preview.png" alt="Logo" style="width: 110px; height: 29px;" />
           </div>
-          <p style="font-size: 9.5px; line-height: 1.4; margin-bottom: 8px;">
+          <p style="font-size: 10.5px; line-height: 1.4; margin-bottom: 8px;">
             Healthcare innovation through AI-powered orchestration.<br />
             Based in Birmingham, UK.
           </p>
@@ -119,32 +118,33 @@
 
         <!-- COMPANY -->
         <div style="flex: 1 1 22%; min-width: 140px;">
-          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Company</h4>
-          <p style="margin: 2px 0;"><a href="/about" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">About Us</a></p>
-          <p style="margin: 2px 0;"><a href="/product" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Product</a></p>
-          <p style="margin: 2px 0;"><a href="/contact" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Contact Us</a></p>
+          <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Company</h4>
+          <p style="margin: 2px 0;"><a href="/about" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">About Us</a></p>
+          <p style="margin: 2px 0;"><a href="/product" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Product</a></p>
+          <p style="margin: 2px 0;"><a href="/contact" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Contact Us</a></p>
         </div>
 
         <!-- USEFUL LINKS -->
         <div style="flex: 1 1 22%; min-width: 140px;">
-          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Useful Links</h4>
-          <p style="margin: 2px 0;"><a href="/privacy-policy" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Privacy Policy</a></p>
-          <p style="margin: 2px 0;"><a href="/terms-of-service" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Terms of Service</a></p>
+          <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Useful Links</h4>
+          <p style="margin: 2px 0;"><a href="/privacy-policy" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Privacy Policy</a></p>
+          <p style="margin: 2px 0;"><a href="/terms-of-service" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Terms of Service</a></p>
         </div>
 
         <!-- CONTACT -->
         <div style="flex: 1 1 22%; min-width: 140px;">
-          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Contact</h4>
-          <p style="font-size: 9.5px; margin: 2px 0;">1B Shaftes Rd, B92 7NF, Solihull, UK</p>
-          <p style="font-size: 9.5px; margin: 2px 0;">info@timglobal.uk</p>
-          <p style="font-size: 9.5px; margin: 2px 0;">+44 7352 310353</p>
+          <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Contact</h4>
+          <p style="font-size: 10.5px; margin: 2px 0;">1B Shaftes Rd, B92 7NF, Solihull, UK</p>
+          <p style="font-size: 10.5px; margin: 2px 0;">info@timglobal.uk</p>
+          <p style="font-size: 10.5px; margin: 2px 0;">+44 7352 310353</p>
         </div>
 
       </div>
 
-      <p style="text-align: center; margin-top: 25px; font-size: 10px; color: #6b7280;">
+      <p style="text-align: center; margin-top: 25px; font-size: 11px; color: #6b7280;">
         © 2025 Timglobal. All rights reserved.
       </p>
     </footer>
+    
   </div>
 </template>

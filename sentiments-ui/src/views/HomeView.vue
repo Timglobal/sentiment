@@ -1,13 +1,13 @@
 <template>
-  <div style="font-family: Arial, sans-serif; color: #1f2937; max-width: 1200px; margin: 0 auto; padding: 40px 20px;">
+  <div style="font-family: Arial, sans-serif; color: #1f2937; ">
     
     <!-- HERO SECTION -->
     <section style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; padding-bottom: 60px;">
       <div style="flex: 1; min-width: 280px; padding-right: 20px;">
-        <h1 style="font-size: 36px; font-weight: bold; margin-bottom: 20px; line-height: 1.3;">
+        <h1 style="font-size: 42px; font-weight: 700; margin-bottom: 20px; line-height: 1.4; font-family: 'Segoe UI', Roboto, sans-serif; color: #1f2937;">
           Empowering Healthcare Through <br /> Project Orchestration
         </h1>
-        <p style="font-size: 16px; color: #4b5563; margin-bottom: 30px;">
+        <p style="font-size: 18px; color: #4b5563; margin-bottom: 30px; max-width: 600px;">
           Timglobal streamlines healthcare operations, maximizes resource efficiency, and enhances patient outcomes.
         </p>
 
@@ -41,7 +41,7 @@
         We deliver measurable improvements across critical healthcare operations, backed by extensive research and real-world implementation.
       </p>
       <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-        <div v-for="(cap, i) in capabilities" :key="i" style="flex: 0 0 calc(33.333% - 20px); box-sizing: border-box; padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; text-align: left;">
+        <div v-for="(cap, i) in capabilities" :key="i" style="flex: 1 1 280px; max-width: 100%; box-sizing: border-box; padding: 16px; border: 1px solid #e5e7eb; border-radius: 10px; text-align: left;">
           <img :src="cap.icon" alt="" style="width: 28px; height: 28px; margin-bottom: 6px;" />
           <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">{{ cap.title }}</h3>
           <p style="font-size: 14px; color: #4b5563;">{{ cap.description }}</p>
@@ -50,18 +50,21 @@
     </section>
 
     <!-- TRUST SECTION -->
-    <section style="display: flex; flex-wrap: wrap; align-items: center; background-color: #e0f2fe; border-radius: 10px; padding: 50px; margin: 60px 0;">
-      <div style="flex: 1; min-width: 280px; padding-right: 20px;">
-        <h2 style="font-size: 26px; font-weight: bold; margin-bottom: 16px;">Why Healthcare Providers Trust Timglobal</h2>
-        <p style="font-size: 15px; color: #374151; margin-bottom: 16px;">
-          Our AI-powered platform streamlines workflows, optimizes decisions, and improves operations. Backed by NHS deployments and academic research.
-        </p>
-        <a href="#" style="color: #2563eb; font-weight: 500; text-decoration: none;">Learn more →</a>
-      </div>
-      <div style="flex: 1; min-width: 280px; text-align: center;">
-        <img src="/3RD SECTION M.png" alt="Doctors" style="width: 100%; max-width: 320px; border-radius: 10px;" />
-      </div>
-    </section>
+    <div style="background-color: #e0f2fe; width: 100%;">
+      <section style="max-width: 1200px; margin: 0 auto; padding: 50px 20px; display: flex; flex-wrap: wrap; align-items: center;">
+        <div style="flex: 1; min-width: 280px; padding-right: 20px;">
+          <h2 style="font-size: 26px; font-weight: bold; margin-bottom: 16px;">Why Healthcare Providers Trust Timglobal</h2>
+          <p style="font-size: 15px; color: #374151; margin-bottom: 16px;">
+            Our AI-powered platform streamlines workflows, optimizes decisions, and improves operations. Backed by NHS deployments and academic research.
+          </p>
+          <a href="#" style="color: #2563eb; font-weight: 500; text-decoration: none;">Learn more →</a>
+        </div>
+        <div style="flex: 1; min-width: 240px; text-align: center;">
+          <img src="/3RD SECTION M.png" alt="Doctors" style="width: 100%; max-width: 320px; border-radius: 10px;" />
+        </div>
+      </section>
+    </div>
+
 
     <!-- OUR SERVICES -->
     <section style="text-align: center; margin-bottom: 60px;">
@@ -71,7 +74,8 @@
       </p>
       <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
         <div v-for="(service, index) in services" :key="index" :style="{
-          flex: '0 0 calc(33.333% - 20px)',
+          flex: '1 1 100%',
+          maxWidth: '320px',
           backgroundColor: service.color,
           padding: '20px',
           width: '220px',
@@ -140,13 +144,13 @@
 
 
           <!-- Waitlist Box -->
-          <div style="background: white; padding: 16px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+          <div style="background: white; padding: 16px; border-radius: 8px; ">
             <p style="font-weight: bold; margin: 0 0 6px;">Join the Waitlist</p>
             <p style="font-size: 11px; color: #4b5563; margin-bottom: 10px;">Be the first to know when our mobile app launches. Get early access and exclusive features.</p>
-            <div style="display: flex; align-items: center; margin-bottom: 8px;">
-              <input v-model="waitlistEmail" placeholder="Enter your email address" style="padding: 10px; flex: 1; border: 1px solid #ccc; border-radius: 4px;" />
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 8px;">
+              <input v-model="waitlistEmail" placeholder="Enter your email address" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;" />
               <RouterLink :to="`/request-demo?email=${waitlistEmail}`">
-                <button style="padding: 10px 16px; background-color: #2563eb; color: white; border: none; margin-left: 10px; border-radius: 4px;">Join Waitlist</button>
+                <button style="padding: 10px 16px; background-color: #2563eb; color: white; border: none; border-radius: 4px; width: 100%;">Join Waitlist</button>
               </RouterLink>
             </div>
             <p style="font-size: 10px; color: #6b7280; margin: 0;">We respect your privacy. Unsubscribe at any time.</p>
@@ -154,8 +158,8 @@
         </div>
 
         <!-- RIGHT IMAGE -->
-        <div style="flex: 1; min-width: 280px; text-align: center;">
-          <img src="/coming soon.png" alt="Coming Soon App" style="max-width: 300px;" />
+        <div style="flex: 1; min-width: 240px; text-align: center;">
+          <img src="/coming soon.png" alt="Coming Soon App" style="width: 100%; max-width: 320px; border-radius: 10px;" />
         </div>
       </div>
     </section>
@@ -202,7 +206,7 @@
               type="text"
               placeholder="Your full name"
               required
-              style="margin-top: 0.25rem; width: 100%; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.75rem; color: #111827;"
+              style="width: 50%; margin-top: 0.25rem; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.75rem; color: #111827;"
             />
           </div>
 
@@ -215,7 +219,7 @@
               type="email"
               placeholder="what is your email address?"
               required
-              style="margin-top: 0.25rem; width: 100%; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.75rem; color: #111827;"
+              style="width: 50%; margin-top: 0.25rem; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.75rem; color: #111827;"
             />
           </div>
 
@@ -228,7 +232,7 @@
               rows="4"
               placeholder="Share your thoughts with us"
               required
-              style="margin-top: 0.25rem; width: 100%; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.75rem; color: #111827;"
+              style="width: 50%; margin-top: 0.25rem; border: 1px solid #E5E7EB; border-radius: 0.5rem; padding: 0.75rem 1rem; font-size: 0.75rem; color: #111827;"
             ></textarea>
           </div>
 
@@ -236,14 +240,14 @@
           <div style="margin-bottom: 1rem;">
             <button
               type="submit"
-              style="width: 100%; background-color: #2563eb; color: white; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; border: none; cursor: pointer;"
+              style="width: 50%; background-color: #2563eb; color: white; padding: 0.75rem 1rem; border-radius: 0.5rem; font-size: 1rem; font-weight: 600; border: none; cursor: pointer;"
             >
               Send Message
             </button>
           </div>
 
           <!-- Faint Message -->
-          <p style="text-align: center; font-size: 0.75rem; color: #9CA3AF; filter: blur(0.4px); margin-top: 0.5rem;">
+          <p style="text-align: left; font-size: 0.75rem; color: #9CA3AF; filter: blur(0.4px); margin-top: 0.5rem;">
             Our team will reach out soon with the next steps.
           </p>
         </form>
@@ -255,9 +259,9 @@
         <!-- LOGO + DESCRIPTION + SOCIAL -->
         <div style="flex: 1 1 22%; min-width: 180px; margin-top: 12px;">
           <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-            <img src="/removebg-preview.png" alt="Logo" style="width: 90px; height: 29px;" />
+            <img src="/removebg-preview.png" alt="Logo" style="width: 110px; height: 29px;" />
           </div>
-          <p style="font-size: 9.5px; line-height: 1.4; margin-bottom: 8px;">
+          <p style="font-size: 10.5px; line-height: 1.4; margin-bottom: 8px;">
             Healthcare innovation through AI-powered orchestration.<br />
             Based in Birmingham, UK.
           </p>
@@ -270,30 +274,30 @@
 
         <!-- COMPANY -->
         <div style="flex: 1 1 22%; min-width: 140px;">
-          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Company</h4>
-          <p style="margin: 2px 0;"><a href="/about" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">About Us</a></p>
-          <p style="margin: 2px 0;"><a href="/product" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Product</a></p>
-          <p style="margin: 2px 0;"><a href="/contact" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Contact Us</a></p>
+          <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Company</h4>
+          <p style="margin: 2px 0;"><a href="/about" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">About Us</a></p>
+          <p style="margin: 2px 0;"><a href="/product" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Product</a></p>
+          <p style="margin: 2px 0;"><a href="/contact" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Contact Us</a></p>
         </div>
 
         <!-- USEFUL LINKS -->
         <div style="flex: 1 1 22%; min-width: 140px;">
-          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Useful Links</h4>
-          <p style="margin: 2px 0;"><a href="/privacy-policy" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Privacy Policy</a></p>
-          <p style="margin: 2px 0;"><a href="/terms-of-service" style="color: #1f2937; font-size: 9.5px; text-decoration: none;">Terms of Service</a></p>
+          <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Useful Links</h4>
+          <p style="margin: 2px 0;"><a href="/privacy-policy" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Privacy Policy</a></p>
+          <p style="margin: 2px 0;"><a href="/terms-of-service" style="color: #1f2937; font-size: 10.5px; text-decoration: none;">Terms of Service</a></p>
         </div>
 
         <!-- CONTACT -->
         <div style="flex: 1 1 22%; min-width: 140px;">
-          <h4 style="font-size: 12px; font-weight: bold; margin-bottom: 6px;">Contact</h4>
-          <p style="font-size: 9.5px; margin: 2px 0;">1B Shaftes Rd, B92 7NF, Solihull, UK</p>
-          <p style="font-size: 9.5px; margin: 2px 0;">info@timglobal.uk</p>
-          <p style="font-size: 9.5px; margin: 2px 0;">+44 7352 310353</p>
+          <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">Contact</h4>
+          <p style="font-size: 10.5px; margin: 2px 0;">1B Shaftes Rd, B92 7NF, Solihull, UK</p>
+          <p style="font-size: 10.5px; margin: 2px 0;">info@timglobal.uk</p>
+          <p style="font-size: 10.5px; margin: 2px 0;">+44 7352 310353</p>
         </div>
 
       </div>
 
-      <p style="text-align: center; margin-top: 25px; font-size: 10px; color: #6b7280;">
+      <p style="text-align: center; margin-top: 25px; font-size: 11px; color: #6b7280;">
         © 2025 Timglobal. All rights reserved.
       </p>
     </footer>

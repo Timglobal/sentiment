@@ -1,31 +1,36 @@
-<template> 
+<template>
   <div class="app-wrapper">
-    <!-- NAVBAR -->
+    <!-- TOP BAR -->
     <header class="navbar">
-      <div class="logo-title">
+      <!-- Hamburger -->
+      <div class="hamburger" @click="toggleMenu">☰</div>
+
+      <!-- Logo in center -->
+      <div class="logo-center">
         <RouterLink to="/">
           <img src="/removebg-preview.png" alt="Logo" class="logo" />
         </RouterLink>
       </div>
-
-      <nav class="nav-links">
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/contact">Contact</RouterLink>
-        <RouterLink to="/product">Product</RouterLink>
-
-        <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
-        <RouterLink v-if="!isLoggedIn" to="/signup">Signup</RouterLink>
-
-        <RouterLink v-if="isLoggedIn" to="/dashboard">Dashboard</RouterLink>
-        
-        <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
-      </nav>
     </header>
 
-    <p class="status">Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
+    <!-- Dropdown Menu -->
+    <div v-if="showMenu" class="dropdown-menu">
+      <RouterLink to="/">Home</RouterLink>
+      <RouterLink to="/about">About</RouterLink>
+      <RouterLink to="/contact">Contact</RouterLink>
+      <RouterLink to="/product">Product</RouterLink>
 
-    <!-- PAGE CONTENT -->
+      <RouterLink v-if="!isLoggedIn" to="/login">Login</RouterLink>
+      <RouterLink v-if="!isLoggedIn" to="/signup">Signup</RouterLink>
+
+      <RouterLink v-if="isLoggedIn" to="/dashboard">Dashboard</RouterLink>
+      <button v-if="isLoggedIn" @click="logout" class="logout-btn">Logout</button>
+
+      <!-- Login status -->
+      <p class="status">Status: {{ isLoggedIn ? 'Logged in' : 'Logged out' }}</p>
+    </div>
+
+    <!-- MAIN PAGE CONTENT -->
     <main class="page-content">
       <RouterView />
     </main>
@@ -33,13 +38,19 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import { RouterLink, RouterView, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'
 
 const router = useRouter()
 const auth = useAuthStore()
-const { isLoggedIn, user } = storeToRefs(auth)
+const { isLoggedIn } = storeToRefs(auth)
+
+const showMenu = ref(false)
+function toggleMenu() {
+  showMenu.value = !showMenu.value
+}
 
 function logout() {
   auth.logout()
@@ -48,13 +59,12 @@ function logout() {
 </script>
 
 <style scoped>
-/* Ensure html and body stretch full screen - move to global if needed */
-:global(html, body) {
+html, body {
   margin: 0;
   padding: 0;
+  font-family: 'Segoe UI', sans-serif;
   width: 100%;
   height: 100%;
-  font-family: 'Segoe UI', sans-serif;
 }
 
 .app-wrapper {
@@ -63,56 +73,52 @@ function logout() {
   min-height: 100vh;
 }
 
-/* NAVBAR STYLES */
+/* HEADER BAR */
 .navbar {
   width: 100%;
-  background-color: #fff;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
-  padding: 12px 20px;
+  background-color: #ffffff;
+  padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
+  box-shadow: none;
+  position: relative;
 }
 
-.logo-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
+/* Hamburger icon */
+.hamburger {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Logo center */
+.logo-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .logo {
-  width: 90px;
-  height: 40px;
-  object-fit: contain;
+  width: 140px;
+  height: auto;
 }
 
-.site-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.nav-links {
+/* DROPDOWN MENU */
+.dropdown-menu {
+  background-color: white;
+  padding: 20px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-  min-width: 200px;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.nav-links a {
+.dropdown-menu a {
   text-decoration: none;
-  color: #333;
-  font-size: 14px;
-  transition: color 0.3s;
+  color: purple;
+  font-size: 16px;
 }
 
-.nav-links a:hover {
+.dropdown-menu a:hover {
   color: #1d4ed8;
 }
 
@@ -122,22 +128,18 @@ function logout() {
   color: red;
   font-weight: bold;
   cursor: pointer;
+  font-size: 16px;
 }
 
-/* STATUS */
 .status {
-  font-size: 12px;
+  font-size: 14px;
   color: #555;
-  text-align: center;
-  margin-top: 4px;
+  margin-top: 10px;
 }
 
-/* PAGE CONTENT */
+/* MAIN PAGE */
 .page-content {
   flex-grow: 1;
   padding: 20px;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box;
 }
 </style>
