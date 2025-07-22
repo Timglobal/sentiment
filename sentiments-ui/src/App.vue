@@ -140,6 +140,6 @@ html, body {
 /* MAIN PAGE */
 .page-content {
   flex-grow: 1;
-  padding: 20px;
+  padding: 0;
 }
 </style>

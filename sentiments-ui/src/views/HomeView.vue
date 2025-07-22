@@ -51,7 +51,7 @@
 
     <!-- TRUST SECTION -->
     <div style="background-color: #e0f2fe; width: 100%;">
-      <section style="max-width: 1200px; margin: 0 auto; padding: 50px 20px; display: flex; flex-wrap: wrap; align-items: center;">
+      <section class="trust-section" style="max-width: 1200px; margin: 0 auto; padding: 50px 20px; display: flex; flex-wrap: wrap; align-items: center;">
         <div style="flex: 1; min-width: 280px; padding-right: 20px;">
           <h2 style="font-size: 26px; font-weight: bold; margin-bottom: 16px;">Why Healthcare Providers Trust Timglobal</h2>
           <p style="font-size: 15px; color: #374151; margin-bottom: 16px;">
@@ -367,3 +367,16 @@ export default {
   }
 }
 </script>
+<style scoped>
+@media (max-width: 768px) {
+  .trust-section {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .trust-section > div {
+    padding-right: 0 !important;
+  }
+}
+
+</style>
