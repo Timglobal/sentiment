@@ -20,6 +20,8 @@ const transporter = nodemailer.createTransport({
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
+   logger: true,
+  debug: true,
 });
 
 // ✅ Verify transporter setup
