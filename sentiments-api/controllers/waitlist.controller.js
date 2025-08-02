@@ -21,12 +21,11 @@ export const joinWaitlist = async (req, res) => {
     const subject = "You're on the Timglobal Waitlist!"
     const message = `Hello ${name},\n\nThanks for joining the Timglobal waitlist! We’ll let you know as soon as our app is ready.\n\n— The Timglobal Team`
 
-    try { 
-        await sendRoomNotification(email, subject, message)
-        console.log('📧 Email sent (probably)');
-    } catch (emailErr) {
-    console.error('❌ Email sending failed:', emailErr);
-    }
+
+    console.log('🟡 About to call sendRoomNotification with:', email, subject)
+    await sendRoomNotification(email, subject, message)
+    console.log('✅ Finished calling sendRoomNotification')
+
 
     res.status(201).json({ message: 'Successfully added to waitlist!' })
   } catch (err) {

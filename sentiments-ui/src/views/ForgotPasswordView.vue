@@ -34,7 +34,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 import { API_BASE_URL } from '@/config'
 
 const email = ref('')

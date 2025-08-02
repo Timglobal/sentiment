@@ -81,7 +81,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { API_BASE_URL } from '@/config'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 import { useAuthStore } from '@/stores/auth'
 const auth = useAuthStore()
 

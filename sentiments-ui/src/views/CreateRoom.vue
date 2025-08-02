@@ -46,7 +46,7 @@
 <script setup>
 import { API_BASE_URL } from '@/config'
 import { ref } from 'vue'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 
 const toast = useToast()
 

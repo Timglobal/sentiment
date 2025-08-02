@@ -1,42 +1,35 @@
 {
-  "name": "sentiments-ui",
-  "version": "0.0.0",
+  "name": "timglobal-vue",
+  "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vue-tsc && vite build",
     "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --build",
-    "lint": "eslint . --fix",
-    "format": "prettier --write src/"
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.19",
+    "@heroicons/vue": "^2.1.1",
+    "lucide-vue-next": "^0.364.0",
     "pinia": "^3.0.3",
-    "vue": "^3.5.17",
-    "vue-router": "^4.5.1",
-    "vue-toastification": "^2.0.0-rc.5"
+    "vue": "^3.4.21",
+    "vue-router": "^4.3.0",
+    "vue-toast-notification": "^3.1.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.1.11",
-    "@tsconfig/node22": "^22.0.2",
-    "@types/node": "^22.15.32",
-    "@vitejs/plugin-vue": "^6.0.0",
-    "@vue/eslint-config-prettier": "^10.2.0",
-    "@vue/eslint-config-typescript": "^14.5.1",
-    "@vue/tsconfig": "^0.7.0",
-    "autoprefixer": "^10.4.21",
-    "eslint": "^9.29.0",
-    "eslint-plugin-vue": "~10.2.0",
-    "jiti": "^2.4.2",
-    "npm-run-all2": "^8.0.4",
-    "postcss": "^8.5.6",
-    "prettier": "3.5.3",
-    "tailwindcss": "^4.1.11",
-    "typescript": "~5.8.0",
-    "vite": "^7.0.2",
-    "vite-plugin-vue-devtools": "^7.7.7",
-    "vue-tsc": "^2.2.10"
+    "@types/node": "^20.11.25",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "@vue/eslint-config-typescript": "^12.0.0",
+    "@vue/tsconfig": "^0.5.1",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^8.57.0",
+    "eslint-plugin-vue": "^9.22.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "~5.4.0",
+    "vite": "^5.1.6",
+    "vite-plugin-vue-devtools": "^8.0.0",
+    "vue-tsc": "^2.0.6"
   }
 }

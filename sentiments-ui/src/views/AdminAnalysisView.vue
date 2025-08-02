@@ -62,7 +62,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { API_BASE_URL } from '@/config'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 
 const analyses = ref<any[]>([])
 const toast = useToast()

@@ -5,7 +5,6 @@
       🛠️ Manage Workers
     </h2>
 
-    <!-- Add/Edit Worker Form -->
     <form
       @submit.prevent="handleSubmit"
       style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2.5rem;"
@@ -67,7 +66,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 import { API_BASE_URL } from '@/config'
 
 const toast = useToast()

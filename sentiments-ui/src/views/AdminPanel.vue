@@ -127,7 +127,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { API_BASE_URL } from '@/config'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 import { RouterLink, RouterView } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
 import { storeToRefs } from 'pinia'

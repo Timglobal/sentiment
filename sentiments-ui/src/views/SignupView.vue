@@ -77,7 +77,7 @@
 import { ref } from 'vue'
 import { API_BASE_URL } from '@/config'
 import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 const toast = useToast()
 
 const name = ref('')

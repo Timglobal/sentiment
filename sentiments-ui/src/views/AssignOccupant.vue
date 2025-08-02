@@ -67,7 +67,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 import { API_BASE_URL } from '@/config'
 
 const route = useRoute()

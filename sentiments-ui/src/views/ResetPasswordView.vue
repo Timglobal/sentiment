@@ -49,7 +49,7 @@
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { API_BASE_URL } from '@/config'
-import { useToast } from 'vue-toastification'
+import { useToast } from 'vue-toast-notification'
 
 const route = useRoute()
 const router = useRouter()
