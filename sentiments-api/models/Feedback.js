@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 const feedbackSchema = new mongoose.Schema({
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  workerId: { type: mongoose.Schema.Types.ObjectId, ref: 'Worker', required: true},
+  workerId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
   senderName: { type: String, required: true },
   senderEmail: { type: String, required: true },
   workerName: { type: String, required: true },

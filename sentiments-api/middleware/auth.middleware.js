@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken'
 
 export const verifyToken = (req, res, next) => {
+  console.log("auth verif")
   const token = req.headers.authorization?.split(' ')[1] // Expecting Bearer token
 
   if (!token) {
@@ -13,6 +14,26 @@ export const verifyToken = (req, res, next) => {
     next()
   } catch (err) {
     res.status(403).json({ message: 'Invalid token' })
+  }
+}
+
+export const optionalAuth = (req, res, next) => {
+  const token = req.headers.authorization?.split(' ')[1] // Expecting Bearer token
+
+  if (!token) {
+    // No token provided, continue without authentication
+    req.user = null
+    return next()
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    req.user = decoded
+    next()
+  } catch (err) {
+    // Invalid token, continue without authentication
+    req.user = null
+    next()
   }
 }
 

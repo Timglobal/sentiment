@@ -2,6 +2,8 @@ import User from '../models/User.js'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
 import bcrypt from 'bcrypt'
+import Company from '../models/Company.js'
+import { sendCompanyRegistrationEmail } from '../utils/email.js'
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body
@@ -22,22 +24,55 @@ export const loginUser = async (req, res) => {
 
     res.json({ token, user: { id: user._id, email: user.email, name: user.name , role: user.role}, })
   } catch (err) {
-    res.status(500).json({ message: 'Server error' })
+    res.status(500).json({ message: 'Server error: '+ err.message })
   }
 }
 
 export const registerUser = async (req, res) => {
-    const { name, email, password, role } = req.body
-    const avatar = req.file ? `${req.protocol}://${req.get('host')}/uploads/avatars/${req.file.filename}` : ''
-
   try {
+    const { name, email, password, role } = req.body
+    let companyId;
+    let company;
+
     const existing = await User.findOne({ email })
     if (existing) {
       return res.status(409).json({ message: 'User already exists' })
     }
+    if(role === 'admin'){
+      let companyName = req.body.companyName;
+      let companyAddress = req.body.companyAddress;
+      const newCompany = new Company({
+        companyName: companyName,
+        companyAddress: companyAddress
+      })
+      let companyDetail = await newCompany.save();
+      company = companyDetail._id;
+      
+      // Send email with company ID to the administrator
+      try {
+        await sendCompanyRegistrationEmail(email, companyName, companyDetail.companyId);
+        console.log('✅ Company registration email sent successfully');
+      } catch (emailError) {
+        console.error('❌ Failed to send company registration email:', emailError.message);
+        // Don't fail the registration if email fails
+      }
+    }else if(role === 'staff' || role === 'patient'){
+      companyId = req.body.companyId;
+      const getCompany = await Company.findOne({companyId: companyId}).select('_id');
+      if(!getCompany){
+        return res.status(404).json({ message: 'Company not found' })
+      }
+      company = getCompany._id;
+    }
+
+    
+  const avatar = req.file ? `${req.protocol}://${req.get('host')}/uploads/avatars/${req.file.filename}` : ''
+
+  
+   
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const newUser = new User({ name, email, password: hashedPassword, role, avatar })
+    const newUser = new User({ name, email, password: hashedPassword, role, avatar,company })
     await newUser.save()
 
     res.status(201).json({ message: 'User created' })

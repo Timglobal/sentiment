@@ -1,16 +1,24 @@
 <template>
   <div class="app-wrapper">
-    <Navbar />
+    <Navbar v-if="!isDashboardRoute"/>
     <main>
       <router-view />
     </main>
-    <Footer />
+    <Footer v-if="!isDashboardRoute" />
   </div>
 </template>
 
-<script setup>
-import Navbar from './components/Navbar.vue'
-import Footer from './components/Footer.vue'
+<script setup lang="ts">
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import Navbar from '@/components/Navbar.vue'
+import Footer from '@/components/Footer.vue'
+
+const route = useRoute()
+
+const isDashboardRoute = computed(() => {
+  return route.meta.layout === 'dashboard'
+})
 </script>
 
 <style scoped>

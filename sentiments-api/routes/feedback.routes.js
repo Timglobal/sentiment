@@ -1,11 +1,13 @@
 import express from 'express'
-import { submitFeedback, getAllFeedbacks } from '../controllers/feedback.controller.js'
-import { verifyToken, requireAdmin } from '../middleware/auth.middleware.js'
+import { submitFeedback, getAllFeedbacks, getFeedbackStats } from '../controllers/feedback.controller.js'
+import { verifyToken, requireAdmin, optionalAuth } from '../middleware/auth.middleware.js'
 
 
 const router = express.Router()
 
-router.post('/', submitFeedback)
+// Public route with optional auth (to capture user ID if logged in)
+router.post('/', optionalAuth, submitFeedback)
 router.get('/', verifyToken, requireAdmin, getAllFeedbacks)
+router.get('/stats', verifyToken, requireAdmin, getFeedbackStats)
 
 export default router

@@ -21,7 +21,9 @@ import workerRoutes from './routes/worker.routes.js'
 import momentRoutes from './routes/moment.routes.js'
 import roomRoutes from './routes/room.routes.js'
 import tenantRoutes from './routes/tenants.routes.js'
+import analyticsRoutes from './routes/analytics.routes.js'
 import { startRoomMonitor } from './utils/scheduler.js'
+import { startAgenda, stopAgenda } from './utils/jobScheduler.js'
 import waitlistRoutes from './routes/waitlist.routes.js'
 
 app.use('/api/auth', authRoutes)
@@ -33,9 +35,12 @@ app.use('/api/analysis', analysisRoutes)
 app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
 app.use('/api/rooms', roomRoutes);
 app.use('/api/tenants', tenantRoutes)
+app.use('/api/analytics', analyticsRoutes)
 app.use('/api/waitlist', waitlistRoutes)
 
-
+app.get("/",(req, res) => {
+  res.json({ message: "Welcome to Sentiment API" })
+})
 app.use((req, res, next) => {
   console.log(`❌ Route not found: ${req.method} ${req.originalUrl}`);
   res.status(404).json({ message: 'Route not found' });
@@ -46,12 +51,30 @@ const PORT = process.env.PORT || 8000
 
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
+  .then(async () => {
     console.log('✅ MongoDB connected')
+    
+    // Start Agenda job scheduler
+    await startAgenda()
+    
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
     startRoomMonitor();
   })
   .catch(err => console.error('❌ DB Connection Error:', err))
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  console.log('🛑 SIGTERM received, shutting down gracefully...')
+  await stopAgenda()
+  process.exit(0)
+})
+
+process.on('SIGINT', async () => {
+  console.log('🛑 SIGINT received, shutting down gracefully...')
+  await stopAgenda()
+  process.exit(0)
+})
+
 process.on('uncaughtException', (err) => {
   console.error('🔥 Uncaught Exception:', err)
 })

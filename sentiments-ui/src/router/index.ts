@@ -15,7 +15,6 @@ import Signup from '../views/Signup.vue'
 
 // Dashboard views
 import Dashboard from '@/views/dashboard/Dashboard.vue'
-import TestDashboard from '../views/TestDashboard.vue'
 import SubmitFeedback from '../views/dashboard/SubmitFeedback.vue'
 import UploadMoment from '../views/dashboard/UploadMoment.vue'
 import ManageWorkers from '../views/dashboard/ManageWorkers.vue'
@@ -25,6 +24,7 @@ import VoiceChat from '../views/dashboard/VoiceChat.vue'
 // User Dashboard views
 import UserDashboard from '../views/user-dashboard/UserDashboard.vue'
 import UserSubmitFeedback from '../views/user-dashboard/SubmitFeedback.vue'
+import ManageFeedback from '@/views/dashboard/ManageFeedback.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,8 +32,8 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView },
     { path: '/about', name: 'about', component: AboutView },
     { path: '/contact', name: 'contact', component: ContactView },
-    { path: '/login', name: 'Login', component: LoginView },
-    { path: '/signup', name: 'signup', component: SignupView },
+    // { path: '/login', name: 'Login', component: LoginView },
+    // { path: '/signup', name: 'signup', component: SignupView },
     { path: '/dashboard', name: 'Dashboard', component: DashboardView },
     { path: '/feedback', name: 'feedback', component: FeedbackFormView },
     { path: '/manage-workers', name: 'ManageWorkers', component: ManageWorkersView },
@@ -91,6 +91,12 @@ const router = createRouter({
       component: VoiceChat,
       meta: { layout: 'dashboard' }
     },
+    {
+      path: '/dashboard/managefeedbacks',
+      name: 'DashboardManageFeedbacks',
+      component: ManageFeedback,
+      meta: { layout: 'dashboard' }
+    },
     // User Dashboard routes
     {
       path: '/user-dashboard',
@@ -107,19 +113,19 @@ const router = createRouter({
     {
       path: '/user-dashboard/my-feedback',
       name: 'UserDashboardMyFeedback',
-      component: () => import('../pages/user-dashboard/UserDashboard.vue'), // Placeholder
+      component: () => import('../views/user-dashboard/UserDashboard.vue'), // Placeholder
       meta: { layout: 'dashboard' }
     },
     {
       path: '/user-dashboard/analytics',
       name: 'UserDashboardAnalytics',
-      component: () => import('../pages/user-dashboard/UserDashboard.vue'), // Placeholder
+      component: () => import('../views/user-dashboard/UserDashboard.vue'), // Placeholder
       meta: { layout: 'dashboard' }
     },
     {
       path: '/user-dashboard/settings',
       name: 'UserDashboardSettings',
-      component: () => import('../pages/user-dashboard/UserDashboard.vue'), // Placeholder
+      component: () => import('../views/user-dashboard/UserDashboard.vue'), // Placeholder
       meta: { layout: 'dashboard' }
     }
   ],

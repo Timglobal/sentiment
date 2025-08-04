@@ -25,9 +25,27 @@ export async function getTranscript(filePath) {
       }
     );
 
-    return response.data; // plain text
+    const transcript = response.data;
+    
+    // Check if transcript is meaningful (not just silence or noise)
+    if (!transcript || transcript.trim().length === 0 || 
+        transcript.toLowerCase().includes('no speech') ||
+        transcript.toLowerCase().includes('silence') ||
+        transcript.trim() === '.') {
+      console.log('⚠️ No meaningful audio content found in video');
+      return null;
+    }
+
+    return transcript; // plain text
   } catch (error) {
     console.error("Transcription failed:", error.response?.data || error.message);
+    
+    // Check if error is due to no audio content
+    if (error.response?.data?.error?.message?.includes('audio') ||
+        error.response?.status === 400) {
+      console.log('⚠️ Video may not contain audio content');
+    }
+    
     return null;
   }
 }
