@@ -6,6 +6,7 @@ const feedbackSchema = new mongoose.Schema({
   senderName: { type: String, required: true },
   senderEmail: { type: String, required: true },
   workerName: { type: String, required: true },
+  sentimentScore: { type: Number, required: false }, // 1 to 100
   source: String, // e.g., "patient", "colleague"
   message: String,
   timestamp: { type: Date, default: Date.now }

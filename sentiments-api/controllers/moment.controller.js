@@ -4,7 +4,7 @@ export async function createMoment(req, res) {
   try {
     const { workerId, description, mediaType, submittedBy } = req.body
     const mediaUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
-
+    
     const moment = new Moment({ workerId, description, mediaUrl, mediaType, submittedBy })
     await moment.save()
 

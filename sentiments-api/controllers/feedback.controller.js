@@ -1,15 +1,16 @@
 import Feedback from '../models/Feedback.js'
 import Worker from '../models/worker.model.js'
+import { getSentimentScore } from '../utils/getSentiment.js'
 
 export async function submitFeedback(req, res) {
   try {
     const { name, email, message, workerId, source } = req.body
-
+    
     const worker = await Worker.findById(workerId)
     if (!worker) {
       return res.status(404).json({ message: 'Worker not found' })
     }
-
+    const sentimentScore = await getSentimentScore(message);
     const newFeedback = new Feedback( {
         senderName: name,
         workerName: worker.name,
@@ -17,7 +18,8 @@ export async function submitFeedback(req, res) {
         userId: null, // We'll add this later for authenticated users
         workerId,
         source,
-        message
+        message,
+        sentimentScore: sentimentScore >= 0 ? sentimentScore : null, // Store null if sentiment analysis fails
     })
     await newFeedback.save()
     res.status(201).json({ message: 'Feedback submitted successfully' })
