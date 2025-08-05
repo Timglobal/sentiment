@@ -23,7 +23,7 @@
 
           <!-- Role Selection -->
           <div class="mb-6">
-            <Label class="text-sm font-medium text-gray-700 mb-3 block">Account Type</Label>
+            <Label class="text-sm font-medium text-gray-700 mb-3 block">Account Type *</Label>
             <div class="grid grid-cols-3 gap-2">
 
               <button
@@ -46,7 +46,7 @@
             <div class="grid grid-cols-2 gap-4">
               <div>
                 <Label for="firstName" class="text-sm font-medium text-gray-700 mb-2 block">
-                  First Name
+                  First Name *
                 </Label>
                 <Input
                   id="firstName"
@@ -59,7 +59,7 @@
               </div>
               <div>
                 <Label for="lastName" class="text-sm font-medium text-gray-700 mb-2 block">
-                  Last Name
+                  Last Name *
                 </Label>
                 <Input
                   id="lastName"
@@ -74,7 +74,7 @@
 
             <div>
               <Label for="email" class="text-sm font-medium text-gray-700 mb-2 block">
-                Email Address
+                Email Address *
               </Label>
               <Input
                 id="email"
@@ -90,7 +90,7 @@
             <div v-if="selectedRole === 'admin'" class="space-y-4">
               <div>
                 <Label for="companyName" class="text-sm font-medium text-gray-700 mb-2 block">
-                  Company Name
+                  Company Name *
                 </Label>
                 <Input
                   id="companyName"
@@ -103,7 +103,7 @@
               </div>
               <div>
                 <Label for="companyAddress" class="text-sm font-medium text-gray-700 mb-2 block">
-                  Company Address
+                  Company Address *
                 </Label>
                 <Input
                   id="companyAddress"
@@ -119,7 +119,7 @@
             <!-- Company ID for Staff and Patient -->
             <div v-if="selectedRole === 'staff' || selectedRole === 'patient'">
               <Label for="companyId" class="text-sm font-medium text-gray-700 mb-2 block">
-                Company ID
+                Company ID *
               </Label>
               <Input
                 id="companyId"
@@ -133,7 +133,7 @@
 
             <div>
               <Label for="password" class="text-sm font-medium text-gray-700 mb-2 block">
-                Password
+                Password *
               </Label>
               <div class="relative">
                 <Input
@@ -157,7 +157,7 @@
 
             <div>
               <Label for="confirmPassword" class="text-sm font-medium text-gray-700 mb-2 block">
-                Confirm Password
+                Confirm Password *
               </Label>
               <div class="relative">
                 <Input
@@ -232,6 +232,7 @@
                   <a href="#" class="text-blue-600 hover:text-blue-500">Terms of Service</a>
                   and
                   <a href="#" class="text-blue-600 hover:text-blue-500">Privacy Policy</a>
+                  *
                 </label>
               </div>
             </div>
@@ -280,7 +281,7 @@ const toast = useToast()
 
 const router = useRouter()
 const avatarUrl = ref<string | null>(null)
-const selectedRole = ref('staff')
+const selectedRole = ref('admin')
 const showPassword = ref(false)
 const showConfirmPassword = ref(false)
 const firstName = ref('')
