@@ -188,3 +188,119 @@ Sentiment Healthcare Platform
     console.error(`❌ ${roleTitle} welcome email error:`, error.message);
   }
 };
+
+// 🔐 Send password reset email
+export const sendPasswordResetEmail = async (to, resetLink, userName = 'User') => {
+  console.log('🔐 sendPasswordResetEmail called for:', to);
+  
+  if (!EMAIL_USER || !EMAIL_PASS) {
+    console.error('❗ Cannot send password reset email — missing credentials.');
+    return;
+  }
+
+  const subject = '🔐 Reset Your Password - TimGlobal Sentiment App';
+  
+  const htmlContent = `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Password Reset</title>
+      <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+        .reset-button { display: inline-block; background: #ff6b6b; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; font-weight: bold; margin: 20px 0; }
+        .reset-button:hover { background: #ff5252; }
+        .warning { background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 5px; margin: 20px 0; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
+      </style>
+    </head>
+    <body>
+      <div class="header">
+        <h1>🔐 Password Reset Request</h1>
+        <p>TimGlobal Healthcare Sentiment Platform</p>
+      </div>
+      
+      <div class="content">
+        <h2>Hello ${userName},</h2>
+        
+        <p>We received a request to reset your password for your TimGlobal Sentiment App account.</p>
+        
+        <p>Click the button below to reset your password:</p>
+        
+        <div style="text-align: center;">
+          <a href="${resetLink}" class="reset-button">Reset My Password</a>
+        </div>
+        
+        <p>Or copy and paste this link into your browser:</p>
+        <p style="word-break: break-all; color: #667eea;"><a href="${resetLink}">${resetLink}</a></p>
+        
+        <div class="warning">
+          <strong>⚠️ Important Security Information:</strong>
+          <ul>
+            <li>This link will expire in 15 minutes for security</li>
+            <li>If you didn't request this reset, please ignore this email</li>
+            <li>Never share this link with anyone else</li>
+            <li>Change your password to something strong and unique</li>
+          </ul>
+        </div>
+        
+        <p>If you're having trouble with the button above, copy and paste the URL into your web browser.</p>
+        
+        <p>If you didn't request a password reset, you can safely ignore this email. Your password will remain unchanged.</p>
+        
+        <p>Best regards,<br>
+        <strong>TimGlobal Sentiment Team</strong></p>
+      </div>
+      
+      <div class="footer">
+        <p>© 2025 TimGlobal Healthcare Platform. All rights reserved.</p>
+        <p>This is an automated message, please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+  `;
+
+  const textContent = `
+🔐 Password Reset Request - TimGlobal Sentiment App
+
+Hello ${userName},
+
+We received a request to reset your password for your TimGlobal Sentiment App account.
+
+Reset your password by clicking this link:
+${resetLink}
+
+⚠️ Important:
+• This link expires in 15 minutes
+• If you didn't request this reset, ignore this email
+• Never share this link with anyone
+
+If you're having trouble, copy and paste the link into your browser.
+
+Best regards,
+TimGlobal Sentiment Team
+
+© 2025 TimGlobal Healthcare Platform
+This is an automated message, please do not reply.
+  `;
+
+  const mailOptions = {
+    from: `"TimGlobal Sentiment App" <${EMAIL_USER}>`,
+    to,
+    subject,
+    text: textContent,
+    html: htmlContent
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Password reset email sent successfully:', info.response);
+    return true;
+  } catch (error) {
+    console.error('❌ Password reset email error:', error.message);
+    return false;
+  }
+};

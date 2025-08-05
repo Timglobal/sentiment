@@ -133,7 +133,7 @@ const router = createRouter({
 
 // ⬇ Add after router is created
 router.beforeEach((to, from, next) => {
-  const publicPages = ['/','/about','/product', '/login', '/signup', '/contact', '/request-demo']
+  const publicPages = ['/','/about','/product', '/login', '/signup', '/contact', '/request-demo', '/forgot-password', '/reset-password']
   const authRequired = !publicPages.includes(to.path)
   const token = localStorage.getItem('token')
 
