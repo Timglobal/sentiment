@@ -7,45 +7,77 @@ import mongoose from 'mongoose'
 const getSentimentOverview = async () => {
   console.log('📊 Fetching sentiment overview...')
   
+  // Get total counts for all data
+  const [totalFeedbacks, totalMoments] = await Promise.all([
+    Feedback.countDocuments(),
+    Moment.countDocuments()
+  ])
+  
+  console.log(`📋 Database totals: ${totalFeedbacks} feedbacks, ${totalMoments} moments`)
+  
+  // Get analytics for items with sentiment scores
   const [momentsStats, feedbacksStats] = await Promise.all([
     Moment.aggregate([
-      { $match: { sentimentScore: { $ne: null } } },
+      { $match: { sentimentScore: { $ne: null, $exists: true } } },
       {
         $group: {
           _id: null,
           totalMoments: { $sum: 1 },
           averageSentiment: { $avg: '$sentimentScore' },
-          positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 20] }, 1, 0] } },
-          neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', -20] }, { $lt: ['$sentimentScore', 20] }] }, 1, 0] } },
-          negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', -20] }, 1, 0] } }
+          positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 60] }, 1, 0] } },
+          neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', 40] }, { $lt: ['$sentimentScore', 60] }] }, 1, 0] } },
+          negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', 40] }, 1, 0] } }
         }
       }
     ]),
     Feedback.aggregate([
-      { $match: { sentimentScore: { $ne: null } } },
+      { $match: { sentimentScore: { $ne: null, $exists: true } } },
       {
         $group: {
           _id: null,
           totalFeedbacks: { $sum: 1 },
           averageSentiment: { $avg: '$sentimentScore' },
-          positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 20] }, 1, 0] } },
-          neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', -20] }, { $lt: ['$sentimentScore', 20] }] }, 1, 0] } },
-          negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', -20] }, 1, 0] } }
+          positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 60] }, 1, 0] } },
+          neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', 40] }, { $lt: ['$sentimentScore', 60] }] }, 1, 0] } },
+          negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', 40] }, 1, 0] } }
         }
       }
     ])
   ])
 
-  const moments = momentsStats[0] || { totalMoments: 0, averageSentiment: 0, positive: 0, neutral: 0, negative: 0 }
-  const feedbacks = feedbacksStats[0] || { totalFeedbacks: 0, averageSentiment: 0, positive: 0, neutral: 0, negative: 0 }
+  console.log(`📈 Sentiment analysis: ${momentsStats.length ? momentsStats[0].totalMoments : 0} moments, ${feedbacksStats.length ? feedbacksStats[0].totalFeedbacks : 0} feedbacks`)
+
+  // Return both total counts and sentiment analysis
+  const moments = {
+    totalMoments: totalMoments,
+    totalWithSentiment: momentsStats[0]?.totalMoments || 0,
+    averageSentiment: momentsStats[0]?.averageSentiment || 0,
+    positive: momentsStats[0]?.positive || 0,
+    neutral: momentsStats[0]?.neutral || 0,
+    negative: momentsStats[0]?.negative || 0
+  }
+
+  const feedbacks = {
+    totalFeedbacks: totalFeedbacks,
+    totalWithSentiment: feedbacksStats[0]?.totalFeedbacks || 0,
+    averageSentiment: feedbacksStats[0]?.averageSentiment || 0,
+    positive: feedbacksStats[0]?.positive || 0,
+    neutral: feedbacksStats[0]?.neutral || 0,
+    negative: feedbacksStats[0]?.negative || 0
+  }
 
   const combined = {
-    total: moments.totalMoments + feedbacks.totalFeedbacks,
-    averageSentiment: (moments.averageSentiment + feedbacks.averageSentiment) / 2,
-    positive: moments.positive + feedbacks.positive,
-    neutral: moments.neutral + feedbacks.neutral,
-    negative: moments.negative + feedbacks.negative
+    total: totalMoments + totalFeedbacks,
+    totalWithSentiment: (momentsStats[0]?.totalMoments || 0) + (feedbacksStats[0]?.totalFeedbacks || 0),
+    averageSentiment: feedbacksStats[0] && momentsStats[0] 
+      ? (momentsStats[0].averageSentiment + feedbacksStats[0].averageSentiment) / 2
+      : feedbacksStats[0]?.averageSentiment || momentsStats[0]?.averageSentiment || 0,
+    positive: (momentsStats[0]?.positive || 0) + (feedbacksStats[0]?.positive || 0),
+    neutral: (momentsStats[0]?.neutral || 0) + (feedbacksStats[0]?.neutral || 0),
+    negative: (momentsStats[0]?.negative || 0) + (feedbacksStats[0]?.negative || 0)
   }
+
+  console.log(`✅ Overview complete - Total: ${combined.total}, With sentiment: ${combined.totalWithSentiment}`)
 
   return { moments, feedbacks, combined }
 }
@@ -57,37 +89,61 @@ const getMomentsSentimentTrend = async (additionalFilters = {}) => {
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-  const matchConditions = {
-    sentimentScore: { $ne: null },
+  // First get all moments in date range
+  const allMatchConditions = {
     timestamp: { $gte: thirtyDaysAgo },
     ...additionalFilters
   }
 
-  return await Moment.aggregate([
-    { $match: matchConditions },
-    {
-      $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
-        averageSentiment: { $avg: '$sentimentScore' },
-        count: { $sum: 1 },
-        positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 20] }, 1, 0] } },
-        neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', -20] }, { $lt: ['$sentimentScore', 20] }] }, 1, 0] } },
-        negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', -20] }, 1, 0] } }
-      }
-    },
-    {
-      $project: {
-        date: '$_id',
-        averageSentiment: { $round: ['$averageSentiment', 1] },
-        count: 1,
-        positive: 1,
-        neutral: 1,
-        negative: 1,
-        _id: 0
-      }
-    },
-    { $sort: { date: 1 } }
+  const sentimentMatchConditions = {
+    sentimentScore: { $ne: null, $exists: true },
+    timestamp: { $gte: thirtyDaysAgo },
+    ...additionalFilters
+  }
+
+  const [allMoments, sentimentMoments] = await Promise.all([
+    Moment.aggregate([
+      { $match: allMatchConditions },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]),
+    Moment.aggregate([
+      { $match: sentimentMatchConditions },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          averageSentiment: { $avg: '$sentimentScore' },
+          count: { $sum: 1 },
+          positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 60] }, 1, 0] } },
+          neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', 40] }, { $lt: ['$sentimentScore', 60] }] }, 1, 0] } },
+          negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', 40] }, 1, 0] } }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ])
   ])
+
+  // Merge the results, preferring sentiment data when available
+  const result = allMoments.map(dayData => {
+    const sentimentData = sentimentMoments.find(s => s._id === dayData._id)
+    return {
+      date: dayData._id,
+      averageSentiment: sentimentData ? Math.round(sentimentData.averageSentiment * 10) / 10 : 0,
+      count: sentimentData ? sentimentData.count : dayData.count,
+      positive: sentimentData ? sentimentData.positive : 0,
+      neutral: sentimentData ? sentimentData.neutral : 0,
+      negative: sentimentData ? sentimentData.negative : 0,
+      _id: 0
+    }
+  })
+
+  console.log(`📊 Moments trend: ${result.length} days, ${sentimentMoments.length} with sentiment`)
+  return result
 }
 
 // Get feedback sentiment trend (last 30 days)
@@ -97,37 +153,61 @@ const getFeedbackSentimentTrend = async (additionalFilters = {}) => {
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-  const matchConditions = {
-    sentimentScore: { $ne: null },
+  // Get all feedbacks and sentiment-analyzed feedbacks separately
+  const allMatchConditions = {
     timestamp: { $gte: thirtyDaysAgo },
     ...additionalFilters
   }
 
-  return await Feedback.aggregate([
-    { $match: matchConditions },
-    {
-      $group: {
-        _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
-        averageSentiment: { $avg: '$sentimentScore' },
-        count: { $sum: 1 },
-        positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 20] }, 1, 0] } },
-        neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', -20] }, { $lt: ['$sentimentScore', 20] }] }, 1, 0] } },
-        negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', -20] }, 1, 0] } }
-      }
-    },
-    {
-      $project: {
-        date: '$_id',
-        averageSentiment: { $round: ['$averageSentiment', 1] },
-        count: 1,
-        positive: 1,
-        neutral: 1,
-        negative: 1,
-        _id: 0
-      }
-    },
-    { $sort: { date: 1 } }
+  const sentimentMatchConditions = {
+    sentimentScore: { $ne: null, $exists: true },
+    timestamp: { $gte: thirtyDaysAgo },
+    ...additionalFilters
+  }
+
+  const [allFeedbacks, sentimentFeedbacks] = await Promise.all([
+    Feedback.aggregate([
+      { $match: allMatchConditions },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          count: { $sum: 1 }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ]),
+    Feedback.aggregate([
+      { $match: sentimentMatchConditions },
+      {
+        $group: {
+          _id: { $dateToString: { format: "%Y-%m-%d", date: "$timestamp" } },
+          averageSentiment: { $avg: '$sentimentScore' },
+          count: { $sum: 1 },
+          positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 60] }, 1, 0] } },
+          neutral: { $sum: { $cond: [{ $and: [{ $gte: ['$sentimentScore', 40] }, { $lt: ['$sentimentScore', 60] }] }, 1, 0] } },
+          negative: { $sum: { $cond: [{ $lt: ['$sentimentScore', 40] }, 1, 0] } }
+        }
+      },
+      { $sort: { _id: 1 } }
+    ])
   ])
+
+  // Merge the results
+  const result = allFeedbacks.map(dayData => {
+    const sentimentData = sentimentFeedbacks.find(s => s._id === dayData._id)
+    return {
+      date: dayData._id,
+      averageSentiment: sentimentData ? Math.round(sentimentData.averageSentiment * 10) / 10 : 0,
+      count: sentimentData ? sentimentData.count : dayData.count,
+      positive: sentimentData ? sentimentData.positive : 0,
+      neutral: sentimentData ? sentimentData.neutral : 0,
+      negative: sentimentData ? sentimentData.negative : 0,
+      _id: 0
+    }
+  })
+
+  console.log(`📋 Feedback trend: ${result.length} days, ${sentimentFeedbacks.length} with sentiment`)
+  return result
 }
 
 // Get department analytics
@@ -253,7 +333,7 @@ const getWorkerPerformance = async () => {
               _id: null,
               count: { $sum: 1 },
               avgSentiment: { $avg: '$sentimentScore' },
-              positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 20] }, 1, 0] } }
+              positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 60] }, 1, 0] } }
             }
           }
         ],
@@ -271,7 +351,7 @@ const getWorkerPerformance = async () => {
               _id: null,
               count: { $sum: 1 },
               avgSentiment: { $avg: '$sentimentScore' },
-              positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 20] }, 1, 0] } }
+              positive: { $sum: { $cond: [{ $gte: ['$sentimentScore', 60] }, 1, 0] } }
             }
           }
         ],
@@ -319,7 +399,7 @@ const getSentimentComparison = async () => {
     {
       $bucket: {
         groupBy: '$sentimentScore',
-        boundaries: [-100, -20, 20, 100],
+        boundaries: [0, 40, 60, 100],
         default: 'other',
         output: {
           count: { $sum: 1 },
@@ -334,7 +414,7 @@ const getSentimentComparison = async () => {
     {
       $bucket: {
         groupBy: '$sentimentScore',
-        boundaries: [-100, -20, 20, 100],
+        boundaries: [0, 40, 60, 100],
         default: 'other',
         output: {
           count: { $sum: 1 },

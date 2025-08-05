@@ -15,7 +15,6 @@ app.use(express.json())
 
 import authRoutes from './routes/auth.routes.js'
 import contactRoutes from './routes/contact.routes.js'
-import analysisRoutes from './routes/analysis.routes.js'
 import feedbackRoutes from './routes/feedback.routes.js'
 import workerRoutes from './routes/worker.routes.js'
 import momentRoutes from './routes/moment.routes.js'
@@ -31,7 +30,6 @@ app.use('/api/contact', contactRoutes)
 app.use('/api/feedback', feedbackRoutes)
 app.use('/api/workers', workerRoutes)
 app.use('/api/moments', momentRoutes)
-app.use('/api/analysis', analysisRoutes)
 app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
 app.use('/api/rooms', roomRoutes);
 app.use('/api/tenants', tenantRoutes)

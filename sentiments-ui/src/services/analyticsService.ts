@@ -255,8 +255,6 @@ class AnalyticsService {
     const metrics = {
       totalFeedback: overview.feedbacks.totalFeedbacks,
       avgSentimentScore: Math.round(overview.combined.averageSentiment * 10) / 10,
-      responseRate: 85.2, // This would be calculated from response tracking
-      avgResponseTime: 2.1 // This would come from response time tracking
     }
 
     // Analytics table data using new structure
@@ -266,7 +264,6 @@ class AnalyticsService {
       neutralSentiment: overview.combined.neutral,
       negativeSentiment: overview.combined.negative,
       engagementScore: Math.round(overview.combined.averageSentiment * 100),
-      responseRate: 85.2,
       averageRating: Math.round((overview.combined.averageSentiment + 1) * 2.5), // Convert to 5-star scale
       momentsShared: overview.moments.totalMoments,
       activeUsers: data.totalWorkers || 0,
@@ -352,8 +349,6 @@ export function useAnalyticsService() {
           metrics: {
             totalFeedback: 0,
             avgSentimentScore: 0,
-            responseRate: 0,
-            avgResponseTime: 0
           }
         },
         analyticsData: {
@@ -362,12 +357,10 @@ export function useAnalyticsService() {
           neutralSentiment: 0,
           negativeSentiment: 0,
           engagementScore: 0,
-          responseRate: 0,
           averageRating: 0,
           momentsShared: 0,
           activeUsers: 0,
           completionRate: 0,
-          averageResponseTime: 0,
           satisfactionScore: 0
         },
         workers: [{ id: "all", name: "All Workers", department: "All" }],

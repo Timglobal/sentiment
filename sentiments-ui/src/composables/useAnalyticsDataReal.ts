@@ -40,8 +40,6 @@ export interface RealTimeData {
   metrics: {
     totalFeedback: number
     avgSentimentScore: number
-    responseRate: number
-    avgResponseTime: number
   }
 }
 
@@ -86,8 +84,6 @@ export function useAnalyticsData() {
     metrics: {
       totalFeedback: 0,
       avgSentimentScore: 0,
-      responseRate: 0,
-      avgResponseTime: 0,
     },
   })
 
@@ -98,12 +94,10 @@ export function useAnalyticsData() {
     neutralSentiment: 0,
     negativeSentiment: 0,
     engagementScore: 0,
-    responseRate: 0,
     averageRating: 0,
     momentsShared: 0,
     activeUsers: 0,
     completionRate: 0,
-    averageResponseTime: 0,
     satisfactionScore: 0
   })
 
@@ -158,14 +152,6 @@ export function useAnalyticsData() {
       change: "+3.1%",
       trend: "up",
       status: "good",
-    },
-    {
-      metric: "Response Rate",
-      current: `${analyticsData.value.responseRate.toFixed(1)}%`,
-      previous: `${(analyticsData.value.responseRate * 0.96).toFixed(1)}%`,
-      change: "+4.2%",
-      trend: "up",
-      status: "excellent",
     },
     {
       metric: "Average Satisfaction Score",

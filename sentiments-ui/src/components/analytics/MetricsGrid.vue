@@ -1,5 +1,5 @@
 <template>
-  <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+  <div class="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2">
     <MetricCard
       title="Total Feedback"
       :value="realTimeData.metrics.totalFeedback"
@@ -15,34 +15,16 @@
       :icon="TrendingUp"
       suffix="/10"
     />
-    <MetricCard
-      title="Response Rate"
-      :value="realTimeData.metrics.responseRate"
-      :change="`${realTimeData.metrics.responseRate > 94 ? '+' : ''}${Math.round((realTimeData.metrics.responseRate - 94) * 10) / 10}%`"
-      :changeType="realTimeData.metrics.responseRate > 94 ? 'positive' : 'negative'"
-      :icon="Activity"
-      suffix="%"
-    />
-    <MetricCard
-      title="Avg Response Time"
-      :value="realTimeData.metrics.avgResponseTime"
-      :change="`${realTimeData.metrics.avgResponseTime < 2.1 ? '-' : '+'}${Math.abs(Math.round((realTimeData.metrics.avgResponseTime - 2.1) * 10) / 10)}`"
-      :changeType="realTimeData.metrics.avgResponseTime < 2.1 ? 'positive' : 'negative'"
-      :icon="Clock"
-      suffix="h"
-    />
   </div>
 </template>
 
 <script setup lang="ts">
 import MetricCard from '@/components/MetricCard.vue'
-import { MessageSquare, TrendingUp, Activity, Clock } from 'lucide-vue-next'
+import { MessageSquare, TrendingUp } from 'lucide-vue-next'
 
 interface RealTimeMetrics {
   totalFeedback: number
   avgSentimentScore: number
-  responseRate: number
-  avgResponseTime: number
 }
 
 interface Props {
