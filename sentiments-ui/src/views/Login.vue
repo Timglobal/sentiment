@@ -125,9 +125,9 @@
                 <input type="checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" />
                 <span class="ml-2 text-sm text-gray-600">Remember me</span>
               </label>
-              <a href="#" class="text-sm text-blue-600 hover:text-blue-500">
+              <router-link to="/forgot-password" class="text-sm text-blue-600 hover:text-blue-500">
                 Forgot password?
-              </a>
+              </router-link>
             </div>
 
             <Button
@@ -187,8 +187,8 @@ const handleLogin = async () => {
   const res = await fetch(`${API_BASE_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      email: email.value, 
+    body: JSON.stringify({
+      email: email.value,
       password: password.value,
       companyId: companyId.value
     })
@@ -214,7 +214,7 @@ const handleLogin = async () => {
 } catch (err: any) {
   toast.error('Login failed: ' + err.message)
 }
-  
+
   isLoading.value = false
 }
 </script>
