@@ -1,0 +1,44 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Timglobal
+
+on:
+  push:
+    branches: [ "main" ]
+    
+jobs:
+  build:
+
+    runs-on: self-hosted
+    
+    strategy:
+      matrix:
+        node-version: [22.15.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+    env:
+      MONGODB_URI: ${{secrets.MONGODB_URI}}
+      NEXT_PUBLIC_ADMIN_USERNAME: ${{secrets.NEXT_PUBLIC_ADMIN_USERNAME}}
+      NEXT_PUBLIC_ADMIN_PASSWORD: ${{secrets.NEXT_PUBLIC_ADMIN_PASSWORD}}
+      OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
+      EMAIL_PASS: ${{secrets.EMAIL_PASS}}
+      EMAIL_USER: ${{secrets.EMAIL_USER}}
+      JWT_SECRET: ${{secrets.JWT_SECRET}}
+      JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
+      SALT_ROUNDS: ${{secrets.SALT_ROUNDS}}
+      VITE_API_BASE_URL: ${{secrets.VITE_API_BASE_URL}}
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - run: cd ./sentiments-ui && npm install --force
+    - run: npm run build
+    - run: pm2 restart timglobal_frontend --update-env || pm2 start npm --name "timglobal_frontend" -- start --update-env
+    - run: pm2 save
+    - run: cd .. && cd ./sentiments-api
+    - run: pm2 restart timglobal_backend --update-env || pm2 start npm --name "timglobal_backend" -- start --update-env
+    - run: pm2 save
+
