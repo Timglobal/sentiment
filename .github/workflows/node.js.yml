@@ -34,8 +34,8 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         
-    - run: pwd && cd ./sentiment/sentiments-ui && npm install --force
-    - run: npm run build
+    - run: pwd && cd ./sentiments-ui && npm install --force
+    - run: pwd && npm run build
     - run: pm2 restart timglobal_frontend --update-env || pm2 start npm --name "timglobal_frontend" -- start --update-env
     - run: pm2 save
     - run: cd .. && cd /sentiments-api
