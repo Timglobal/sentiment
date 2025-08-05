@@ -25,6 +25,16 @@ export async function submitFeedback(req, res) {
       return res.status(404).json({ message: 'Worker not found' })
     }
 
+    // If user is authenticated, ensure worker is in the same company
+    if (req.user?.id) {
+      const currentUser = await Worker.findById(req.user.id).populate('company')
+      if (currentUser && currentUser.company && worker.company) {
+        if (currentUser.company._id.toString() !== worker.company.toString()) {
+          return res.status(403).json({ message: 'Cannot submit feedback for workers outside your company' })
+        }
+      }
+    }
+
     // Get sentiment score
     const sentimentScore = await getSentimentScore(message);
     
@@ -69,11 +79,36 @@ export async function getFeedbackStats(req, res) {
   try {
     const { workerId, dateFrom, dateTo } = req.query
     
-    // Build match query
-    const matchQuery = {}
-    if (workerId) {
-      matchQuery.workerId = new mongoose.Types.ObjectId(workerId)
+    // Get current user and their company to filter feedbacks by company
+    const userId = req.user.id
+    const user = await Worker.findById(userId).populate('company')
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
     }
+    
+    // Build match query with company filtering
+    const matchQuery = {}
+    
+    // Only show feedbacks for workers in the same company
+    if (user.company) {
+      const companyUsers = await Worker.find({ company: user.company._id }, '_id')
+      const companyUserIds = companyUsers.map(u => u._id)
+      matchQuery.workerId = { $in: companyUserIds }
+    }
+    
+    // Additional workerId filter if specified
+    if (workerId) {
+      if (matchQuery.workerId) {
+        // Ensure the specific workerId is also in the company
+        matchQuery.workerId = { 
+          $in: matchQuery.workerId.$in.filter(id => id.toString() === workerId) 
+        }
+      } else {
+        matchQuery.workerId = new mongoose.Types.ObjectId(workerId)
+      }
+    }
+    
     if (dateFrom || dateTo) {
       matchQuery.timestamp = {}
       if (dateFrom) matchQuery.timestamp.$gte = new Date(dateFrom)
@@ -129,11 +164,36 @@ export async function getAllFeedbacks(req, res) {
   try {
     const { page = 1, limit = 10, sortBy = 'timestamp', sortOrder = 'desc', workerId, sentimentFilter } = req.query
     
-    // Build query filters
-    const query = {}
-    if (workerId) {
-      query.workerId = workerId
+    // Get current user and their company to filter feedbacks by company
+    const userId = req.user.id
+    const user = await Worker.findById(userId).populate('company')
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
     }
+    
+    // Build query filters with company filtering
+    const query = {}
+    
+    // Only show feedbacks for workers in the same company
+    if (user.company) {
+      const companyUsers = await Worker.find({ company: user.company._id }, '_id')
+      const companyUserIds = companyUsers.map(u => u._id)
+      query.workerId = { $in: companyUserIds }
+    }
+    
+    // Additional workerId filter if specified
+    if (workerId) {
+      if (query.workerId) {
+        // Ensure the specific workerId is also in the company
+        query.workerId = { 
+          $in: query.workerId.$in.filter(id => id.toString() === workerId) 
+        }
+      } else {
+        query.workerId = workerId
+      }
+    }
+    
     if (sentimentFilter) {
       if (sentimentFilter === 'positive') {
         query.sentimentScore = { $gte: 70 }

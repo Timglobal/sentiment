@@ -21,6 +21,7 @@ import momentRoutes from './routes/moment.routes.js'
 import roomRoutes from './routes/room.routes.js'
 import tenantRoutes from './routes/tenants.routes.js'
 import analyticsRoutes from './routes/analytics.routes.js'
+import dashboardRoutes from './routes/dashboard.routes.js'
 import { startRoomMonitor } from './utils/scheduler.js'
 import { startAgenda, stopAgenda } from './utils/jobScheduler.js'
 import waitlistRoutes from './routes/waitlist.routes.js'
@@ -34,6 +35,7 @@ app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
 app.use('/api/rooms', roomRoutes);
 app.use('/api/tenants', tenantRoutes)
 app.use('/api/analytics', analyticsRoutes)
+app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/waitlist', waitlistRoutes)
 
 app.get("/",(req, res) => {

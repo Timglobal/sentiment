@@ -109,7 +109,7 @@
                   id="companyAddress"
                   v-model="companyAddress"
                   type="text"
-                  placeholder="123 Healthcare St, Medical City, MC 12345"
+                  placeholder="211 Lambscote Close, Shirley, Birmingham, B90 1NS, UK"
                   required
                   class="w-full"
                 />
