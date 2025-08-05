@@ -33,7 +33,7 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
-        cache: 'npm'
+        
     - run: cd ./sentiments-ui && npm install --force
     - run: npm run build
     - run: pm2 restart timglobal_frontend --update-env || pm2 start npm --name "timglobal_frontend" -- start --update-env
