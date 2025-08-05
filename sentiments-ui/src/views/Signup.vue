@@ -25,18 +25,7 @@
           <div class="mb-6">
             <Label class="text-sm font-medium text-gray-700 mb-3 block">Account Type</Label>
             <div class="grid grid-cols-3 gap-2">
-              <button
-                :class="[
-                  'p-3 rounded-lg border-2 transition-all text-xs font-medium',
-                  selectedRole === 'staff'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                ]"
-                @click="selectedRole = 'staff'"
-              >
-                <User class="w-4 h-4 mx-auto mb-1" />
-                Staff Member
-              </button>
+
               <button
                 :class="[
                   'p-3 rounded-lg border-2 transition-all text-xs font-medium',
@@ -48,18 +37,6 @@
               >
                 <Shield class="w-4 h-4 mx-auto mb-1" />
                 Administrator
-              </button>
-              <button
-                :class="[
-                  'p-3 rounded-lg border-2 transition-all text-xs font-medium',
-                  selectedRole === 'patient'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                ]"
-                @click="selectedRole = 'patient'"
-              >
-                <Heart class="w-4 h-4 mx-auto mb-1" />
-                Patient
               </button>
             </div>
           </div>
@@ -209,10 +186,10 @@
               </Label>
               <div class="flex items-center space-x-4">
                 <div class="w-16 h-16 rounded-full border-2 border-gray-300 border-dashed flex items-center justify-center overflow-hidden bg-gray-50">
-                  <img 
-                    v-if="avatarUrl" 
-                    :src="avatarUrl" 
-                    alt="Avatar preview" 
+                  <img
+                    v-if="avatarUrl"
+                    :src="avatarUrl"
+                    alt="Avatar preview"
                     class="w-full h-full object-cover"
                   />
                   <Camera v-else class="w-6 h-6 text-gray-400" />
@@ -330,44 +307,44 @@ const handleSignup = async () => {
     toast.error('First name is required')
     return
   }
-  
+
   if (!lastName.value.trim()) {
     toast.error('Last name is required')
     return
   }
-  
+
   if (!email.value.trim()) {
     toast.error('Email address is required')
     return
   }
-  
+
   // Email format validation
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!emailRegex.test(email.value)) {
     toast.error('Please enter a valid email address')
     return
   }
-  
+
   if (!password.value) {
     toast.error('Password is required')
     return
   }
-  
+
   if (password.value.length < 6) {
     toast.error('Password must be at least 6 characters long')
     return
   }
-  
+
   if (!confirmPassword.value) {
     toast.error('Please confirm your password')
     return
   }
-  
+
   if (password.value !== confirmPassword.value) {
     toast.error('Passwords do not match')
     return
   }
-  
+
   // Role-specific field validation
   if (selectedRole.value === 'admin') {
     if (!companyName.value.trim()) {
@@ -384,12 +361,12 @@ const handleSignup = async () => {
       return
     }
   }
-  
+
   if (!acceptTerms.value) {
     toast.error('You must accept the terms and conditions')
     return
   }
-  
+
   isLoading.value = true
   try {
     const formData = new FormData()
@@ -423,7 +400,7 @@ const handleSignup = async () => {
   } catch (err: any) {
     toast.error('Signup failed: ' + err.message)
   }
-  
+
   isLoading.value = false
 }
 
