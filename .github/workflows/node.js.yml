@@ -17,7 +17,7 @@ jobs:
         node-version: [22.15.0]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     env:
-      MONGODB_URI: ${{secrets.MONGODB_URI}}
+      MONGO_URI: ${{secrets.MONGO_URI}}
       NEXT_PUBLIC_ADMIN_USERNAME: ${{secrets.NEXT_PUBLIC_ADMIN_USERNAME}}
       NEXT_PUBLIC_ADMIN_PASSWORD: ${{secrets.NEXT_PUBLIC_ADMIN_PASSWORD}}
       OPENAI_API_KEY: ${{secrets.OPENAI_API_KEY}}
