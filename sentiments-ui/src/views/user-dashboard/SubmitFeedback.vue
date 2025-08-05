@@ -19,7 +19,7 @@
           </p>
           <div class="bg-blue-50 p-4 rounded-lg">
             <p class="text-sm text-blue-800">
-              <strong>What happens next?</strong> Your feedback will be reviewed by our team and appropriate actions will be taken. 
+              <strong>What happens next?</strong> Your feedback will be reviewed by our team and appropriate actions will be taken.
               You may receive follow-up communication if needed.
             </p>
           </div>
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow-sm border">
           <div class="p-4">
             <div class="flex items-center space-x-3">
@@ -69,7 +69,7 @@
             </div>
           </div>
         </div>
-        
+
         <div class="bg-white rounded-lg shadow-sm border">
           <div class="p-4">
             <div class="flex items-center space-x-3">
@@ -150,7 +150,7 @@
                 <div class="text-sm text-blue-800">
                   <p class="font-medium mb-1">Privacy & Confidentiality</p>
                   <p>
-                    Your feedback is treated confidentially and will only be shared with relevant team members 
+                    Your feedback is treated confidentially and will only be shared with relevant team members
                     for improvement purposes. We respect your privacy and handle all feedback responsibly.
                   </p>
                 </div>
@@ -166,8 +166,8 @@
               >
                 Clear Form
               </button>
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 :disabled="!feedback.trim() || !category || isSubmitting"
                 class="min-w-[120px] px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
@@ -221,7 +221,8 @@
 import { ref } from 'vue'
 import UserDashboardLayout from '../../components/UserDashboardLayout.vue'
 import SelectWorker from '../../components/SelectWorker.vue'
-import { 
+import type { Worker } from '@/services/workerService'
+import {
   MessageSquare,
   Send,
   CheckCircle,
@@ -231,13 +232,6 @@ import {
   AlertCircle,
   Clock
 } from 'lucide-vue-next'
-
-interface Worker {
-  id: number
-  name: string
-  role: string
-  department: string
-}
 
 const feedback = ref("")
 const category = ref("")
@@ -260,13 +254,13 @@ const handleSubmit = async () => {
   }
 
   isSubmitting.value = true
-  
+
   // Simulate API call
   await new Promise(resolve => setTimeout(resolve, 2000))
-  
+
   isSubmitting.value = false
   submitted.value = true
-  
+
   // Reset form after success message
   setTimeout(() => {
     submitted.value = false
