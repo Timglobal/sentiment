@@ -393,7 +393,7 @@ const loadDashboardData = async () => {
 
 const getActionCardClass = (color: string) => {
   const colorClasses = {
-    blue: 'bg-blue-700 text-white hover:bg-blue-800',
+    blue: 'bg-blue-800 text-white',
     green: 'border-2 border-dashed border-gray-300 hover:border-green-400 hover:bg-green-50',
     purple: 'bg-purple-100 border-purple-200 hover:bg-purple-200',
     orange: 'bg-orange-100 border-orange-200 hover:bg-orange-200'
