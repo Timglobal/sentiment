@@ -24,10 +24,11 @@ export default defineConfig({
   },
   server: {
     port: 3001,
-    allowedHosts: ["3001--main--safehands--emma66886.workspace.kinemlabs.com"]
+    allowedHosts: ["3001--main--safehands--emma66886.workspace.kinemlabs.com","timglobal.uk"]
   },
   preview: {
     port: 4173,
-    host: true  // Allow external connections
+    host: true,  // Allow external connections
+    allowedHosts: ["timglobal.uk"]
   }
 })
