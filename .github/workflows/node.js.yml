@@ -34,11 +34,11 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         
-    - run: cd ./sentiments-ui && npm install --force
+    - run: cd ./sentiment/sentiments-ui && npm install --force
     - run: npm run build
     - run: pm2 restart timglobal_frontend --update-env || pm2 start npm --name "timglobal_frontend" -- start --update-env
     - run: pm2 save
-    - run: cd .. && cd ./sentiments-api
+    - run: cd .. && cd /sentiments-api
     - run: pm2 restart timglobal_backend --update-env || pm2 start npm --name "timglobal_backend" -- start --update-env
     - run: pm2 save
 
