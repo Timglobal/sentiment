@@ -6,6 +6,7 @@ import nodemailer from 'nodemailer';
 // 🌐 Load and verify environment variables
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
+const FROM_EMAIL = 'admin@timglobal.uk';
 
 if (!EMAIL_USER || !EMAIL_PASS) {
   console.error('❗ Missing EMAIL_USER or EMAIL_PASS in environment — emails will NOT be sent.');
@@ -13,7 +14,7 @@ if (!EMAIL_USER || !EMAIL_PASS) {
 
 // 🚚 Set up nodemailer transporter
 const transporter = nodemailer.createTransport({
-  host: 'smtp.gmail.com',
+  host: 'smtp.sendgrid.net',
   port: 465,
   secure: true,
   auth: {
@@ -42,7 +43,7 @@ export const sendRoomNotification = async (to, subject, message) => {
   }
 
   const mailOptions = {
-    from: `"Sentiment App" <${EMAIL_USER}>`,
+    from: `"Sentiment App" <${FROM_EMAIL}>`,
     to,
     subject,
     text: message,
@@ -93,7 +94,7 @@ The Sentiment Healthcare Team
   `.trim();
 
   const mailOptions = {
-    from: `"Sentiment Healthcare Platform" <${EMAIL_USER}>`,
+    from: `"Sentiment Healthcare Platform" <${FROM_EMAIL}>`,
     to,
     subject,
     text: message,
@@ -171,11 +172,11 @@ Welcome aboard!
 
 Best regards,
 ${companyName} Team
-Sentiment Healthcare Platform
+Timglobal Healthcare Platform
   `.trim();
 
   const mailOptions = {
-    from: `"${companyName} via Sentiment Healthcare" <${EMAIL_USER}>`,
+    from: `"${companyName} via Timglobal Healthcare" <${FROM_EMAIL}>`,
     to,
     subject,
     text: message,

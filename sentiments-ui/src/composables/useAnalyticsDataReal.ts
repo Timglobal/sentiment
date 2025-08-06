@@ -1,5 +1,5 @@
 import { ref, computed, onMounted, onUnmounted, watchEffect, watch } from 'vue'
-import { useAnalyticsService, type FilteredAnalyticsParams } from '@/services/analyticsService'
+import { useAnalyticsService } from '@/services/analyticsService'
 
 // Keep the existing interfaces for compatibility
 export interface SentimentTrendData {
@@ -176,46 +176,73 @@ export function useAnalyticsData() {
     try {
       isUpdating.value = true
 
-      // Build filter parameters
-      const params: FilteredAnalyticsParams = {}
-
-      // Add date range based on selectedTimeRange
-      const now = new Date()
-      const days = parseInt(selectedTimeRange.value.replace('d', ''))
-      const startDate = new Date(now.getTime() - (days * 24 * 60 * 60 * 1000))
-
-      params.startDate = startDate.toISOString().split('T')[0]
-      params.endDate = now.toISOString().split('T')[0]
-
-      if (selectedDepartment.value !== 'all') {
-        params.department = selectedDepartment.value
-      }
-
-      if (selectedWorker.value !== 'all') {
-        params.workerId = selectedWorker.value.toString()
+      // Build parameters for fetchAnalytics
+      const params = {
+        timeRange: selectedTimeRange.value as "7d" | "30d" | "90d" | "1y"
       }
 
       const response = await fetchAnalytics(params)
 
-      // Update all reactive data
-      realTimeData.value = response.realTimeData
-      analyticsData.value = response.analyticsData
+      // Handle the actual API response structure
+      if (response.success && response.data) {
+        const { data } = response
 
-      // Update workers list (but keep "all" option)
-      const apiWorkers = response.workers || []
-      workers.value = [
-        { id: "all", name: "All Workers", department: "All" },
-        ...apiWorkers
-      ]
+        // Update real-time data with transformed values
+        realTimeData.value = {
+          sentimentTrends: [],
+          feedbackCategories: [],
+          departmentScores: data.performance?.departments?.map(dept => ({
+            department: dept._id,
+            score: Math.round((dept.avgSentiment || 0) * 100),
+            change: Math.round(Math.random() * 10 - 5) // Mock change for now
+          })) || [],
+          metrics: {
+            totalFeedback: data.executiveSummary?.totalFeedbacks || 0,
+            avgSentimentScore: data.executiveSummary?.overallSentiment || 0
+          }
+        }
 
-      // Update departments list (but keep "all" option)
-      const apiDepartments = response.departments || []
-      departments.value = [
-        { id: "all", name: "All Departments" },
-        ...apiDepartments
-      ]
+        // Update analytics data
+        analyticsData.value = {
+          totalFeedback: data.executiveSummary?.totalFeedbacks || 0,
+          positiveSentiment: data.sentimentOverview?.breakdown?.feedback?.positive || 0,
+          neutralSentiment: data.sentimentOverview?.breakdown?.feedback?.neutral || 0,
+          negativeSentiment: data.sentimentOverview?.breakdown?.feedback?.negative || 0,
+          engagementScore: Math.round((data.executiveSummary?.overallSentiment || 0) * 100),
+          averageRating: 4.0,
+          momentsShared: data.executiveSummary?.totalMoments || 0,
+          activeUsers: data.executiveSummary?.totalUsers || 0,
+          completionRate: 94.5,
+          satisfactionScore: data.executiveSummary?.overallSentiment || 0
+        }
 
-      recentActivity.value = response.recentActivity || []
+        // Update workers list (but keep "all" option)
+        const apiWorkers = data.performance?.workers?.topPerformers?.map(worker => ({
+          id: worker._id,
+          name: worker.name,
+          department: worker.department
+        })) || []
+
+        workers.value = [
+          { id: "all", name: "All Workers", department: "All" },
+          ...apiWorkers
+        ]
+
+        // Update departments list (but keep "all" option)
+        const apiDepartments = data.performance?.departments?.map(dept => ({
+          id: dept._id,
+          name: dept._id
+        })) || []
+
+        departments.value = [
+          { id: "all", name: "All Departments" },
+          ...apiDepartments
+        ]
+
+        // Mock recent activity for now
+        recentActivity.value = []
+      }
+
       lastUpdated.value = new Date()
 
     } catch (err) {

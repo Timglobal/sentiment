@@ -1,6 +1,9 @@
 import { OpenAI } from "openai";
 import dotenv from "dotenv";
-dotenv.config()
+import path from "path";
+
+dotenv.config({ path: path.resolve('./.env') })
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // make sure to set your API key in .env
 });

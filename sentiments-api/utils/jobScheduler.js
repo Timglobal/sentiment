@@ -131,6 +131,35 @@ export async function queueSentimentAnalysis(momentId, mediaPath, mediaType) {
   }
 }
 
+// Helper function to check if agenda is running
+export function isAgendaRunning() {
+  return agenda && agenda._ready
+}
+
+// Helper function to check if agenda is currently processing jobs
+export async function isAgendaIdle() {
+  if (!agenda || !agenda._ready) {
+    return false // Agenda not ready, not idle
+  }
+  
+  try {
+    // Check for running jobs
+    const runningJobs = await agenda.jobs({ 
+      $or: [
+        { 'lockedAt': { $exists: true }, 'lastFinishedAt': { $exists: false } },
+        { 'lockedAt': { $gt: new Date(Date.now() - 30000) } } // Jobs locked in last 30 seconds
+      ]
+    })
+    
+    const isIdle = runningJobs.length === 0
+    console.log(`📋 Agenda status: ${isIdle ? 'IDLE' : 'BUSY'} (${runningJobs.length} active jobs)`)
+    return isIdle
+  } catch (error) {
+    console.error('❌ Error checking agenda status:', error)
+    return false // Assume busy if we can't check
+  }
+}
+
 // Helper function to queue file cleanup
 export async function queueFileCleanup(filePath, delayHours = 24) {
   try {

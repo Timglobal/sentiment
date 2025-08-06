@@ -151,8 +151,7 @@ const fileInput = ref<HTMLInputElement>()
 
 // Computed
 const isFormValid = computed(() => {
-  return form.value.description.trim() &&
-         selectedWorker.value &&
+  return selectedWorker.value &&
          selectedFile.value
 })
 

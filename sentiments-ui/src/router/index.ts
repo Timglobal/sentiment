@@ -17,6 +17,7 @@ import Signup from '../views/Signup.vue'
 import Dashboard from '@/views/dashboard/Dashboard.vue'
 import SubmitFeedback from '../views/dashboard/SubmitFeedback.vue'
 import UploadMoment from '../views/dashboard/UploadMoment.vue'
+import ViewMoments from '../views/dashboard/ViewMoments.vue'
 import ManageWorkers from '../views/dashboard/ManageWorkers.vue'
 import Analytics from '../views/dashboard/Analytics.vue'
 import VoiceChat from '../views/dashboard/VoiceChat.vue'
@@ -71,6 +72,12 @@ const router = createRouter({
       path: '/dashboard/upload-moment',
       name: 'DashboardUploadMoment',
       component: UploadMoment,
+      meta: { layout: 'dashboard' }
+    },
+    {
+      path: '/dashboard/view-moments',
+      name: 'DashboardViewMoments',
+      component: ViewMoments,
       meta: { layout: 'dashboard' }
     },
     {
