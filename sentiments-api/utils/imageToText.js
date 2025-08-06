@@ -1,6 +1,9 @@
 import { OpenAI } from 'openai'
 import fs from 'fs'
 import path from 'path'
+import dotenv from 'dotenv'
+
+dotenv.config({ path: path.resolve('./.env') })
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -31,7 +34,7 @@ export async function analyzeImageText(imagePath) {
     else if (fileExtension === '.webp') mimeType = 'image/webp'
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4-vision-preview",
+      model: "gpt-4o",
       messages: [
         {
           role: "user",

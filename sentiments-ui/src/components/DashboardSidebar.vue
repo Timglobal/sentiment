@@ -79,7 +79,8 @@ import {
   X,
   UserCircle,
   Mic,
-  ClipboardList
+  ClipboardList,
+  EyeIcon
 } from 'lucide-vue-next'
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth';
@@ -107,6 +108,7 @@ const sidebarItems = [
   { id: "submit-feedback", label: "Submit Feedback", icon: MessageSquare, href: "/dashboard/submit-feedback" },
   { id: "manage-feedback", label: "Manage Feedbacks", icon: ClipboardList, href: "/dashboard/managefeedbacks" },
   { id: "upload-moment", label: "Upload Moment", icon: Upload, href: "/dashboard/upload-moment" },
+  { id: "view-moment", label: "View Moment", icon: EyeIcon, href: "/dashboard/view-moments" },
   { id: "manage-workers", label: "Manage Workers", icon: Users, href: "/dashboard/manage-workers" },
   { id: "analytics", label: "Analytics", icon: BarChart3, href: "/dashboard/analytics" },
   { id: "voice-chat", label: "AI Voice Chat", icon: Mic, href: "/dashboard/voice-chat" },

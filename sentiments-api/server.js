@@ -31,7 +31,12 @@ app.use('/api/contact', contactRoutes)
 app.use('/api/feedback', feedbackRoutes)
 app.use('/api/workers', workerRoutes)
 app.use('/api/moments', momentRoutes)
-app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')))
+
+// Serve static files from uploads directory
+const uploadsPath = path.join(process.cwd(), 'uploads')
+console.log('📁 Uploads path:', uploadsPath)
+app.use('/uploads', express.static(uploadsPath))
+
 app.use('/api/rooms', roomRoutes);
 app.use('/api/tenants', tenantRoutes)
 app.use('/api/analytics', analyticsRoutes)

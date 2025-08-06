@@ -1,48 +1,173 @@
 import { ref } from 'vue'
 import { API_BASE_URL } from '@/config'
 
-// Types for API responses - Updated to match new backend
-export interface SentimentOverview {
-  moments: {
-    totalMoments: number
-    averageSentiment: number
-    positive: number
-    neutral: number
-    negative: number
-  }
-  feedbacks: {
-    totalFeedbacks: number
-    averageSentiment: number
-    positive: number
-    neutral: number
-    negative: number
-  }
-  combined: {
-    total: number
-    averageSentiment: number
-    positive: number
-    neutral: number
-    negative: number
+// Base response interface
+export interface AnalyticsResponse {
+  success: boolean
+  message?: string
+  data?: {
+    executiveSummary?: {
+      overallSentiment?: number
+      totalFeedbacks?: number
+      totalMoments?: number
+      totalUsers?: number
+    }
+    sentimentOverview?: {
+      breakdown?: {
+        feedback?: {
+          excellent?: number
+          veryPositive?: number
+          positive?: number
+          neutral?: number
+          negative?: number
+          veryNegative?: number
+          avgSentiment?: number
+          totalAnalyzed?: number
+        }
+        moments?: {
+          excellent?: number
+          veryPositive?: number
+          positive?: number
+          neutral?: number
+          negative?: number
+          veryNegative?: number
+          avgSentiment?: number
+          totalAnalyzed?: number
+        }
+      }
+    }
+    performance?: {
+      departments?: Array<{
+        _id: string
+        totalWorkers?: number
+        totalFeedbacks?: number
+        totalMoments?: number
+        avgSentiment?: number
+        workerCount?: number
+        overallSentiment?: number
+      }>
+      workers?: {
+        topPerformers?: Array<{
+          _id: string
+          name: string
+          department: string
+          feedbackCount?: number
+          momentCount?: number
+          totalFeedbacks?: number
+          totalMoments?: number
+          avgSentiment?: number
+        }>
+        needsAttention?: Array<{
+          _id: string
+          name: string
+          department: string
+          feedbackCount?: number
+          momentCount?: number
+          totalFeedbacks?: number
+          totalMoments?: number
+          avgSentiment?: number
+        }>
+      }
+    }
+    insights?: Array<{
+      type: string
+      message: string
+    }>
   }
 }
 
-export interface SentimentTrend {
-  date: string
-  averageSentiment: number
-  count: number
-  positive: number
-  neutral: number
-  negative: number
+// Filtered analytics parameters
+export interface FilteredAnalyticsParams {
+  startDate?: string
+  endDate?: string
+  department?: string
+  workerId?: string
+  source?: string
+  timeRange?: string
 }
 
-export interface DepartmentAnalytics {
-  department: string
-  workerCount: number
-  totalMoments: number
+// Types for new backend API response structure
+export interface ExecutiveSummary {
   totalFeedbacks: number
-  momentsSentiment: number
-  feedbacksSentiment: number
+  totalMoments: number
+  totalUsers: number
   overallSentiment: number
+}
+
+export interface SentimentBreakdown {
+  feedback: {
+    avgSentiment: number
+    totalAnalyzed: number
+    excellent: number
+    veryPositive: number
+    positive: number
+    neutral: number
+    negative: number
+    veryNegative: number
+    maxSentiment: number
+    minSentiment: number
+  }
+  moments: {
+    avgSentiment: number
+    totalAnalyzed: number
+    excellent: number
+    veryPositive: number
+    positive: number
+    neutral: number
+    negative: number
+    veryNegative: number
+    maxSentiment: number
+    minSentiment: number
+  }
+}
+
+export interface SentimentOverview {
+  breakdown: SentimentBreakdown
+  combined: {
+    avgSentiment: number
+    totalAnalyzed: number
+  }
+}
+
+export interface DailyTrend {
+  _id: string
+  avgSentiment: number
+  count: number
+}
+
+export interface WeeklyTrend {
+  current: {
+    count: number
+    avgSentiment: number
+  }
+  previous: {
+    count: number
+    avgSentiment: number
+  }
+  growth: number
+}
+
+export interface HourlyActivity {
+  _id: number
+  count: number
+  avgSentiment: number
+}
+
+export interface Trends {
+  daily: DailyTrend[]
+  weekly: WeeklyTrend
+  hourly: HourlyActivity[]
+}
+
+export interface DepartmentAnalysis {
+  _id: string
+  totalWorkers: number
+  totalFeedbacks: number
+  totalMoments: number
+  avgSentiment: number
+  workerCount: number
+  overallSentiment: number
+  positivePercentage: number
 }
 
 export interface WorkerPerformance {
@@ -51,72 +176,75 @@ export interface WorkerPerformance {
   email: string
   role: string
   department: string
-  totalMoments: number
+  feedbackCount: number
+  momentCount: number
   totalFeedbacks: number
-  momentsSentiment: number
-  feedbacksSentiment: number
-  overallSentiment: number
-  positiveMoments: number
-  positiveFeedbacks: number
-  totalPositive: number
+  totalMoments: number
+  avgSentiment: number
 }
 
-export interface AnalyticsResponse {
-  success: boolean
-  data: {
-    sentimentOverview: SentimentOverview
-    momentsSentimentTrend: SentimentTrend[]
-    feedbackSentimentTrend: SentimentTrend[]
-    departmentAnalytics: DepartmentAnalytics[]
-    workerPerformance: WorkerPerformance[]
-    sentimentComparison: {
-      moments: Array<{
-        _id: number
-        count: number
-        avgScore: number
-      }>
-      feedbacks: Array<{
-        _id: number
-        count: number
-        avgScore: number
-      }>
-    }
-    recentActivity: {
-      moments: Array<{
-        _id: string
-        workerId: {
-          _id: string
-          name: string
-          department: string
-          role: string
-        }
-        mediaType: string
-        sentimentScore: number
-        timestamp: string
-      }>
-      feedbacks: Array<{
-        _id: string
-        workerId: {
-          _id: string
-          name: string
-          department: string
-          role: string
-        }
-        senderName: string
-        sentimentScore: number
-        timestamp: string
-      }>
-    }
-    lastUpdated: string
-    totalWorkers: number
+export interface Performance {
+  departments: DepartmentAnalysis[]
+  workers: {
+    topPerformers: WorkerPerformance[]
+    needsAttention: WorkerPerformance[]
   }
 }
 
-export interface FilteredAnalyticsParams {
+export interface SourceAnalysis {
+  _id: string
+  count: number
+  avgSentiment: number
+  totalFeedbacks: number
+  positivePercentage: number
+}
+
+export interface Insight {
+  type: string
+  title: string
+  description: string
+  message: string
+  value: number
+  priority: string
+}
+
+export interface ComprehensiveAnalytics {
+  executiveSummary: ExecutiveSummary
+  summary: ExecutiveSummary // alias for backward compatibility
+  sentimentOverview: SentimentOverview
+  trends: Trends
+  performance: Performance
+  departmentAnalysis: DepartmentAnalysis[]
+  workerPerformance: {
+    topPerformers: WorkerPerformance[]
+    needsAttention: WorkerPerformance[]
+    all: WorkerPerformance[]
+  }
+  sourceAnalysis: SourceAnalysis[]
+  sources: SourceAnalysis[]
+  insights: Insight[]
+  metadata: {
+    generatedAt: string
+    timeRange: string
+    companyId: string
+    dateFilter: object
+  }
+}
+
+export interface ComprehensiveAnalyticsResponse {
+  success: boolean
+  data: ComprehensiveAnalytics
+}
+
+export interface AnalyticsParams {
+  timeRange?: '7d' | '30d' | '90d' | '1y'
   startDate?: string
   endDate?: string
-  department?: string
-  workerId?: string
+}
+
+export interface ExportParams {
+  format?: 'json' | 'csv'
+  type?: 'summary' | 'detailed'
 }
 
 class AnalyticsService {
@@ -163,6 +291,33 @@ class AnalyticsService {
     }
   }
 
+  // Get comprehensive analytics data with time range
+  async getComprehensiveAnalytics(timeRange: string = '30d'): Promise<AnalyticsResponse> {
+    try {
+      console.log('📊 Fetching comprehensive analytics from:', `${this.baseURL}/?timeRange=${timeRange}`)
+
+      const response = await fetch(`${this.baseURL}/?timeRange=${timeRange}`, {
+        method: 'GET',
+        headers: this.getHeaders()
+      })
+
+      console.log('📊 Comprehensive analytics response status:', response.status)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('❌ Comprehensive analytics API error:', response.status, errorText)
+        throw new Error(`HTTP error! status: ${response.status} - ${errorText}`)
+      }
+
+      const data = await response.json()
+      console.log('📊 Comprehensive analytics data received:', data)
+      return data
+    } catch (error) {
+      console.error('❌ Error fetching comprehensive analytics:', error)
+      throw error
+    }
+  }
+
   // Get filtered analytics data
   async getFilteredAnalytics(params: FilteredAnalyticsParams): Promise<AnalyticsResponse> {
     try {
@@ -175,6 +330,12 @@ class AnalyticsService {
       }
       if (params.workerId && params.workerId !== 'all') {
         queryParams.append('workerId', params.workerId)
+      }
+      if (params.source && params.source !== 'all') {
+        queryParams.append('source', params.source)
+      }
+      if (params.timeRange) {
+        queryParams.append('timeRange', params.timeRange)
       }
 
       const url = `${this.baseURL}/filtered?${queryParams.toString()}`
@@ -207,111 +368,33 @@ class AnalyticsService {
 
     const { data } = apiData
 
-    // Safely handle potentially undefined arrays
-    const momentsTrend = data.momentsSentimentTrend || []
-    const departmentAnalytics = data.departmentAnalytics || []
-    const workerPerformance = data.workerPerformance || []
-    const overview = data.sentimentOverview || {
-      moments: { totalMoments: 0, averageSentiment: 0, positive: 0, neutral: 0, negative: 0 },
-      feedbacks: { totalFeedbacks: 0, averageSentiment: 0, positive: 0, neutral: 0, negative: 0 },
-      combined: { total: 0, averageSentiment: 0, positive: 0, neutral: 0, negative: 0 }
-    }
-    const recentActivity = data.recentActivity || { moments: [], feedbacks: [] }
-
-    console.log('📊 Data arrays:', {
-      momentsTrend: momentsTrend.length,
-      departmentAnalytics: departmentAnalytics.length,
-      workerPerformance: workerPerformance.length,
-      recentMoments: recentActivity.moments.length,
-      recentFeedbacks: recentActivity.feedbacks.length
-    })
-
-    // Transform to match SentimentTrendData interface
-    const sentimentTrends = momentsTrend.map(item => ({
-      date: item.date,
-      positive: item.positive,
-      neutral: item.neutral,
-      negative: item.negative,
-      timestamp: new Date(item.date).getTime()
-    }))
-
-    // Transform feedback categories - create from department analytics
-    const feedbackCategories = departmentAnalytics.map((item, index) => ({
-      name: item.department,
-      value: overview.feedbacks.totalFeedbacks > 0
-        ? Math.round((item.totalFeedbacks / overview.feedbacks.totalFeedbacks) * 100)
-        : 0,
-      fill: `hsl(var(--chart-${index + 1}))`
-    }))
-
-    // Transform department scores to match DepartmentScoreData interface
-    const departmentScores = departmentAnalytics.map(item => ({
-      department: item.department,
-      score: Math.round(item.overallSentiment * 10) / 10,
-      change: 0 // Calculate based on historical data if available
-    }))
-
-    // Transform metrics using new structure
-    const metrics = {
-      totalFeedback: overview.feedbacks.totalFeedbacks,
-      avgSentimentScore: Math.round(overview.combined.averageSentiment * 10) / 10,
-    }
-
-    // Analytics table data using new structure
-    const analyticsData = {
-      totalFeedback: overview.feedbacks.totalFeedbacks,
-      positiveSentiment: overview.combined.positive,
-      neutralSentiment: overview.combined.neutral,
-      negativeSentiment: overview.combined.negative,
-      engagementScore: Math.round(overview.combined.averageSentiment * 100),
-      averageRating: Math.round((overview.combined.averageSentiment + 1) * 2.5), // Convert to 5-star scale
-      momentsShared: overview.moments.totalMoments,
-      activeUsers: data.totalWorkers || 0,
-      completionRate: 94.5, // This would be calculated from completion tracking
-      averageResponseTime: 2.1,
-      satisfactionScore: Math.round(overview.combined.averageSentiment * 10) / 10
-    }
-
+    // Return simplified structure that matches the new API format
     return {
       realTimeData: {
-        sentimentTrends,
-        feedbackCategories,
-        departmentScores,
-        metrics
+        sentimentTrends: [],
+        feedbackCategories: [],
+        departmentScores: [],
+        metrics: {
+          totalFeedback: data.executiveSummary?.totalFeedbacks || 0,
+          avgSentimentScore: data.executiveSummary?.overallSentiment || 0
+        }
       },
-      analyticsData,
-      workers: workerPerformance.map(worker => ({
-        id: worker._id,
-        name: worker.name,
-        department: worker.department,
-        role: worker.role
-      })),
-      departments: [...new Set(departmentAnalytics.map(d => d.department))].map(dept => ({
-        id: dept.toLowerCase(),
-        name: dept
-      })),
-      recentActivity: [
-        ...recentActivity.moments.map(moment => ({
-          _id: moment._id,
-          type: 'moment' as const,
-          content: `${moment.mediaType} moment`,
-          sentiment: moment.sentimentScore,
-          sentimentLabel: moment.sentimentScore > 0.1 ? 'positive' : moment.sentimentScore < -0.1 ? 'negative' : 'neutral',
-          worker: moment.workerId.name,
-          department: moment.workerId.department,
-          createdAt: moment.timestamp
-        })),
-        ...recentActivity.feedbacks.map(feedback => ({
-          _id: feedback._id,
-          type: 'feedback' as const,
-          content: `Feedback from ${feedback.senderName}`,
-          sentiment: feedback.sentimentScore,
-          sentimentLabel: feedback.sentimentScore > 0.1 ? 'positive' : feedback.sentimentScore < -0.1 ? 'negative' : 'neutral',
-          worker: feedback.workerId.name,
-          department: feedback.workerId.department,
-          createdAt: feedback.timestamp
-        }))
-      ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 10)
+      analyticsData: {
+        totalFeedback: data.executiveSummary?.totalFeedbacks || 0,
+        positiveSentiment: 0,
+        neutralSentiment: 0,
+        negativeSentiment: 0,
+        engagementScore: Math.round((data.executiveSummary?.overallSentiment || 0) * 100),
+        averageRating: 4.0,
+        momentsShared: data.executiveSummary?.totalMoments || 0,
+        activeUsers: data.executiveSummary?.totalUsers || 0,
+        completionRate: 94.5,
+        averageResponseTime: 2.1,
+        satisfactionScore: data.executiveSummary?.overallSentiment || 0
+      },
+      workers: [],
+      departments: [],
+      recentActivity: []
     }
   }
 }
@@ -319,54 +402,28 @@ class AnalyticsService {
 // Create and export a singleton instance
 export const analyticsService = new AnalyticsService()
 
+// Default export for compatibility
+export default analyticsService
+
 // Composable for reactive analytics data
 export function useAnalyticsService() {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const lastUpdated = ref<Date | null>(null)
 
-  const fetchAnalytics = async (params?: FilteredAnalyticsParams) => {
+  const fetchAnalytics = async (params?: AnalyticsParams) => {
     isLoading.value = true
     error.value = null
 
     try {
-      const data = params
-        ? await analyticsService.getFilteredAnalytics(params)
-        : await analyticsService.getAnalytics()
-
+      const timeRange = params?.timeRange || '30d'
+      const data = await analyticsService.getComprehensiveAnalytics(timeRange)
       lastUpdated.value = new Date()
-      return analyticsService.transformToFrontendFormat(data)
+      return data
     } catch (err) {
       console.error('❌ Analytics fetch error:', err)
       error.value = err instanceof Error ? err.message : 'Failed to fetch analytics'
-
-      // Return empty analytics data as fallback
-      return {
-        realTimeData: {
-          sentimentTrends: [],
-          feedbackCategories: [],
-          departmentScores: [],
-          metrics: {
-            totalFeedback: 0,
-            avgSentimentScore: 0,
-          }
-        },
-        analyticsData: {
-          totalFeedback: 0,
-          positiveSentiment: 0,
-          neutralSentiment: 0,
-          negativeSentiment: 0,
-          engagementScore: 0,
-          averageRating: 0,
-          momentsShared: 0,
-          activeUsers: 0,
-          completionRate: 0,
-          satisfactionScore: 0
-        },
-        workers: [{ id: "all", name: "All Workers", department: "All" }],
-        departments: [{ id: "all", name: "All Departments" }],
-        recentActivity: []
-      }
+      throw err
     } finally {
       isLoading.value = false
     }
