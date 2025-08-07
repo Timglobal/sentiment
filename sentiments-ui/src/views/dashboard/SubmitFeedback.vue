@@ -59,13 +59,13 @@
 
               <div>
                 <Label class="block text-sm font-medium text-gray-700 mb-2">
-                  Select Staff
+                  Select Person
                 </Label>
                 <SelectWorker
                   :selected-worker="selectedWorker"
                   @worker-select="selectedWorker = $event"
-                  trigger-label="Select Staff for Feedback"
-                  placeholder="Choose a specific staff member"
+                  trigger-label="Select Person for Feedback"
+                  placeholder="Choose a person to provide feedback about"
                 />
               </div>
 

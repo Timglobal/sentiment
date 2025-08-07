@@ -81,7 +81,60 @@ const taskSchema = new mongoose.Schema({
   isArchived: {
     type: Boolean,
     default: false
-  }
+  },
+  emailNotifications: {
+    enabled: {
+      type: Boolean,
+      default: true
+    },
+    dueDateReminder: {
+      enabled: {
+        type: Boolean,
+        default: true
+      },
+      hoursBefore: {
+        type: Number,
+        default: 24, // Send reminder 24 hours before due date
+        min: 1,
+        max: 168 // Max 1 week before
+      },
+      sent: {
+        type: Boolean,
+        default: false
+      },
+      sentAt: {
+        type: Date
+      }
+    },
+    overdueNotification: {
+      enabled: {
+        type: Boolean,
+        default: true
+      },
+      sent: {
+        type: Boolean,
+        default: false
+      },
+      sentAt: {
+        type: Date
+      }
+    }
+  },
+  scheduledReminders: [{
+    type: {
+      type: String,
+      enum: ['due_date_reminder', 'overdue_notification'],
+      required: true
+    },
+    scheduledFor: {
+      type: Date,
+      required: true
+    },
+    jobId: {
+      type: String,
+      required: true
+    }
+  }]
 }, {
   timestamps: true
 })
@@ -97,32 +150,6 @@ taskSchema.virtual('isOverdue').get(function() {
   return this.dueDate < new Date() && this.status !== 'completed'
 })
 
-// Update status to overdue automatically
-taskSchema.pre('find', function() {
-  this.updateMany(
-    { 
-      dueDate: { $lt: new Date() }, 
-      status: { $nin: ['completed', 'overdue'] } 
-    },
-    { status: 'overdue' }
-  )
-})
 
-taskSchema.pre('findOne', function() {
-  this.updateOne(
-    { 
-      dueDate: { $lt: new Date() }, 
-      status: { $nin: ['completed', 'overdue'] } 
-    },
-    { status: 'overdue' }
-  )
-})
-
-// Auto-populate user information
-taskSchema.pre(['find', 'findOne'], function() {
-  this.populate('userId', 'name email role')
-  this.populate('assignedTo', 'name email role')
-  this.populate('notes.createdBy', 'name email')
-})
 
 export default mongoose.model('Task', taskSchema)

@@ -60,189 +60,31 @@
         </div>
       </div>
 
-      <!-- Quick Stats -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white rounded-lg shadow-sm border">
-          <div class="p-4">
-            <div class="flex items-center space-x-3">
-              <div class="p-2 bg-blue-100 rounded-lg">
-                <MessageSquare class="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p class="text-sm text-gray-600">
-                  {{ auth.user?.role === 'staff' ? 'Your Submissions' : 'Your Feedback' }}
-                </p>
-                <p class="text-lg font-semibold">{{ auth.user?.role === 'staff' ? '24' : '8' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-sm border">
-          <div class="p-4">
-            <div class="flex items-center space-x-3">
-              <div class="p-2 bg-green-100 rounded-lg">
-                <ThumbsUp class="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p class="text-sm text-gray-600">
-                  {{ auth.user?.role === 'staff' ? 'Positive Reviews' : 'Response Rate' }}
-                </p>
-                <p class="text-lg font-semibold">{{ auth.user?.role === 'staff' ? '92%' : '100%' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white rounded-lg shadow-sm border">
-          <div class="p-4">
-            <div class="flex items-center space-x-3">
-              <div class="p-2 bg-purple-100 rounded-lg">
-                <Users class="w-5 h-5 text-purple-600" />
-              </div>
-              <div>
-                <p class="text-sm text-gray-600">
-                  {{ auth.user?.role === 'staff' ? 'Team Impact' : 'Care Team Size' }}
-                </p>
-                <p class="text-lg font-semibold">{{ auth.user?.role === 'staff' ? 'High' : '5' }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Role-based Feedback Categories -->
-      <div class="bg-white rounded-lg shadow-sm border">
-        <div class="p-6">
-          <h2 class="text-lg font-semibold text-gray-900 mb-4">
-            {{ auth.user?.role === 'staff' ? 'Feedback Categories' : 'Share Your Experience' }}
-          </h2>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div v-if="auth.user?.role === 'staff'" class="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-blue-300 transition-colors cursor-pointer"
-                 @click="selectFeedbackType('patient')">
-              <div class="flex items-start space-x-3">
-                <div class="p-2 bg-blue-100 rounded-lg">
-                  <User class="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Patient Feedback</h3>
-                  <p class="text-sm text-gray-600">Share observations about patient care, progress, or concerns</p>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="auth.user?.role === 'staff'" class="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-green-300 transition-colors cursor-pointer"
-                 @click="selectFeedbackType('colleague')">
-              <div class="flex items-start space-x-3">
-                <div class="p-2 bg-green-100 rounded-lg">
-                  <Users class="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Colleague Feedback</h3>
-                  <p class="text-sm text-gray-600">Provide feedback about team members, collaboration, or performance</p>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="auth.user?.role === 'staff'" class="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-purple-300 transition-colors cursor-pointer"
-                 @click="selectFeedbackType('process')">
-              <div class="flex items-start space-x-3">
-                <div class="p-2 bg-purple-100 rounded-lg">
-                  <Settings class="w-5 h-5 text-purple-600" />
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Process Improvement</h3>
-                  <p class="text-sm text-gray-600">Suggest improvements to workflows, procedures, or systems</p>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="auth.user?.role !== 'staff'" class="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-blue-300 transition-colors cursor-pointer"
-                 @click="selectFeedbackType('staff')">
-              <div class="flex items-start space-x-3">
-                <div class="p-2 bg-blue-100 rounded-lg">
-                  <Stethoscope class="w-5 h-5 text-blue-600" />
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Healthcare Team</h3>
-                  <p class="text-sm text-gray-600">Share feedback about your assigned healthcare providers</p>
-                </div>
-              </div>
-            </div>
-
-            <div v-if="auth.user?.role !== 'staff'" class="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-green-300 transition-colors cursor-pointer"
-                 @click="selectFeedbackType('care')">
-              <div class="flex items-start space-x-3">
-                <div class="p-2 bg-green-100 rounded-lg">
-                  <Heart class="w-5 h-5 text-green-600" />
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">Care Experience</h3>
-                  <p class="text-sm text-gray-600">Rate and comment on your overall care experience</p>
-                </div>
-              </div>
-            </div>
-
-            <div class="p-4 border-2 border-dashed border-gray-200 rounded-lg hover:border-orange-300 transition-colors cursor-pointer"
-                 @click="selectFeedbackType('general')">
-              <div class="flex items-start space-x-3">
-                <div class="p-2 bg-orange-100 rounded-lg">
-                  <MessageCircle class="w-5 h-5 text-orange-600" />
-                </div>
-                <div>
-                  <h3 class="font-medium text-gray-900">General Feedback</h3>
-                  <p class="text-sm text-gray-600">
-                    {{ auth.user?.role === 'staff'
-                      ? 'Other suggestions, concerns, or compliments'
-                      : 'General suggestions or concerns about your care'
-                    }}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <!-- Feedback Form -->
       <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border">
         <div class="p-6 border-b">
           <h2 class="text-lg font-semibold flex items-center gap-2">
             <MessageSquare class="w-5 h-5" />
-            Share Your {{ feedbackType ? feedbackType.charAt(0).toUpperCase() + feedbackType.slice(1) : '' }} Feedback
+            Share Your Feedback
           </h2>
-          <p class="text-sm text-gray-600 mt-1" v-if="feedbackType">
-            {{ getFeedbackTypeDescription(feedbackType) }}
+          <p class="text-sm text-gray-600 mt-1">
+            Your feedback helps us improve our healthcare services and team performance.
           </p>
         </div>
         <div class="p-6 space-y-6">
           <form @submit.prevent="handleSubmit" class="space-y-6">
-            <!-- Category Selection -->
+            <!-- Select Worker -->
             <div class="space-y-3">
-              <label class="block text-sm font-medium text-gray-700">What would you like to provide feedback about? *</label>
-              <select
-                v-model="category"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="">Select a category</option>
-                <option v-for="cat in categories" :key="cat.value" :value="cat.value">
-                  {{ cat.label }}
-                </option>
-              </select>
-            </div>
-
-            <!-- Select Worker (Optional) -->
-            <div class="space-y-3">
-              <label class="block text-sm font-medium text-gray-700">Select Worker for Feedback (Optional)</label>
+              <label class="block text-sm font-medium text-gray-700">Select Person for Feedback *</label>
               <SelectWorker
                 :selected-worker="selectedWorker"
                 @worker-select="selectedWorker = $event"
-                trigger-label="Select Worker for Feedback"
-                placeholder="Choose a worker to provide feedback about (optional)"
+                trigger-label="Select Person for Feedback"
+                placeholder="Choose a person to provide feedback about (Required)"
+                required
               />
               <p class="text-xs text-gray-500">
-                You can provide feedback about a specific worker or leave this blank for general feedback.
+                Please select the specific person you want to provide feedback about.
               </p>
             </div>
 
@@ -279,6 +121,11 @@
               </div>
             </div>
 
+            <!-- Error Message -->
+            <div v-if="error" class="p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p class="text-sm text-red-600">{{ error }}</p>
+            </div>
+
             <!-- Submit Button -->
             <div class="flex justify-end space-x-4">
               <button
@@ -290,7 +137,7 @@
               </button>
               <button
                 type="submit"
-                :disabled="!feedback.trim() || !category || isSubmitting"
+                :disabled="!isFormValid || isSubmitting"
                 class="min-w-[120px] px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <div v-if="isSubmitting" class="flex items-center gap-2">
@@ -306,35 +153,6 @@
           </form>
         </div>
       </div>
-
-      <!-- Guidelines -->
-      <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-sm border">
-        <div class="p-6 border-b">
-          <h2 class="text-lg font-semibold">Feedback Guidelines</h2>
-        </div>
-        <div class="p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 class="font-medium text-green-600 mb-2">✓ Do</h4>
-              <ul class="text-sm text-gray-600 space-y-1">
-                <li>• Be specific and provide concrete examples</li>
-                <li>• Focus on behaviors and situations, not personalities</li>
-                <li>• Suggest constructive solutions when possible</li>
-                <li>• Keep feedback relevant to work environment</li>
-              </ul>
-            </div>
-            <div>
-              <h4 class="font-medium text-red-600 mb-2">✗ Don't</h4>
-              <ul class="text-sm text-gray-600 space-y-1">
-                <li>• Use offensive or inappropriate language</li>
-                <li>• Make personal attacks or accusations</li>
-                <li>• Share confidential or sensitive information</li>
-                <li>• Submit false or misleading information</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </UserDashboardLayout>
 </template>
@@ -343,6 +161,7 @@
 import { ref, computed } from 'vue'
 import { useToast } from 'vue-toast-notification'
 import { useAuthStore } from '@/stores/auth'
+import { useFeedback } from '@/composables/useFeedback'
 import UserDashboardLayout from '../../components/UserDashboardLayout.vue'
 import SelectWorker from '../../components/SelectWorker.vue'
 import Badge from '@/components/ui/Badge.vue'
@@ -351,139 +170,64 @@ import {
   MessageSquare,
   Send,
   CheckCircle,
-  Building,
-  Users,
-  Star,
-  AlertCircle,
-  Clock,
-  ThumbsUp,
-  User,
-  Settings,
-  Stethoscope,
-  Heart,
-  MessageCircle
+  Clock
 } from 'lucide-vue-next'
 
 // State
 const toast = useToast()
 const auth = useAuthStore()
+const { submitFeedback, isSubmitting, error, clearError } = useFeedback()
 const feedback = ref("")
-const category = ref("")
 const selectedWorker = ref<Worker | null>(null)
-const isSubmitting = ref(false)
 const submitted = ref(false)
-const feedbackType = ref<string>('')
 
-// Role-based categories
-const staffCategories = [
-  { value: "patient-care", label: "Patient Care Quality", icon: User },
-  { value: "colleague-performance", label: "Colleague Performance", icon: Users },
-  { value: "process-improvement", label: "Process Improvement", icon: Settings },
-  { value: "team-collaboration", label: "Team Collaboration", icon: Users },
-  { value: "management", label: "Management", icon: Building },
-  { value: "resources", label: "Resources & Tools", icon: Building },
-  { value: "other", label: "Other", icon: MessageSquare }
-]
+// Auto-fill user data from authenticated user
+const name = ref(auth.user?.name || '')
+const email = ref(auth.user?.email || '')
+const source = ref(auth.user?.role || 'patient')
 
-const patientCategories = [
-  { value: "healthcare-team", label: "Healthcare Team", icon: Stethoscope },
-  { value: "care-quality", label: "Care Quality", icon: Heart },
-  { value: "communication", label: "Communication", icon: MessageCircle },
-  { value: "facility", label: "Facility & Environment", icon: Building },
-  { value: "other", label: "Other", icon: MessageSquare }
-]
-
-const categories = computed(() => {
-  return auth.user?.role === 'staff' ? staffCategories : patientCategories
+// Computed
+const isFormValid = computed(() => {
+  return name.value.trim() &&
+         email.value.trim() &&
+         feedback.value.trim() &&
+         selectedWorker.value &&
+         source.value.trim()
 })
 
 // Methods
-const selectFeedbackType = (type: string) => {
-  feedbackType.value = type
-  // Auto-select appropriate category based on feedback type
-  if (auth.user?.role === 'staff') {
-    switch (type) {
-      case 'patient':
-        category.value = 'patient-care'
-        break
-      case 'colleague':
-        category.value = 'colleague-performance'
-        break
-      case 'process':
-        category.value = 'process-improvement'
-        break
-      default:
-        category.value = 'other'
-    }
-  } else {
-    switch (type) {
-      case 'staff':
-        category.value = 'healthcare-team'
-        break
-      case 'care':
-        category.value = 'care-quality'
-        break
-      default:
-        category.value = 'other'
-    }
-  }
-}
-
-const getFeedbackTypeDescription = (type: string) => {
-  const descriptions: Record<string, string> = {
-    patient: 'Share observations about patient care, progress, or concerns',
-    colleague: 'Provide feedback about team members, collaboration, or performance',
-    process: 'Suggest improvements to workflows, procedures, or systems',
-    staff: 'Share feedback about your assigned healthcare providers',
-    care: 'Rate and comment on your overall care experience',
-    general: auth.user?.role === 'staff'
-      ? 'Other suggestions, concerns, or compliments'
-      : 'General suggestions or concerns about your care'
-  }
-  return descriptions[type] || 'Share your feedback'
-}
-
 const handleSubmit = async () => {
-  if (!feedback.value.trim() || !category.value) {
-    toast.error('Please fill in all required fields')
+  if (!isFormValid.value) {
+    toast.error('Please fill in all required fields including worker selection')
     return
   }
 
-  isSubmitting.value = true
+  clearError()
 
-  try {
-    // Simulate API call - replace with actual service call
-    await new Promise(resolve => setTimeout(resolve, 2000))
+  const feedbackData = {
+    name: name.value.trim(),
+    email: email.value.trim(),
+    message: feedback.value.trim(),
+    workerId: selectedWorker.value!._id,
+    source: source.value.trim()
+  }
 
-    // Here you would call your feedback service
-    // await feedbackService.submitFeedback({
-    //   feedback: feedback.value,
-    //   category: category.value,
-    //   workerId: selectedWorker.value?.id,
-    //   feedbackType: feedbackType.value,
-    //   userId: auth.user?.id,
-    //   userRole: auth.user?.role
-    // })
+  const success = await submitFeedback(feedbackData)
 
-    toast.success('Feedback submitted successfully!')
+  if (success) {
     submitted.value = true
 
-    // Reset form after success message
+    // Reset form after success
     setTimeout(() => {
       submitted.value = false
       clearForm()
     }, 3000)
-  } catch (error) {
-    toast.error('Failed to submit feedback. Please try again.')
-  } finally {
-    isSubmitting.value = false
   }
 }
 
 const clearForm = () => {
   feedback.value = ""
-  category.value = ""
   selectedWorker.value = null
-  feedbackType.value = ""
+  // Keep name, email, and source filled for convenience since they're from authenticated user
 }
 </script>

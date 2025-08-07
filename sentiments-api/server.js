@@ -27,8 +27,10 @@ import treatmentScheduleRoutes from './routes/treatmentSchedule.routes.js'
 import patientRecordRoutes from './routes/patientRecord.routes.js'
 import { startRoomMonitor } from './utils/scheduler.js'
 import { startAgenda, stopAgenda } from './utils/jobScheduler.js'
+import { startTaskScheduler, stopTaskScheduler } from './utils/taskScheduler.js'
 import waitlistRoutes from './routes/waitlist.routes.js'
 import taskRoutes from './routes/task.routes.js'
+import aiAssistantRoutes from './routes/ai-assistant.routes.js'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/contact', contactRoutes)
@@ -50,6 +52,7 @@ app.use('/api/treatment-schedule', treatmentScheduleRoutes)
 app.use('/api/patients', patientRecordRoutes)
 app.use('/api/waitlist', waitlistRoutes)
 app.use('/api/tasks', taskRoutes)
+app.use('/api/ai-assistant', aiAssistantRoutes)
 
 app.get("/",(req, res) => {
   res.json({ message: "Welcome to Sentiment API" })
@@ -70,6 +73,9 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     // Start Agenda job scheduler
     await startAgenda()
     
+    // Start task scheduler for email notifications
+    await startTaskScheduler()
+    
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
     startRoomMonitor();
   })
@@ -79,12 +85,14 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 process.on('SIGTERM', async () => {
   console.log('🛑 SIGTERM received, shutting down gracefully...')
   await stopAgenda()
+  await stopTaskScheduler()
   process.exit(0)
 })
 
 process.on('SIGINT', async () => {
   console.log('🛑 SIGINT received, shutting down gracefully...')
   await stopAgenda()
+  await stopTaskScheduler()
   process.exit(0)
 })
 

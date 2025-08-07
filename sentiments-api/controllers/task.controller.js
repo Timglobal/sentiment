@@ -1,6 +1,7 @@
 import Task from '../models/Task.js'
 import User from '../models/User.js'
 import mongoose from 'mongoose'
+import { scheduleTaskReminders, cancelTaskReminders } from '../utils/taskScheduler.js'
 
 // Get all tasks for the authenticated user
 export const getTasks = async (req, res) => {
@@ -19,17 +20,17 @@ export const getTasks = async (req, res) => {
     } = req.query
 
     const userId = req.user.id
-    console.log('Fetching tasks for user ID:', userId)
-    console.log('User object:', req.user)
-    console.log('UserId type:', typeof userId)
+    // console.log('Fetching tasks for user ID:', userId)
+    // console.log('User object:', req.user)
+    // console.log('UserId type:', typeof userId)
     const skip = (page - 1) * limit
 
     // Build query - ensure userId is in the correct format for MongoDB
     const query = { 
-      userId: new mongoose.Types.ObjectId(userId),
+      userId: userId,
       isArchived: false 
     }
-    console.log('Task query:', query)
+
 
     // Add filters
     if (status) query.status = status
@@ -54,19 +55,27 @@ export const getTasks = async (req, res) => {
     // Sort configuration
     const sortConfig = {}
     sortConfig[sortBy] = sortOrder === 'desc' ? -1 : 1
-
+    // console.log('Task query:', query)
     // Execute queries
+    // console.log({
+    //   sortConfig,
+    //   skip,
+    //   limit: parseInt(limit)
+    // })
+
+    const getTheTasks = await Task.find();
+    //console.log({ getTheTasks })
     const [tasks, totalTasks] = await Promise.all([
-      Task.find(query)
+      await Task.find(query)
         .sort(sortConfig)
         .skip(skip)
         .limit(parseInt(limit)),
       Task.countDocuments(query)
     ])
     
-    console.log('Found tasks:', tasks.length)
-    console.log('Total tasks count:', totalTasks)
-    console.log('Tasks data:', tasks)
+    // console.log('Found tasks:', tasks.length)
+    // console.log('Total tasks count:', totalTasks)
+    // console.log('Tasks data:', tasks)
 
     // Calculate stats
     const stats = await Task.aggregate([
@@ -130,7 +139,7 @@ export const getTasks = async (req, res) => {
       }
     })
   } catch (error) {
-    console.error('Error fetching tasks:', error)
+    // console.error('Error fetching tasks:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch tasks',
@@ -145,7 +154,7 @@ export const getTaskById = async (req, res) => {
     const { id } = req.params
     const userId = req.user.id
 
-    const task = await Task.findOne({ _id: id, userId })
+    const task = await Task.findOne({ _id: id, userId: new mongoose.Types.ObjectId(userId) })
 
     if (!task) {
       return res.status(404).json({
@@ -159,7 +168,7 @@ export const getTaskById = async (req, res) => {
       data: task
     })
   } catch (error) {
-    console.error('Error fetching task:', error)
+    // console.error('Error fetching task:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch task',
@@ -219,8 +228,8 @@ export const createTask = async (req, res) => {
       dueDate: new Date(dueDate),
       estimatedHours,
       tags,
-      userId,
-      assignedTo: assignedTo || userId,
+      userId: new mongoose.Types.ObjectId(userId),
+      assignedTo: new mongoose.Types.ObjectId(assignedTo || userId),
       company: req.user.company
     })
 
@@ -228,13 +237,22 @@ export const createTask = async (req, res) => {
     await savedTask.populate('userId', 'name email role')
     await savedTask.populate('assignedTo', 'name email role')
 
+    // Schedule email reminders for the new task
+    try {
+      await scheduleTaskReminders(savedTask._id)
+      console.log(`📅 Email reminders scheduled for task: ${savedTask.title}`)
+    } catch (scheduleError) {
+      console.error('Failed to schedule task reminders:', scheduleError)
+      // Don't fail the task creation if scheduling fails
+    }
+
     res.status(201).json({
       success: true,
       data: savedTask,
       message: 'Task created successfully'
     })
   } catch (error) {
-    console.error('Error creating task:', error)
+    // console.error('Error creating task:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to create task',
@@ -272,7 +290,7 @@ export const updateTask = async (req, res) => {
     }
 
     const task = await Task.findOneAndUpdate(
-      { _id: id, userId },
+      { _id: id, userId: new mongoose.Types.ObjectId(userId) },
       updates,
       { new: true, runValidators: true }
     )
@@ -282,6 +300,26 @@ export const updateTask = async (req, res) => {
         success: false,
         message: 'Task not found'
       })
+    }
+
+    // If the task status is completed, cancel any pending reminders
+    if (updates.status === 'completed') {
+      try {
+        await cancelTaskReminders(task._id)
+        console.log(`✅ Cancelled reminders for completed task: ${task.title}`)
+      } catch (cancelError) {
+        console.error('Failed to cancel task reminders:', cancelError)
+      }
+    } 
+    // If due date was updated and task is not completed, reschedule reminders
+    else if (updates.dueDate) {
+      try {
+        await cancelTaskReminders(task._id)
+        await scheduleTaskReminders(task._id)
+        console.log(`🔄 Rescheduled reminders for updated task: ${task.title}`)
+      } catch (rescheduleError) {
+        console.error('Failed to reschedule task reminders:', rescheduleError)
+      }
     }
 
     res.json({
@@ -305,7 +343,7 @@ export const deleteTask = async (req, res) => {
     const { id } = req.params
     const userId = req.user.id
 
-    const task = await Task.findOneAndDelete({ _id: id, userId })
+    const task = await Task.findOneAndDelete({ _id: id, userId: new mongoose.Types.ObjectId(userId) })
 
     if (!task) {
       return res.status(404).json({
@@ -314,12 +352,20 @@ export const deleteTask = async (req, res) => {
       })
     }
 
+    // Cancel any scheduled reminders for the deleted task
+    try {
+      await cancelTaskReminders(task._id)
+      console.log(`🗑️ Cancelled reminders for deleted task: ${task.title}`)
+    } catch (cancelError) {
+      console.error('Failed to cancel reminders for deleted task:', cancelError)
+    }
+
     res.json({
       success: true,
       message: 'Task deleted successfully'
     })
   } catch (error) {
-    console.error('Error deleting task:', error)
+    // console.error('Error deleting task:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to delete task',
@@ -358,7 +404,7 @@ export const bulkUpdateTasks = async (req, res) => {
       modifiedCount: result.modifiedCount
     })
   } catch (error) {
-    console.error('Error bulk updating tasks:', error)
+    // console.error('Error bulk updating tasks:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to update tasks',
@@ -415,7 +461,7 @@ export const getTasksByCategory = async (req, res) => {
       data: result
     })
   } catch (error) {
-    console.error('Error fetching tasks by category:', error)
+    // console.error('Error fetching tasks by category:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch tasks by category',
@@ -446,7 +492,7 @@ export const getOverdueTasks = async (req, res) => {
       data: overdueTasks
     })
   } catch (error) {
-    console.error('Error fetching overdue tasks:', error)
+    // console.error('Error fetching overdue tasks:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch overdue tasks',
@@ -496,7 +542,7 @@ export const addTaskNote = async (req, res) => {
       message: 'Note added successfully'
     })
   } catch (error) {
-    console.error('Error adding task note:', error)
+    // console.error('Error adding task note:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to add note',
@@ -529,7 +575,7 @@ export const archiveTask = async (req, res) => {
       message: 'Task archived successfully'
     })
   } catch (error) {
-    console.error('Error archiving task:', error)
+    // console.error('Error archiving task:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to archive task',

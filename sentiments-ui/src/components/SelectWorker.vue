@@ -39,7 +39,7 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Search workers by name, role, or department..."
+              :placeholder="getSearchPlaceholder()"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -117,6 +117,7 @@ import Button from './ui/Button.vue'
 import Badge from './ui/Badge.vue'
 import { Users, X } from 'lucide-vue-next'
 import { useWorkers } from '@/composables/useWorkers'
+import { useAuthStore } from '@/stores/auth'
 import type { Worker } from '@/services/workerService'
 
 interface Props {
@@ -136,8 +137,9 @@ const emit = defineEmits<{
   'worker-select': [worker: Worker | null]
 }>()
 
-// Use workers composable
+// Use workers composable and auth store
 const { workers, fetchWorkers, isLoading } = useWorkers()
+const authStore = useAuthStore()
 
 const isOpen = ref(false)
 const searchQuery = ref('')
@@ -157,11 +159,43 @@ const handleClearSelection = () => {
   emit('worker-select', null)
 }
 
-// Filter workers based on search query and role filter
+// Get appropriate search placeholder based on context
+const getSearchPlaceholder = () => {
+  const userRole = authStore.user?.role
+
+  if (userRole === 'patient') {
+    return 'Search staff members by name, role, or department...'
+  } else if (userRole === 'staff') {
+    return 'Search staff and patients by name, role, or department...'
+  } else if (userRole === 'admin') {
+    return 'Search all users by name, role, or department...'
+  }
+
+  return 'Search workers by name, role, or department...'
+}
+
+// Filter workers based on search query, role filter, and user permissions
 const filteredWorkers = computed(() => {
   let filtered = workers.value
+  const userRole = authStore.user?.role
 
-  // Apply role filter if specified
+  // Apply role-based visibility rules
+  if (userRole === 'patient') {
+    // Patients can only see staff members
+    filtered = filtered.filter(worker => worker.role === 'staff')
+  } else if (userRole === 'staff') {
+    // Staff can see both patients and other staff
+    filtered = filtered.filter(worker =>
+      worker.role === 'staff' || worker.role === 'patient'
+    )
+  } else if (userRole === 'admin') {
+    // Admin can see everyone (staff and patients)
+    filtered = filtered.filter(worker =>
+      worker.role === 'staff' || worker.role === 'patient'
+    )
+  }
+
+  // Apply additional role filter if specified (this overrides the above logic)
   if (props.roleFilter) {
     filtered = filtered.filter(worker => worker.role === props.roleFilter)
   }
