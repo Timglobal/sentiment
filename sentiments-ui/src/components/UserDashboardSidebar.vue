@@ -1,6 +1,6 @@
 <template>
   <div v-if="isMobileSidebarOpen" class="fixed inset-0 bg-black bg-opacity-50 z-30 lg:hidden" @click="closeMobileSidebar"></div>
-  
+
   <div
     :class="[
       'fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-sm border-r border-gray-200 flex flex-col h-screen overflow-y-auto',
@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    
+
     <!-- Navigation -->
     <div class="p-4 flex-1">
       <nav class="space-y-2">
@@ -49,8 +49,8 @@
           <User class="w-4 h-4 text-gray-600" />
         </div>
         <div>
-          <p class="font-medium text-gray-900 text-sm">John Doe</p>
-          <p class="text-xs text-gray-600">Staff Member</p>
+          <p class="font-medium text-gray-900 text-sm">{{ auth.user?.name || 'User' }}</p>
+          <p class="text-xs text-gray-600">{{ auth.user?.role === 'staff' ? 'Staff Member' : 'Patient' }}</p>
         </div>
       </div>
     </div>
@@ -58,14 +58,16 @@
 </template>
 
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRoute } from 'vue-router'
-import { 
-  MessageSquare, 
-  BarChart3, 
-  Settings, 
-  User, 
-  Home, 
-  Star 
+import { useAuthStore } from '@/stores/auth'
+import {
+  MessageSquare,
+  User,
+  Home,
+  Users,
+  Mic,
+  ListTodo
 } from 'lucide-vue-next'
 
 interface SidebarItem {
@@ -73,6 +75,7 @@ interface SidebarItem {
   label: string
   icon: any
   href: string
+  roles?: string[] // Roles that can access this item
 }
 
 interface Props {
@@ -86,14 +89,26 @@ interface Emits {
 defineProps<Props>()
 const emit = defineEmits<Emits>()
 const route = useRoute()
+const auth = useAuthStore()
 
-const sidebarItems: SidebarItem[] = [
-  { id: "overview", label: "Overview", icon: Home, href: "/user-dashboard" },
+const allSidebarItems: SidebarItem[] = [
+  { id: "overview", label: "Dashboard", icon: Home, href: "/user-dashboard" },
+  // { id: "manage-patients", label: "Manage Patients", icon: Users, href: "/user-dashboard/manage-patients", roles: ['staff'] },
+  { id: "task-management", label: "Task Management", icon: ListTodo, href: "/user-dashboard/task-management", roles: ['staff'] },
   { id: "submit-feedback", label: "Submit Feedback", icon: MessageSquare, href: "/user-dashboard/submit-feedback" },
-  { id: "my-feedback", label: "My Feedback", icon: Star, href: "/user-dashboard/my-feedback" },
-  { id: "analytics", label: "Analytics", icon: BarChart3, href: "/user-dashboard/analytics" },
-  { id: "settings", label: "Settings", icon: Settings, href: "/user-dashboard/settings" },
+  { id: "ai-assistant", label: "AI Assistant", icon: Mic, href: "/user-dashboard/ai-assistant" },
 ]
+
+// Filter sidebar items based on user role
+const sidebarItems = computed(() => {
+  const userRole = auth.user?.role
+  return allSidebarItems.filter(item => {
+    // If no roles specified, item is available to all users
+    if (!item.roles) return true
+    // If roles specified, check if user's role is included
+    return item.roles.includes(userRole || '')
+  })
+})
 
 const isActive = (href: string) => {
   return route.path === href

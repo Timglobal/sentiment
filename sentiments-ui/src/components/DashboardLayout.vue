@@ -79,6 +79,7 @@ const sidebarItems = [
   { id: "submit-feedback", label: "Submit Feedback", href: "/dashboard/submit-feedback" },
   { id: "upload-moment", label: "Upload Moment", href: "/dashboard/upload-moment" },
   { id: "manage-workers", label: "Manage Workers", href: "/dashboard/manage-workers" },
+  { id: "assign-patients", label: "Assign Patients", href: "/dashboard/assign-patients" },
   { id: "analytics", label: "Analytics", href: "/dashboard/analytics" },
   { id: "manage-feedbacks", label: "Manage Feedbacks", href: "/dashboard/managefeedbacks" },
   { id: "user-dashboard", label: "User Dashboard", href: "/user-dashboard" },

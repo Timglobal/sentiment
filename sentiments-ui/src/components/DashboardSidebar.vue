@@ -80,7 +80,8 @@ import {
   UserCircle,
   Mic,
   ClipboardList,
-  EyeIcon
+  EyeIcon,
+  UserPlus
 } from 'lucide-vue-next'
 import { ref, watch } from 'vue';
 import { useAuthStore } from '@/stores/auth';
@@ -110,8 +111,9 @@ const sidebarItems = [
   { id: "upload-moment", label: "Upload Moment", icon: Upload, href: "/dashboard/upload-moment" },
   { id: "view-moment", label: "View Moment", icon: EyeIcon, href: "/dashboard/view-moments" },
   { id: "manage-workers", label: "Manage Workers", icon: Users, href: "/dashboard/manage-workers" },
+  // { id: "assign-patients", label: "Assign Patients", icon: UserPlus, href: "/dashboard/assign-patients" },
   { id: "analytics", label: "Analytics", icon: BarChart3, href: "/dashboard/analytics" },
-  { id: "voice-chat", label: "AI Voice Chat", icon: Mic, href: "/dashboard/voice-chat" },
+  // { id: "voice-chat", label: "AI Voice Chat", icon: Mic, href: "/dashboard/voice-chat" },
   // { id: "user-dashboard", label: "User Dashboard", icon: UserCircle, href: "/user-dashboard" },
 ]
 

@@ -43,3 +43,10 @@ export function requireAdmin(req, res, next) {
   }
   next()
 }
+
+export function requireStaff(req, res, next) {
+  if (req.user.role !== 'staff' && req.user.role !== 'admin') {
+    return res.status(403).json({ message: 'Access denied: Staff members only.' })
+  }
+  next()
+}

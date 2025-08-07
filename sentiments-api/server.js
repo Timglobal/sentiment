@@ -22,9 +22,13 @@ import roomRoutes from './routes/room.routes.js'
 import tenantRoutes from './routes/tenants.routes.js'
 import analyticsRoutes from './routes/analytics.routes.js'
 import dashboardRoutes from './routes/dashboard.routes.js'
+import assignmentRoutes from './routes/assignment.routes.js'
+import treatmentScheduleRoutes from './routes/treatmentSchedule.routes.js'
+import patientRecordRoutes from './routes/patientRecord.routes.js'
 import { startRoomMonitor } from './utils/scheduler.js'
 import { startAgenda, stopAgenda } from './utils/jobScheduler.js'
 import waitlistRoutes from './routes/waitlist.routes.js'
+import taskRoutes from './routes/task.routes.js'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/contact', contactRoutes)
@@ -41,7 +45,11 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/tenants', tenantRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/dashboard', dashboardRoutes)
+app.use('/api/assignments', assignmentRoutes)
+app.use('/api/treatment-schedule', treatmentScheduleRoutes)
+app.use('/api/patients', patientRecordRoutes)
 app.use('/api/waitlist', waitlistRoutes)
+app.use('/api/tasks', taskRoutes)
 
 app.get("/",(req, res) => {
   res.json({ message: "Welcome to Sentiment API" })

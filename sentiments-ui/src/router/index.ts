@@ -25,7 +25,11 @@ import VoiceChat from '../views/dashboard/VoiceChat.vue'
 // User Dashboard views
 import UserDashboard from '../views/user-dashboard/UserDashboard.vue'
 import UserSubmitFeedback from '../views/user-dashboard/SubmitFeedback.vue'
+import ManagePatients from '../views/user-dashboard/ManagePatients.vue'
+import TaskManagement from '../views/user-dashboard/TaskManagement.vue'
+import AIAssistant from '../views/user-dashboard/AIAssistant.vue'
 import ManageFeedback from '@/views/dashboard/ManageFeedback.vue'
+import AssignPatientsView from '@/views/dashboard/AssignPatientsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -104,6 +108,12 @@ const router = createRouter({
       component: ManageFeedback,
       meta: { layout: 'dashboard' }
     },
+    {
+      path: '/dashboard/assign-patients',
+      name: 'DashboardAssignPatients',
+      component: AssignPatientsView,
+      meta: { layout: 'dashboard' }
+    },
     // User Dashboard routes
     {
       path: '/user-dashboard',
@@ -115,6 +125,24 @@ const router = createRouter({
       path: '/user-dashboard/submit-feedback',
       name: 'UserDashboardSubmitFeedback',
       component: UserSubmitFeedback,
+      meta: { layout: 'dashboard' }
+    },
+    {
+      path: '/user-dashboard/manage-patients',
+      name: 'UserDashboardManagePatients',
+      component: ManagePatients,
+      meta: { layout: 'dashboard', requiresStaff: true }
+    },
+    {
+      path: '/user-dashboard/task-management',
+      name: 'UserDashboardTaskManagement',
+      component: TaskManagement,
+      meta: { layout: 'dashboard', requiresStaff: true }
+    },
+    {
+      path: '/user-dashboard/ai-assistant',
+      name: 'UserDashboardAIAssistant',
+      component: AIAssistant,
       meta: { layout: 'dashboard' }
     },
     {
@@ -146,6 +174,14 @@ router.beforeEach((to, from, next) => {
 
   if (authRequired && !token) {
     return next('/login') // 🔒 Redirect to login if not authenticated
+  }
+
+  // Check for staff-only routes
+  if (to.meta.requiresStaff) {
+    const userRole = localStorage.getItem('userRole')
+    if (userRole !== 'staff') {
+      return next('/user-dashboard') // Redirect non-staff users to main dashboard
+    }
   }
 
   next()

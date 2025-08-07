@@ -23,48 +23,7 @@
             <p class="text-gray-600">Sign in to your account</p>
           </div>
 
-          <!-- Role Selection -->
-          <div class="mb-6">
-            <Label class="text-sm font-medium text-gray-700 mb-3 block">Login As</Label>
-            <div class="grid grid-cols-3 gap-2">
-              <button
-                :class="[
-                  'p-3 rounded-lg border-2 transition-all text-xs font-medium',
-                  selectedRole === 'staff'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                ]"
-                @click="selectedRole = 'staff'"
-              >
-                <User class="w-4 h-4 mx-auto mb-1" />
-                Staff Member
-              </button>
-              <button
-                :class="[
-                  'p-3 rounded-lg border-2 transition-all text-xs font-medium',
-                  selectedRole === 'admin'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                ]"
-                @click="selectedRole = 'admin'"
-              >
-                <Shield class="w-4 h-4 mx-auto mb-1" />
-                Administrator
-              </button>
-              <button
-                :class="[
-                  'p-3 rounded-lg border-2 transition-all text-xs font-medium',
-                  selectedRole === 'patient'
-                    ? 'border-blue-500 bg-blue-50 text-blue-700'
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
-                ]"
-                @click="selectedRole = 'patient'"
-              >
-                <Heart class="w-4 h-4 mx-auto mb-1" />
-                Patient
-              </button>
-            </div>
-          </div>
+
 
           <!-- Login Form -->
           <form @submit.prevent="handleLogin" class="space-y-4">
@@ -170,12 +129,12 @@ import Label from '../components/ui/Label.vue'
 import { API_BASE_URL } from '@/config'
 import { useAuthStore } from '@/stores/auth'
 import { useToast } from 'vue-toast-notification'
-import { Menu, X, LogIn, User, Shield, Eye, EyeOff, Heart } from 'lucide-vue-next'
+import { Menu, X, LogIn, Eye, EyeOff } from 'lucide-vue-next'
+
 const auth = useAuthStore()
 const router = useRouter()
+const toast = useToast()
 
-const toast = useToast();
-const selectedRole = ref('staff')
 const showPassword = ref(false)
 const email = ref('')
 const password = ref('')
@@ -184,36 +143,40 @@ const isLoading = ref(false)
 const handleLogin = async () => {
   isLoading.value = true
   try {
-  const res = await fetch(`${API_BASE_URL}/auth/login`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      email: email.value,
-      password: password.value,
-      companyId: companyId.value
+    const res = await fetch(`${API_BASE_URL}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value,
+        companyId: companyId.value
+      })
     })
-  })
 
-  const data = await res.json()
-  if (!res.ok) throw new Error(data.message)
+    const data = await res.json()
+    if (!res.ok) throw new Error(data.message)
 
-  localStorage.setItem('token', data.token)
-  localStorage.setItem('user', JSON.stringify(data.user))
-  localStorage.setItem('userRole', data.user.role)
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('user', JSON.stringify(data.user))
+    localStorage.setItem('userRole', data.user.role)
 
-  auth.login(data.token, data.user)
-  toast.success('Login successful! ✅')
-    // Redirect based on role
-  if (selectedRole.value === 'admin') {
-    router.push('/dashboard')
-  } else if (selectedRole.value === 'patient') {
-    router.push('/patient-dashboard')
-  } else {
-    router.push('/user-dashboard')
+    auth.login(data.token, data.user)
+    toast.success('Login successful! ✅')
+
+    // Redirect based on user role from backend response
+    const userRole = data.user.role?.toLowerCase()
+
+    if (userRole === 'admin' || userRole === 'administrator') {
+      router.push('/dashboard')
+    } else if (userRole === 'staff' || userRole === 'patient') {
+      router.push('/user-dashboard')
+    } else {
+      // Default fallback
+      router.push('/user-dashboard')
+    }
+  } catch (err: any) {
+    toast.error('Login failed: ' + err.message)
   }
-} catch (err: any) {
-  toast.error('Login failed: ' + err.message)
-}
 
   isLoading.value = false
 }
