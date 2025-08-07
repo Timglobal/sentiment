@@ -21,11 +21,12 @@ export const getTasks = async (req, res) => {
     const userId = req.user.id
     console.log('Fetching tasks for user ID:', userId)
     console.log('User object:', req.user)
+    console.log('UserId type:', typeof userId)
     const skip = (page - 1) * limit
 
-    // Build query
+    // Build query - ensure userId is in the correct format for MongoDB
     const query = { 
-      userId,
+      userId: new mongoose.Types.ObjectId(userId),
       isArchived: false 
     }
     console.log('Task query:', query)
@@ -62,6 +63,10 @@ export const getTasks = async (req, res) => {
         .limit(parseInt(limit)),
       Task.countDocuments(query)
     ])
+    
+    console.log('Found tasks:', tasks.length)
+    console.log('Total tasks count:', totalTasks)
+    console.log('Tasks data:', tasks)
 
     // Calculate stats
     const stats = await Task.aggregate([
