@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import path from 'path'
 import dotenv from 'dotenv'
+import http from 'http'
 
 dotenv.config({ path: path.resolve('./.env') })
 
@@ -10,6 +11,8 @@ console.log('🌍 ENV EMAIL_USER:', process.env.EMAIL_USER);
 console.log('🌍 ENV EMAIL_PASS:', process.env.EMAIL_PASS);
 
 const app = express()
+const server = http.createServer(app)
+
 app.use(cors())
 app.use(express.json())
 
@@ -31,6 +34,9 @@ import { startTaskScheduler, stopTaskScheduler } from './utils/taskScheduler.js'
 import waitlistRoutes from './routes/waitlist.routes.js'
 import taskRoutes from './routes/task.routes.js'
 import aiAssistantRoutes from './routes/ai-assistant.routes.js'
+
+// Import AI Voice Stream Handler
+import AIVoiceStreamHandler from './services/aiVoiceStreamHandler.js'
 
 app.use('/api/auth', authRoutes)
 app.use('/api/contact', contactRoutes)
@@ -63,7 +69,7 @@ app.use((req, res, next) => {
 });
 
 
-const PORT = process.env.PORT || 8000
+const PORT = process.env.PORT || 3001
 
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -76,7 +82,14 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     // Start task scheduler for email notifications
     await startTaskScheduler()
     
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`))
+    // Initialize AI Voice Stream Handler
+    const aiVoiceHandler = new AIVoiceStreamHandler(server)
+    console.log('🎙️ AI Voice Stream Handler initialized')
+    
+    server.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`)
+      console.log(`🎙️ WebSocket endpoint: ws://localhost:${PORT}/ai-voice-stream`)
+    })
     startRoomMonitor();
   })
   .catch(err => console.error('❌ DB Connection Error:', err))
