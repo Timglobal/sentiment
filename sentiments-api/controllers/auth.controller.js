@@ -6,13 +6,17 @@ import Company from '../models/Company.js'
 import { sendCompanyRegistrationEmail, sendPasswordResetEmail } from '../utils/email.js'
 
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body
+  const { email, password, companyId } = req.body
 
   try {
-    const user = await User.findOne({ email })
+    const user = await User.findOne({ email }).populate('company')
+    console.log({user})
 
     if (!user ) {
       return res.status(401).json({ message: 'Invalid credentials' })
+    }
+    if (user.company && user.company.companyId.toString() !== companyId) {
+      return res.status(401).json({ message: 'Invalid credentials for this company' })
     }
 
     const isMatch = await bcrypt.compare(password, user.password)
