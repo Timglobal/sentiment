@@ -69,7 +69,7 @@ app.use((req, res, next) => {
 });
 
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 8000
 
 
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -85,7 +85,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     // Initialize AI Voice Stream Handler
     const aiVoiceHandler = new AIVoiceStreamHandler(server)
     console.log('🎙️ AI Voice Stream Handler initialized')
-    
+    // aiVoiceHandler.wss.
     server.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`)
       console.log(`🎙️ WebSocket endpoint: ws://localhost:${PORT}/ai-voice-stream`)
