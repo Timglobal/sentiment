@@ -29,26 +29,33 @@
               <div class="mx-auto">
                 <div class="w-32 h-32 rounded-full mx-auto mb-4 flex items-center justify-center transition-all duration-300"
                      :class="{
-                       'bg-green-100 border-4 border-green-300 shadow-lg animate-pulse': isInCall && isListening,
+                       'bg-green-100 border-4 border-green-300 shadow-lg animate-pulse': isInCall && (isListening || isUserSpeaking),
                        'bg-blue-100 border-4 border-blue-300 shadow-lg animate-pulse': isInCall && isSpeaking,
                        'bg-yellow-100 border-4 border-yellow-300 shadow-lg': isInCall && isProcessing,
                        'bg-gray-100 border-4 border-gray-200': !isInCall,
-                       'bg-red-100 border-4 border-red-300': isInCall && !isConnected
+                       'bg-red-100 border-4 border-red-300': isInCall && !isConnected,
+                       'bg-purple-100 border-4 border-purple-300 shadow-md': isInCall && vad && !isUserSpeaking && !isListening
                      }">
                   <Bot class="w-16 h-16" :class="{
-                    'text-green-600': isInCall && isListening,
+                    'text-green-600': isInCall && (isListening || isUserSpeaking),
                     'text-blue-600': isInCall && isSpeaking,
                     'text-yellow-600': isInCall && isProcessing,
                     'text-gray-500': !isInCall,
-                    'text-red-600': isInCall && !isConnected
+                    'text-red-600': isInCall && !isConnected,
+                    'text-purple-600': isInCall && vad && !isUserSpeaking && !isListening
                   }" />
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">
                   {{ isInCall ? statusMessage : 'AI Healthcare Assistant' }}
                 </h3>
                 <p class="text-sm text-gray-600">
-                  {{ isInCall
-                    ? (isListening ? 'Listening to your voice...' : isSpeaking ? 'AI is responding...' : isProcessing ? 'Processing your request...' : 'Call in progress')
+                  {{ isInCall 
+                    ? (isUserSpeaking ? 'You are speaking...' 
+                       : isListening ? 'Listening to your voice...' 
+                       : isSpeaking ? 'AI is responding...' 
+                       : isProcessing ? 'Processing your request...' 
+                       : vad ? 'Smart listening active - just start speaking' 
+                       : 'Click Talk button to speak')
                     : 'Click the call button to start a voice conversation'
                   }}
                 </p>
@@ -330,7 +337,7 @@ const volumeLevel = ref(0)
 const error = ref('')
 const isUserSpeaking = ref(false)
 const speechStartTime = ref<number | null>(null)
-const silenceTimeout = ref<NodeJS.Timeout | null>(null)
+const silenceTimeout = ref<number | null>(null)
 
 const conversation = ref<Array<{
   type: 'user' | 'assistant'
@@ -368,7 +375,7 @@ const startCall = async () => {
   }
 }
 
-const endCall = () => {
+const endCall = async () => {
   isInCall.value = false
   isListening.value = false
   isSpeaking.value = false
@@ -384,8 +391,10 @@ const endCall = () => {
   // Destroy VAD instance
   if (vad.value) {
     try {
+      await vad.value.pause()  // Stop VAD detection first
       vad.value.destroy()
       vad.value = null
+      console.log('VAD stopped and destroyed')
     } catch (err) {
       console.error('Error destroying VAD:', err)
     }
@@ -570,9 +579,6 @@ const setupVoiceActivityDetection = async () => {
         ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.14.0/dist/"
       },
       
-      workletURL: "https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.7/dist/vad.worklet.bundle.min.js",
-      modelURL: "https://cdn.jsdelivr.net/npm/@ricky0123/vad-web@0.0.7/dist/silero_vad.onnx",
-      
       // Sensitivity settings
       preSpeechPadFrames: 1,
       positiveSpeechThreshold: 0.5,
@@ -581,6 +587,10 @@ const setupVoiceActivityDetection = async () => {
     })
 
     console.log('VAD initialized successfully')
+    
+    // Start VAD listening
+    await vad.value.start()
+    console.log('VAD started - ready to detect speech')
     
   } catch (err) {
     console.error('Error initializing VAD:', err)
