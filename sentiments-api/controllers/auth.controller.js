@@ -10,7 +10,7 @@ export const loginUser = async (req, res) => {
 
   try {
     const user = await User.findOne({ email }).populate('company')
-    console.log({user})
+    // console.log({user})
 
     if (!user ) {
       return res.status(401).json({ message: 'Invalid credentials' })
