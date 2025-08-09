@@ -14,7 +14,10 @@ import AdminPanel from '../views/AdminPanel.vue'
 import AdminMomentsView from '@/views/AdminMomentsView.vue'
 import Login from '../views/Login.vue'
 import Signup from '../views/Signup.vue'
-
+import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
+import AdminAnalysisView from '../views/AdminAnalysisView.vue'
+import ResetPasswordView from '@/views/ResetPasswordView.vue'
+import ProductView from '@/views/ProductView.vue'
 // Dashboard views
 import Dashboard from '@/views/dashboard/Dashboard.vue'
 import SubmitFeedback from '../views/dashboard/SubmitFeedback.vue'
@@ -49,10 +52,10 @@ const router = createRouter({
     { path: '/admin', name: 'admin', component: AdminPanel },
     // { path: '/create-room', name: 'CreateRoom', component: CreateRoom },
     { path: '/admin-moments', name: 'AdminMoments', component: AdminMomentsView},
-    { path: '/admin-analysis', name: 'AdminAnlysis', component: () => import('../views/AdminAnalysisView.vue'), meta: { requiresAuth: true}},
-    { path: '/reset-password', name: 'ResetPassword', component: () => import('@/views/ResetPasswordView.vue'),},
-    { path: '/forgot-password', name: 'ForgotPassword', component: () => import('@/views/ForgotPasswordView.vue'),},
-    { path: '/product', name: 'Product', component: () => import('@/views/ProductView.vue'),},
+    { path: '/admin-analysis', name: 'AdminAnlysis', component: AdminAnalysisView, meta: { requiresAuth: true}},
+    { path: '/reset-password', name: 'ResetPassword', component: ResetPasswordView,},
+    { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPasswordView,},
+    { path: '/product', name: 'Product', component: ProductView,},
   {
       path: '/login',
       name: 'Login',
