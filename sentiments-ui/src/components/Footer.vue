@@ -71,14 +71,14 @@
           <h3 class="font-semibold text-gray-900 mb-4">Useful Links</h3>
           <ul class="space-y-3 text-gray-700">
             <li>
-              <a href="#" class="hover:text-blue-600 transition-colors">
-                Privacy
-              </a>
+              <router-link to="/privacy-policy" class="hover:text-blue-600 transition-colors">
+                Privacy Policy
+              </router-link>
             </li>
             <li>
-              <a href="#" class="hover:text-blue-600 transition-colors">
-                Terms of Service
-              </a>
+              <router-link to="/terms-conditions" class="hover:text-blue-600 transition-colors">
+                Terms & Conditions
+              </router-link>
             </li>
           </ul>
         </div>

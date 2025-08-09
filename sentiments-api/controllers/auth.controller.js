@@ -6,7 +6,7 @@ import Company from '../models/Company.js'
 import { sendCompanyRegistrationEmail, sendPasswordResetEmail } from '../utils/email.js'
 
 export const loginUser = async (req, res) => {
-  const { email, password, companyId } = req.body
+  const { email, password, companyId,acceptedTermsAndConditionAndPrivacyAndPolicy } = req.body
 
   try {
     const user = await User.findOne({ email }).populate('company')
@@ -18,6 +18,16 @@ export const loginUser = async (req, res) => {
     if (user.company && user.company.companyId.toString() !== companyId) {
       return res.status(401).json({ message: 'Invalid credentials for this company' })
     }
+
+    if(!acceptedTermsAndConditionAndPrivacyAndPolicy){
+      return res.status(401).json({ message: 'You must accept the terms and conditions and privacy policy' })
+    }
+
+    if(!user.acceptedTermsAndConditionAndPrivacyAndPolicy){
+      //update usee to accept terms and condions and privacy and policy
+      await User.updateOne({ _id: user._id }, { acceptedTermsAndConditionAndPrivacyAndPolicy: true })
+    }
+
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
@@ -38,6 +48,7 @@ export const registerUser = async (req, res) => {
     let companyId;
     let company;
 
+    const acceptedTermsAndConditionAndPrivacyAndPolicy = (req.body.hasOwnProperty("acceptedTermsAndConditionAndPrivacyAndPolicy") && req.body.acceptedTermsAndConditionAndPrivacyAndPolicy === "true")?true:false;
     const existing = await User.findOne({ email })
     if (existing) {
       return res.status(409).json({ message: 'User already exists' })
@@ -76,7 +87,7 @@ export const registerUser = async (req, res) => {
    
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    const newUser = new User({ name, email, password: hashedPassword, role, avatar,company })
+    const newUser = new User({ name, email, password: hashedPassword, role, avatar,company,acceptedTermsAndConditionAndPrivacyAndPolicy })
     await newUser.save()
 
     res.status(201).json({ message: 'User created' })

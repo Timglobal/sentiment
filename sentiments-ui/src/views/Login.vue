@@ -88,7 +88,26 @@
                 Forgot password?
               </router-link>
             </div>
-
+            <div class="flex items-start">
+              <div class="flex items-center h-5">
+                <input
+                  id="terms"
+                  v-model="acceptTerms"
+                  type="checkbox"
+                  class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+                  required
+                />
+              </div>
+              <div class="ml-3 text-sm">
+                <label for="terms" class="text-gray-600">
+                  I agree to the
+                  <router-link to="/terms-conditions" class="text-blue-600 hover:text-blue-500">Terms of Service</router-link>
+                  and
+                  <router-link to="/privacy-policy" class="text-blue-600 hover:text-blue-500">Privacy Policy</router-link>
+                  *
+                </label>
+              </div>
+            </div>
             <Button
               type="submit"
               class="w-full bg-blue-600 hover:bg-blue-700 py-3 text-lg"
@@ -140,16 +159,23 @@ const email = ref('')
 const password = ref('')
 const companyId = ref('')
 const isLoading = ref(false)
+const acceptTerms = ref(false)
+
 const handleLogin = async () => {
   isLoading.value = true
   try {
+    if (!acceptTerms.value) {
+    toast.error('You must accept the terms and conditions')
+    return
+  }
     const res = await fetch(`${API_BASE_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         email: email.value,
         password: password.value,
-        companyId: companyId.value
+        companyId: companyId.value,
+        acceptedTermsAndConditionAndPrivacyAndPolicy:acceptTerms.value
       })
     })
 

@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema({
   avatar: String,
   resetToken: String,
   resetTokenExpires: Date,
+  acceptedTermsAndConditionAndPrivacyAndPolicy:{
+    type: Boolean,
+    default: false
+  },
   company:{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Companys'

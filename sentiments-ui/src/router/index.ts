@@ -37,6 +37,8 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView },
     { path: '/about', name: 'about', component: AboutView },
     { path: '/contact', name: 'contact', component: ContactView },
+    { path: '/privacy-policy', name: 'privacy-policy', component: () => import('../views/PrivacyPolicyView.vue') },
+    { path: '/terms-conditions', name: 'terms-conditions', component: () => import('../views/TermsConditionsView.vue') },
     // { path: '/login', name: 'Login', component: LoginView },
     // { path: '/signup', name: 'signup', component: SignupView },
     { path: '/dashboard', name: 'Dashboard', component: DashboardView },

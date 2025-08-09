@@ -229,9 +229,9 @@
               <div class="ml-3 text-sm">
                 <label for="terms" class="text-gray-600">
                   I agree to the
-                  <a href="#" class="text-blue-600 hover:text-blue-500">Terms of Service</a>
+                  <router-link to="/terms-conditions" class="text-blue-600 hover:text-blue-500">Terms of Service</router-link>
                   and
-                  <a href="#" class="text-blue-600 hover:text-blue-500">Privacy Policy</a>
+                  <router-link to="/privacy-policy" class="text-blue-600 hover:text-blue-500">Privacy Policy</router-link>
                   *
                 </label>
               </div>
@@ -375,6 +375,7 @@ const handleSignup = async () => {
     formData.append('email', email.value.trim())
     formData.append('password', password.value)
     formData.append('role', selectedRole.value)
+    formData.append('acceptedTermsAndConditionAndPrivacyAndPolicy',acceptTerms.value? 'true' : 'false')
 
     // Add role-specific fields
     if (selectedRole.value === 'admin') {
