@@ -1421,7 +1421,7 @@ ${feedbackSummary}
     try {
       const response = await this.openai.audio.speech.create({
         model: 'tts-1',
-        voice: 'nova', // Female voice, sounds professional
+        voice: 'onyx', // Male voice, deep and professional
         input: text,
         response_format: 'mp3'
       });

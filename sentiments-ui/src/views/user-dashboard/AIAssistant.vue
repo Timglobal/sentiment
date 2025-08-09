@@ -27,23 +27,67 @@
             <div class="space-y-6">
               <!-- AI Assistant Avatar/Status -->
               <div class="mx-auto">
-                <div class="w-32 h-32 rounded-full mx-auto mb-4 flex items-center justify-center transition-all duration-300"
+                <div class="w-32 h-32 rounded-full mx-auto mb-4 flex items-center justify-center relative overflow-hidden avatar-container"
                      :class="{
-                       'bg-green-100 border-4 border-green-300 shadow-lg animate-pulse': isInCall && (isListening || isUserSpeaking),
-                       'bg-blue-100 border-4 border-blue-300 shadow-lg animate-pulse': isInCall && isSpeaking,
-                       'bg-yellow-100 border-4 border-yellow-300 shadow-lg': isInCall && isProcessing,
-                       'bg-gray-100 border-4 border-gray-200': !isInCall,
-                       'bg-red-100 border-4 border-red-300': isInCall && !isConnected,
-                       'bg-purple-100 border-4 border-purple-300 shadow-md': isInCall && vad && !isUserSpeaking && !isListening
+                       'border-4 border-green-300 shadow-lg ready-to-listen': isInCall && (isListening || isUserSpeaking || isReadyToListen),
+                       'border-4 border-blue-300 shadow-lg ai-speaking-avatar': isInCall && isSpeaking,
+                       'border-4 border-yellow-300 shadow-lg': isInCall && isProcessing,
+                       'border-4 border-gray-200': !isInCall,
+                       'border-4 border-red-300': isInCall && !isConnected,
+                       'border-4 border-purple-300 shadow-md': isInCall && vad && !isUserSpeaking && !isListening
                      }">
-                  <Bot class="w-16 h-16" :class="{
-                    'text-green-600': isInCall && (isListening || isUserSpeaking),
-                    'text-blue-600': isInCall && isSpeaking,
-                    'text-yellow-600': isInCall && isProcessing,
-                    'text-gray-500': !isInCall,
-                    'text-red-600': isInCall && !isConnected,
-                    'text-purple-600': isInCall && vad && !isUserSpeaking && !isListening
-                  }" />
+
+                  <!-- AI Profile Image -->
+                  <img
+                    src="/aiimage.jpg"
+                    alt="AI Assistant"
+                    class="w-full h-full object-cover rounded-full transition-all duration-300"
+                    :class="{
+                      'brightness-110 scale-105': isInCall && (isListening || isUserSpeaking),
+                      'brightness-100': !isInCall,
+                      'grayscale': isInCall && !isConnected
+                    }"
+                  />
+
+                  <!-- Resonance Animation Rings when AI is Speaking -->
+                  <div v-if="isSpeaking" class="absolute inset-0 pointer-events-none">
+                    <!-- Primary resonance ring -->
+                    <div class="absolute inset-0 rounded-full border-3 border-blue-400 opacity-70 resonance-ring"></div>
+                    <!-- Secondary resonance ring -->
+                    <div class="absolute inset-1 rounded-full border-2 border-blue-300 opacity-50 resonance-ring"></div>
+                    <!-- Tertiary resonance ring -->
+                    <div class="absolute inset-3 rounded-full border-1 border-blue-200 opacity-30 resonance-ring"></div>
+                    <!-- Quaternary resonance ring -->
+                    <div class="absolute inset-5 rounded-full border-1 border-blue-100 opacity-20 resonance-ring"></div>
+                  </div>
+
+                  <!-- Pulse overlay for different states -->
+                  <div v-if="isInCall && (isListening || isUserSpeaking)"
+                       class="absolute inset-0 rounded-full bg-green-400 opacity-20 animate-pulse"></div>
+                  <div v-if="isInCall && isProcessing"
+                       class="absolute inset-0 rounded-full bg-yellow-400 opacity-20 animate-pulse"></div>
+                  <div v-if="isInCall && !isConnected"
+                       class="absolute inset-0 rounded-full bg-red-400 opacity-30 animate-pulse"></div>
+
+                  <!-- Status Icon Overlay -->
+                  <div class="absolute bottom-[-48px] right-[-48px] w-8 h-8 rounded-full bg-white shadow-lg flex items-center justify-center"
+                       :class="{
+                         'border-2 border-green-400': isInCall && (isListening || isUserSpeaking),
+                         'border-2 border-blue-400': isInCall && isSpeaking,
+                         'border-2 border-yellow-400': isInCall && isProcessing,
+                         'border-2 border-gray-300': !isInCall,
+                         'border-2 border-red-400': isInCall && !isConnected
+                       }">
+                    <Mic class="w-4 h-4" v-if="isInCall && (isListening || isUserSpeaking)"
+                         :class="'text-green-600'" />
+                    <Bot class="w-4 h-4" v-else-if="isInCall && isSpeaking"
+                         :class="'text-blue-600'" />
+                    <div v-else-if="isInCall && isProcessing"
+                         class="w-2 h-2 rounded-full bg-yellow-500 animate-pulse"></div>
+                    <div v-else-if="isInCall && !isConnected"
+                         class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <Bot class="w-4 h-4 text-gray-500" v-else />
+                  </div>
                 </div>
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">
                   {{ isInCall ? statusMessage : 'AI Healthcare Assistant' }}
@@ -1298,6 +1342,75 @@ onUnmounted(() => {
   60% {
     transform: translateY(-3px);
   }
+}
+
+/* Enhanced resonance animation for AI speaking */
+@keyframes resonance-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
+
+@keyframes avatar-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(59, 130, 246, 0.8), 0 0 40px rgba(59, 130, 246, 0.3);
+  }
+}
+
+/* Apply custom resonance animation when AI is speaking */
+.ai-speaking-avatar {
+  animation: avatar-glow 2s ease-in-out infinite;
+}
+
+.ai-speaking-avatar .resonance-ring {
+  animation: resonance-ring 1.5s ease-out infinite;
+}
+
+.ai-speaking-avatar .resonance-ring:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.ai-speaking-avatar .resonance-ring:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.ai-speaking-avatar .resonance-ring:nth-child(4) {
+  animation-delay: 0.6s;
+}
+
+/* Smooth transitions for avatar states */
+.avatar-container {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.avatar-container img {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Ready state gentle pulse */
+@keyframes ready-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.5);
+  }
+}
+
+.ready-to-listen {
+  animation: ready-pulse 3s ease-in-out infinite;
 }
 
 .animate-bounce {
