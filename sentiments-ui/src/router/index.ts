@@ -3,6 +3,8 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import ContactView from '../views/ContactView.vue'
 import LoginView from '../views/LoginView.vue'
+import PrivacyPolicyView from '../views/PrivacyPolicyView.vue'
+import TermsConditionsView from '../views/TermsConditionsView.vue'
 // import RoomDetail from '../views/RoomDetail.vue'
 import SignupView from '../views/SignupView.vue'
 import DashboardView from '../views/DashboardView.vue'
@@ -37,8 +39,8 @@ const router = createRouter({
     { path: '/', name: 'home', component: HomeView },
     { path: '/about', name: 'about', component: AboutView },
     { path: '/contact', name: 'contact', component: ContactView },
-    { path: '/privacy-policy', name: 'privacy-policy', component: () => import('../views/PrivacyPolicyView.vue') },
-    { path: '/terms-conditions', name: 'terms-conditions', component: () => import('../views/TermsConditionsView.vue') },
+    { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicyView },
+    { path: '/terms-conditions', name: 'terms-conditions', component: TermsConditionsView },
     // { path: '/login', name: 'Login', component: LoginView },
     // { path: '/signup', name: 'signup', component: SignupView },
     { path: '/dashboard', name: 'Dashboard', component: DashboardView },
