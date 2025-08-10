@@ -27,7 +27,7 @@
             <div class="space-y-6">
               <!-- AI Assistant Avatar/Status -->
               <div class="mx-auto">
-                <div class="w-32 h-32 rounded-full mx-auto mb-4 flex items-center justify-center relative overflow-hidden avatar-container"
+                <div class="w-40 h-40 rounded-full mx-auto mb-4 flex items-center justify-center relative overflow-hidden avatar-container"
                      :class="{
                        'border-4 border-green-300 shadow-lg ready-to-listen': isInCall && (isListening || isUserSpeaking || isReadyToListen),
                        'border-4 border-blue-300 shadow-lg ai-speaking-avatar': isInCall && isSpeaking,
@@ -37,9 +37,27 @@
                        'border-4 border-purple-300 shadow-md': isInCall && vad && !isUserSpeaking && !isListening
                      }">
 
-                  <!-- AI Profile Image -->
+                  <!-- D-ID Talking Avatar Video -->
+                  <video
+                    v-if="currentAvatarVideo && isSpeaking"
+                    ref="avatarVideoElement"
+                    :src="currentAvatarVideo"
+                    class="w-full h-full object-cover rounded-full transition-all duration-300"
+                    :class="{
+                      'brightness-110 scale-105': isInCall && (isListening || isUserSpeaking),
+                      'brightness-100': !isInCall,
+                      'grayscale': isInCall && !isConnected
+                    }"
+                    autoplay
+                    loop
+                    muted
+                    playsinline
+                  />
+
+                  <!-- Fallback AI Profile Image -->
                   <img
-                    src="/aiimage.jpg"
+                    v-else
+                    src="https://timglobal.uk/aiimage.jpg"
                     alt="AI Assistant"
                     class="w-full h-full object-cover rounded-full transition-all duration-300"
                     :class="{
@@ -48,6 +66,15 @@
                       'grayscale': isInCall && !isConnected
                     }"
                   />
+
+                  <!-- Video Generation Loading Indicator -->
+                  <div v-if="isGeneratingVideo"
+                       class="absolute inset-0 rounded-full bg-blue-900 bg-opacity-80 flex items-center justify-center">
+                    <div class="text-center text-white">
+                      <div class="w-8 h-8 border-2 border-white border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                      <div class="text-xs font-medium">Generating<br>Video...</div>
+                    </div>
+                  </div>
 
                   <!-- Resonance Animation Rings when AI is Speaking -->
                   <div v-if="isSpeaking" class="absolute inset-0 pointer-events-none">
@@ -384,6 +411,7 @@ import Card from '@/components/ui/Card.vue'
 import CardContent from '@/components/ui/CardContent.vue'
 import Button from '@/components/ui/Button.vue'
 import Badge from '@/components/ui/Badge.vue'
+import didService from '@/services/didService'
 import {
   Mic,
   MessageSquare,
@@ -405,6 +433,7 @@ const router = useRouter()
 
 // Refs
 const conversationContainer = ref<HTMLElement>()
+const avatarVideoElement = ref<HTMLVideoElement>()
 const audioContext = ref<AudioContext | null>(null)
 const mediaStream = ref<MediaStream | null>(null)
 const socket = ref<WebSocket | null>(null)
@@ -424,6 +453,11 @@ const speechStartTime = ref<number | null>(null)
 const silenceTimeout = ref<number | null>(null)
 const isReadyToListen = ref(false)
 const vadActive = ref(false) // Track VAD state to prevent multiple starts
+
+// D-ID specific state
+const currentAvatarVideo = ref<string>('')
+const isGeneratingVideo = ref(false)
+const videoCache = new Map<string, string>()
 
 const conversation = ref<Array<{
   type: 'user' | 'assistant'
@@ -471,6 +505,10 @@ const endCall = async () => {
   isUserSpeaking.value = false
   isReadyToListen.value = false
   vadActive.value = false
+  isGeneratingVideo.value = false
+
+  // Clear avatar video
+  clearAvatarVideo()
 
   // Clear any timeouts
   if (silenceTimeout.value) {
@@ -602,10 +640,28 @@ const handleSocketMessage = async (data: any) => {
         addMessage('assistant', data.text)
       }
 
-      // Play audio response if available
-      if (data.audio) {
-        await playAudioResponse(data.audio)
+      // Generate D-ID video and play audio response
+      if (data.audio && data.text) {
+        // Generate D-ID video in parallel with audio playback
+        const videoGenerationPromise = generateAvatarVideo(data.text, data.audio)
+
+        // Start audio playback immediately
+        const audioPlaybackPromise = playAudioResponse(data.audio)
+
+        // Handle video generation result
+        videoGenerationPromise.then(videoUrl => {
+          if (videoUrl && isSpeaking.value) {
+            playAvatarVideo(videoUrl)
+          }
+        }).catch(err => {
+          console.warn('⚠️ D-ID video generation failed, continuing with audio only:', err)
+        })
+
+        await audioPlaybackPromise
         // Audio onended callback will handle automatic listening restart
+      } else if (data.audio) {
+        // Audio only fallback
+        await playAudioResponse(data.audio)
       } else {
         // If no audio, start listening immediately
         setTimeout(async () => {
@@ -644,9 +700,29 @@ const handleSocketMessage = async (data: any) => {
       if (data.message) {
         addMessage('assistant', data.message)
       }
-      if (data.audio) {
-        await playAudioResponse(data.audio)
+
+      // Generate D-ID video and play audio for welcome message
+      if (data.audio && data.message) {
+        // Generate D-ID video in parallel with audio playback
+        const videoGenerationPromise = generateAvatarVideo(data.message, data.audio)
+
+        // Start audio playback immediately
+        const audioPlaybackPromise = playAudioResponse(data.audio)
+
+        // Handle video generation result
+        videoGenerationPromise.then(videoUrl => {
+          if (videoUrl && isSpeaking.value) {
+            playAvatarVideo(videoUrl)
+          }
+        }).catch(err => {
+          console.warn('⚠️ D-ID welcome video generation failed, continuing with audio only:', err)
+        })
+
+        await audioPlaybackPromise
         // Audio onended callback will handle automatic listening restart
+      } else if (data.audio) {
+        // Audio only fallback
+        await playAudioResponse(data.audio)
       } else {
         // If no audio, start listening immediately
         setTimeout(async () => {
@@ -1138,6 +1214,9 @@ const playAudioResponse = async (audioData: string | number[]) => {
         isSpeaking.value = false
         console.log('🎤 AI finished speaking - ready for user input')
 
+        // Clear the avatar video when speaking ends
+        clearAvatarVideo()
+
         // Use centralized VAD management to restart after AI stops talking
         if (vad.value && isInCall.value) {
           try {
@@ -1190,6 +1269,7 @@ const playAudioResponse = async (audioData: string | number[]) => {
       (source as any).onerror = (err:any) => {
         console.error('🔴 Audio source error:', err)
         isSpeaking.value = false
+        clearAvatarVideo() // Clear video on audio error
         if (!isProcessing.value && !isUserSpeaking.value && isConnected.value) {
           isReadyToListen.value = true
         }
@@ -1203,6 +1283,7 @@ const playAudioResponse = async (audioData: string | number[]) => {
         if (isSpeaking.value) {
           console.log('⏰ Failsafe: Audio playback timeout, resetting speaking state')
           isSpeaking.value = false
+          clearAvatarVideo() // Clear video on timeout
           if (!isProcessing.value && !isUserSpeaking.value && isConnected.value) {
             isReadyToListen.value = true
           }
@@ -1212,6 +1293,7 @@ const playAudioResponse = async (audioData: string | number[]) => {
     } else {
       console.error('❌ No audio context available for playback')
       isSpeaking.value = false
+      clearAvatarVideo() // Clear video on error
       if (!isProcessing.value && !isUserSpeaking.value && isConnected.value) {
         isReadyToListen.value = true
       }
@@ -1219,9 +1301,106 @@ const playAudioResponse = async (audioData: string | number[]) => {
   } catch (err) {
     console.error('Error playing audio:', err)
     isSpeaking.value = false
+    clearAvatarVideo() // Clear video on error
     if (!isProcessing.value && !isUserSpeaking.value && isConnected.value) {
       isReadyToListen.value = true
     }
+  }
+}
+
+// D-ID Avatar Video Functions
+const generateAvatarVideo = async (text: string, audioBase64?: string): Promise<string | null> => {
+  if (!didService.isConfigured()) {
+    console.warn('⚠️ D-ID not configured, using static avatar')
+    return null
+  }
+
+  try {
+    // Check cache first
+    const cacheKey = audioBase64 ? `audio_${audioBase64.substring(0, 50)}` : `text_${text.substring(0, 50)}`
+    if (videoCache.has(cacheKey)) {
+      console.log('📹 Using cached D-ID video')
+      return videoCache.get(cacheKey)!
+    }
+
+    console.log('🎬 Generating D-ID talking avatar video...')
+    isGeneratingVideo.value = true
+
+    let videoUrl: string
+
+    if (audioBase64) {
+      // Create video from audio (more accurate lip sync)
+      videoUrl = await didService.createTalkingVideoFromAudio(audioBase64)
+    } else {
+      // Create video from text
+      videoUrl = await didService.createTalkingVideoFromText(text)
+    }
+
+    // Cache the video URL
+    videoCache.set(cacheKey, videoUrl)
+
+    // Clear old cache entries if we have too many (keep last 10)
+    if (videoCache.size > 10) {
+      const firstKey = videoCache.keys().next().value
+      videoCache.delete(firstKey)
+    }
+
+    console.log('✅ D-ID video generated successfully:', videoUrl)
+    return videoUrl
+
+  } catch (error) {
+    console.error('❌ Failed to generate D-ID video:', error)
+    return null
+  } finally {
+    isGeneratingVideo.value = false
+  }
+}
+
+const playAvatarVideo = (videoUrl: string | null) => {
+  if (!videoUrl) return
+
+  try {
+    currentAvatarVideo.value = videoUrl
+
+    // Wait for video element to be available and load the video
+    nextTick(() => {
+      if (avatarVideoElement.value) {
+        avatarVideoElement.value.load()
+
+        // Ensure video plays when ready
+        avatarVideoElement.value.onloadeddata = () => {
+          if (isSpeaking.value) {
+            avatarVideoElement.value?.play().catch(err => {
+              console.warn('Video autoplay failed:', err)
+            })
+          }
+        }
+
+        // Handle video end - loop the video while AI is still speaking
+        avatarVideoElement.value.onended = () => {
+          if (isSpeaking.value && avatarVideoElement.value) {
+            avatarVideoElement.value.currentTime = 0
+            avatarVideoElement.value.play().catch(err => {
+              console.warn('Video loop failed:', err)
+            })
+          }
+        }
+      }
+    })
+
+    console.log('📹 Avatar video set and ready to play:', videoUrl)
+
+  } catch (error) {
+    console.error('❌ Error setting up avatar video:', error)
+    currentAvatarVideo.value = ''
+  }
+}
+
+const clearAvatarVideo = () => {
+  currentAvatarVideo.value = ''
+  if (avatarVideoElement.value) {
+    avatarVideoElement.value.pause()
+    avatarVideoElement.value.currentTime = 0
   }
 }
 

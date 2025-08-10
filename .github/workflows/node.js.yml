@@ -27,6 +27,8 @@ jobs:
       JWT_EXPIRATION: ${{secrets.JWT_EXPIRATION}}
       SALT_ROUNDS: ${{secrets.SALT_ROUNDS}}
       VITE_API_BASE_URL: ${{secrets.VITE_API_BASE_URL}}
+      VITE_WS_BASE_URL: ${{secrets.VITE_WS_BASE_URL}}
+      VITE_DID_API_KEY: ${{secrets.VITE_DID_API_KEY}}
     steps:
     - uses: actions/checkout@v4
     - name: Use Node.js ${{ matrix.node-version }}
