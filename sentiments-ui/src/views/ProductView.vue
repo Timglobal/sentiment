@@ -16,12 +16,12 @@
             </p>
           </div>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/login" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Get Started
-            </router-link>
-            <router-link to="/about" class="border border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
+            </button>
+            <button class="border border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Learn More
-            </router-link>
+            </button>
           </div>
         </div>
       </div>
@@ -164,12 +164,12 @@
             Ready To Transform Healthcare Environments
           </h2>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/request-demo" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors">
+            <button class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Request a Demo
-            </router-link>
-            <router-link to="/contact" class="border border-white text-white hover:bg-white hover:text-blue-600 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
+            </button>
+            <button class="border border-white text-white hover:bg-white hover:text-blue-600 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Get in Touch
-            </router-link>
+            </button>
           </div>
         </div>
       </div>
