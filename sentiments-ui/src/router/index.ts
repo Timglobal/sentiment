@@ -40,7 +40,7 @@ import AssignPatientsView from '@/views/dashboard/AssignPatientsView.vue'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-        { path: '/', name: 'home', component: HomeView, meta: { public: true } },
+    { path: '/', name: 'home', component: HomeView, meta: { public: true } },
     { path: '/about', name: 'about', component: AboutView, meta: { public: true } },
     { path: '/contact', name: 'contact', component: ContactView, meta: { public: true } },
     { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicyView, meta: { public: true } },
