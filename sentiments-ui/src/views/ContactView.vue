@@ -10,7 +10,11 @@
               Let's Build the Future of Healthcare Together
             </h1>
             <p class="text-lg text-gray-600 leading-relaxed">
+<<<<<<< HEAD
               We're excited to learn more about your needs and how Timglobal Ltd. can help you. Please fill
+=======
+              We're excited to learn more about your needs and how Tim Global Technologies Ltd. can help. Please fill
+>>>>>>> 390c0fc38dbc35d4b041da797ff1f473a135265a
               out the form below, and we'll get back to you promptly.
             </p>
           </div>
@@ -204,4 +208,8 @@ async function submitForm() {
     toast.error('Failed to send message: ' + err.message)
   }
 }
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> 390c0fc38dbc35d4b041da797ff1f473a135265a

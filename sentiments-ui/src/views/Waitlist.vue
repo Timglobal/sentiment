@@ -149,6 +149,7 @@ async function submitForm() {
     })
 
     const data = await res.json()
+
     if (!res.ok) throw new Error(data.message)
 
     toast.success('You’ve been added to the waitlist! ✅')

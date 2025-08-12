@@ -18,6 +18,7 @@
               </p>
             </div>
             <div class="flex flex-col sm:flex-row gap-4">
+<<<<<<< HEAD
               <router-link to="/signup" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center justify-center transition-colors">
                 Get Started
                 <ArrowRightIcon class="ml-2 h-4 w-4" />
@@ -26,6 +27,16 @@
                 <PlayIcon class="mr-2 h-4 w-4" />
                 Watch Demo
               </a>
+=======
+              <router-link to="/login" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center justify-center transition-colors">
+                Get Started 
+                <ArrowRightIcon class="ml-2 h-4 w-4" />
+              </router-link>
+              <button class="border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg flex items-center justify-center transition-colors">
+                <PlayIcon class="mr-2 h-4 w-4" />
+                Watch Demo
+              </button>
+>>>>>>> 390c0fc38dbc35d4b041da797ff1f473a135265a
             </div>
           </div>
           <div class="relative">
