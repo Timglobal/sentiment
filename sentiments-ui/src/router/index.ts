@@ -15,6 +15,7 @@ import ForgotPasswordView from '@/views/ForgotPasswordView.vue'
 import AdminAnalysisView from '../views/AdminAnalysisView.vue'
 import ResetPasswordView from '@/views/ResetPasswordView.vue'
 import ProductView from '@/views/ProductView.vue'
+import waitlist from '@/views/Waitlist.vue'
 // Dashboard views
 import Dashboard from '@/views/dashboard/Dashboard.vue'
 import SubmitFeedback from '../views/dashboard/SubmitFeedback.vue'
@@ -46,6 +47,7 @@ const router = createRouter({
     { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPasswordView, meta: { public: true } },
     { path: '/reset-password', name: 'ResetPassword', component: ResetPasswordView, meta: { public: true } },
     { path: '/product', name: 'Product', component: ProductView, meta: { public: true } },
+    { path: '/request-demo', name: 'waitlist', component: waitlist, meta: { public: true } },
 
     // Legacy form routes (protected)
     { path: '/dashboard-legacy', name: 'DashboardLegacy', component: DashboardView },

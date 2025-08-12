@@ -235,9 +235,9 @@
             <router-link to="/request-demo" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Request a Demo
             </router-link>
-            <button class="border border-white text-white hover:bg-white hover:text-blue-600 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
+            <router-link to="/contact" class="border border-white text-white hover:bg-white hover:text-blue-600 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Get in Touch
-            </button>
+            </router-link>
           </div>
         </div>
       </div>
