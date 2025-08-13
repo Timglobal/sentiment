@@ -34,11 +34,8 @@
               </svg>
             </a>
             <a
-<<<<<<< HEAD
               href="https://youtube.com/@timglobal-b5n?si=86N2T03FL7V8r1xS"
-=======
-              href="#"
->>>>>>> 390c0fc38dbc35d4b041da797ff1f473a135265a
+
               class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center hover:bg-blue-700 transition-colors"
             >
               <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
