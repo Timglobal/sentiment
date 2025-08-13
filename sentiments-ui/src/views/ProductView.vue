@@ -16,21 +16,12 @@
             </p>
           </div>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-<<<<<<< HEAD
             <router-link to="/signup" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Get Started
             </router-link>
             <router-link to="/about" class="border border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Learn More
             </router-link>
-=======
-            <button class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg text-lg font-medium transition-colors">
-              Get Started
-            </button>
-            <button class="border border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
-              Learn More
-            </button>
->>>>>>> 390c0fc38dbc35d4b041da797ff1f473a135265a
           </div>
         </div>
       </div>
@@ -173,21 +164,12 @@
             Ready To Transform Healthcare Environments
           </h2>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-<<<<<<< HEAD
             <router-link to="/request-demo" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Request a Demo
             </router-link>
             <router-link to="/contact" class="border border-white text-white hover:bg-white hover:text-blue-600 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
               Get in Touch
             </router-link>
-=======
-            <button class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg text-lg font-medium transition-colors">
-              Request a Demo
-            </button>
-            <button class="border border-white text-white hover:bg-white hover:text-blue-600 bg-transparent px-8 py-3 rounded-lg text-lg font-medium transition-colors">
-              Get in Touch
-            </button>
->>>>>>> 390c0fc38dbc35d4b041da797ff1f473a135265a
           </div>
         </div>
       </div>
