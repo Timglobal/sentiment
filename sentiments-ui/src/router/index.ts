@@ -34,6 +34,7 @@ import TaskManagement from '../views/user-dashboard/TaskManagement.vue'
 import AIAssistant from '../views/user-dashboard/AIAssistant.vue'
 import ManageFeedback from '@/views/dashboard/ManageFeedback.vue'
 import AssignPatientsView from '@/views/dashboard/AssignPatientsView.vue'
+import Waitlist from '@/views/Waitlist.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,6 +49,7 @@ const router = createRouter({
     { path: '/forgot-password', name: 'ForgotPassword', component: ForgotPasswordView, meta: { public: true } },
     { path: '/reset-password', name: 'ResetPassword', component: ResetPasswordView, meta: { public: true } },
     { path: '/product', name: 'Product', component: ProductView, meta: { public: true } },
+    { path: '/request-demo', name: 'Waitlist', component: Waitlist, meta: { public: true }},
 
 
 
