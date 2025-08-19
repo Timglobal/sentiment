@@ -22,7 +22,7 @@
                 Get Started
                 <ArrowRightIcon class="ml-2 h-4 w-4" />
               </router-link>
-              <a target="_blank" href="https://youtu.be/7GD_WBZLRP0" class="border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg flex items-center justify-center transition-colors">
+              <a target="_blank" href="https://youtu.be/q3NrkvPZ5l4?si=qE6dQ8_7MI0r77QL" class="border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-50 px-6 py-3 rounded-lg flex items-center justify-center transition-colors">
                 <PlayIcon class="mr-2 h-4 w-4" />
                 Watch Demo
               </a>
@@ -103,7 +103,7 @@
             <p class="text-lg text-gray-700 leading-relaxed">
               We provide AI-powered platform that streamlines workflows, optimizes resource allocation and mitigates
               operational risks. Backed by cutting-edge research through UK Degrees ltd., our solution offers
-              real-time analysis for deep stakeholder insight enabling better descision, improved outcomes and,
+              real-time analysis for deep stakeholder insight enabling better decision, improved outcomes and,
               on-time, on-budget delivery. Our scalable SaaS model is built specifically for NHS trusts, private
               providers and care organizations, empowering them to focus on what matters the most: patient care.
             </p>
