@@ -63,21 +63,23 @@
 
             <div>
               <label for="phone" class="block text-sm font-medium text-gray-900 mb-2">
-                Phone Number
+                Whatsapp Number <span class="text-red-500">*</span>
               </label>
               <input
-                v-model="form.phone"
+                v-model="form.whatsapp"
                 type="tel"
-                id="phone"
-                name="phone"
-                placeholder="What is your phone number?"
+                id="whatsapp"
+                name="whatsapp"
+                pattern="^\+?[1-9]\d{7,14}$"
+                placeholder="Please include your phone number with country code (e.g. +447352310353)"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                required
               />
             </div>
 
             <div>
               <label for="message" class="block text-sm font-medium text-gray-900 mb-2">
-                Message
+                Message <span class="text-red-500">*</span>
               </label>
               <textarea
                 v-model="form.message"
@@ -86,6 +88,7 @@
                 rows="4"
                 placeholder="Tell us about your project or requirements"
                 class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                required
               ></textarea>
             </div>
 
@@ -167,14 +170,11 @@ import { API_BASE_URL } from '@/config'
 import { useToast } from 'vue-toast-notification'
 const toast = useToast()
 
-const name = ref('')
-const email = ref('')
-const message = ref('')
 const form = ref({
   name: '',
   email: '',
   company: '',
-  phone: '',
+  whatsapp: '',
   message: ''
 })
 
@@ -190,7 +190,7 @@ async function submitForm() {
         email: form.value.email,
         message: form.value.message,
         company: form.value.company,
-        phone: form.value.phone,
+        whatsapp: form.value.whatsapp,
       })
     })
 
@@ -198,7 +198,7 @@ async function submitForm() {
     if (!res.ok) throw new Error(data.message)
 
     toast.success('Message sent! ✅')
-    form.value = {name : '', email: '', company: '', phone: '', message: ''}
+    form.value = {name : '', email: '', company: '', whatsapp: '', message: ''}
 
   } catch (err: any) {
     toast.error('Failed to send message: ' + err.message)
