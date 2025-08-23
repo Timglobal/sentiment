@@ -158,7 +158,6 @@
 
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
 import { API_BASE_URL } from '@/config'
 
 const form = ref({
@@ -190,14 +189,20 @@ const submitApplication = async () => {
       formData.append(key, form.value[key]);
     });
 
-    await axios.post(`${API_BASE_URL}/careers`, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+    const res = await fetch(`${API_BASE_URL}/careers`, {
+      method: "POST",
+      body: formData, // fetch auto sets correct headers for FormData
     });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      throw new Error(errData.error || "Something went wrong");
+    }
 
     success.value = true;
     form.value = { name: "", email: "", whatsapp: "", role: "", level: "", coverletter: "", cv: null };
   } catch (err) {
-    error.value = err.response?.data?.error || "Something went wrong";
+    error.value = err.message || "Something went wrong";
   } finally {
     loading.value = false;
   }
