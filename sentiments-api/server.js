@@ -14,11 +14,7 @@ console.log('🌍 ENV EMAIL_PASS:', process.env.EMAIL_PASS);
 const app = express()
 const server = http.createServer(app)
 
-app.use(cors({
-  origin: ["http://localhost:3001"],   // allow your frontend dev server
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"]
-}))
+app.use(cors())
 app.use(express.json())
 
 import authRoutes from './routes/auth.routes.js'
