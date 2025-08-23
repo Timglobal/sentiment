@@ -2,28 +2,49 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 import nodemailer from 'nodemailer';
+import path from 'path';
+import fs from "fs";
 
 // 🌐 Load and verify environment variables
 const EMAIL_USER = process.env.EMAIL_USER;
 const EMAIL_PASS = process.env.EMAIL_PASS;
 const FROM_EMAIL = 'admin@timglobal.uk';
 
+const ADMIN_EMAIL = (process.env.ADMIN_EMAIL || '').trim()
+const HR_EMAIL    = (process.env.HR_EMAIL    || '').trim()
+
+console.log("ENV HR_EMAIL:", process.env.HR_EMAIL);
+console.log("ENV ADMIN_EMAIL:", process.env.ADMIN_EMAIL);
+
+
 if (!EMAIL_USER || !EMAIL_PASS) {
   console.error('❗ Missing EMAIL_USER or EMAIL_PASS in environment — emails will NOT be sent.');
 }
 
+if (!ADMIN_EMAIL) {
+  console.error('❗ ADMIN_EMAIL is missing from .env — admin notifications will NOT be sent.')
+}
+if (!HR_EMAIL) {
+  console.error('❗ HR_EMAIL is missing from .env — HR notifications will NOT be sent.')
+}
+
+
 // 🚚 Set up nodemailer transporter
 const transporter = nodemailer.createTransport({
   host: 'smtp.sendgrid.net',
-  port: 465,
-  secure: true,
+  port: process.env.NODE_ENV === 'production' ? 465 : 587, // use 465 in prod, 587 locally
+  secure: process.env.NODE_ENV === 'production', // true only in prod
   auth: {
     user: EMAIL_USER,
     pass: EMAIL_PASS,
   },
-   logger: true,
+  pool: true,            
+  maxConnections: 3,    
+  maxMessages: 10,       
+  logger: true,
   debug: true,
 });
+
 
 // ✅ Verify transporter setup
 transporter.verify((error, success) => {
@@ -56,6 +77,143 @@ export const sendRoomNotification = async (to, subject, message) => {
     console.error('❌ Email error:', error.message);
   }
 };
+
+export const sendContactNotification = async ({ name, email, company, whatsapp, message }) => {
+  if (!EMAIL_USER || !EMAIL_PASS || !ADMIN_EMAIL) {
+    console.error('❗ Cannot send email — missing credentials.');
+    return;
+  }
+
+  const mailOptions = {
+    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    to: ADMIN_EMAIL,  // 👈 who should receive it (set in .env)
+    subject: `📩 New Contact Form Message from ${name}`,
+    text: `
+You received a new contact form submission:
+
+Name: ${name}
+Email: ${email}
+Company: ${company}
+WhatsApp: ${whatsapp}
+Message: ${message}
+    `
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('📧 Contact form email sent:', info.response);
+  } catch (error) {
+    console.error('❌ Contact form email error:', error.message);
+  }
+};
+
+export const sendUserConfirmation = async ({ name, email, message }) => {
+  if (!EMAIL_USER || !EMAIL_PASS) {
+    console.error('❗ Cannot send email — missing credentials.');
+    return;
+  }
+
+  const mailOptions = {
+    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    to: email,  // 👈 send directly to the user
+    subject: '✅ We received your message!',
+    text: `
+Hello ${name},
+
+Thank you for reaching out to us! 🎉
+We have received your message and will get back to you shortly.
+
+Here’s a copy of your message:
+"${message}"
+
+Best regards,  
+The Timglobal Team
+    `,
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('📧 User confirmation email sent:', info.response);
+  } catch (error) {
+    console.error('❌ User confirmation email error:', error.message);
+  }
+};
+
+export const sendCareerNotification = async ({ name, email, whatsapp, role, level, coverletter, cv }) => {
+  if (!EMAIL_USER || !EMAIL_PASS  || !HR_EMAIL) {
+    console.error('❗ Cannot send email — missing credentials.');
+    return;
+  }
+
+try {
+
+  if (!fs.existsSync(cv)) {
+      console.error("❌ CV file not found:", cv);
+      return;
+    }
+
+  console.log("📎 Attaching CV file:", cv);
+
+  const mailOptions = {
+    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    to: HR_EMAIL, // 👈 HR email in .env
+    cc: email,
+    subject: `📩 New Career Application: ${role} (${level})`,
+    text: `
+You received a new career application:
+
+Name: ${name}
+Email: ${email}
+WhatsApp: ${whatsapp}
+Role: ${role}
+Level: ${level}
+Cover Letter: ${coverletter}
+`,
+  attachments: [
+    {
+      filename: path.basename(cv), // or .docx depending on upload
+      path: cv, // 👈 actual file path saved by multer
+    },
+  ],
+  };
+    const info = await transporter.sendMail(mailOptions);
+    console.log('📧 Career notification email sent:', info.response);
+  } catch (error) {
+    console.error('❌ Career notification email error:', error.message);
+  }
+};
+
+export const sendCareerConfirmation = async ({ name, email, role, level }) => {
+  if (!EMAIL_USER || !EMAIL_PASS) {
+    console.error('❗ Cannot send email — missing credentials.');
+    return;
+  }
+
+  const mailOptions = {
+    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    to: email, // 👈 applicant’s email
+    subject: '✅ We received your job application!',
+    text: `
+Hello ${name},
+
+Thank you for applying for the position of "${role}" (${level}).
+
+Our HR team has received your application and will review it soon, but send your details to ${HR_EMAIL} to be very sure of your application being reviewed.  
+We will contact you if you are shortlisted.
+
+Best regards,  
+The Timglobal Careers Team
+    `
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('📧 Career confirmation email sent:', info.response);
+  } catch (error) {
+    console.error('❌ Career confirmation email error:', error.message);
+  }
+};
+
 
 export const sendCompanyRegistrationEmail = async (to, companyName, companyId) => {
   console.log('🏢 sendCompanyRegistrationEmail called for:', to);

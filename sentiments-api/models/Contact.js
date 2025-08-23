@@ -1,9 +1,11 @@
 import mongoose from 'mongoose'
 
 const contactSchema = new mongoose.Schema({
-  name: String,
-  email: String,
-  message: String,
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  whatsapp: { type: String, required: true }, 
+  company: String,
+  message: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 })
 

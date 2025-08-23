@@ -50,6 +50,11 @@
           <h3 class="font-semibold text-gray-900 mb-4">Company</h3>
           <ul class="space-y-3 text-gray-700">
             <li>
+              <router-link to="/careers" class="hover:text-blue-600 transition-colors">
+                careers
+              </router-link>
+            </li>
+            <li>
               <router-link to="/about" class="hover:text-blue-600 transition-colors">
                 About Us
               </router-link>

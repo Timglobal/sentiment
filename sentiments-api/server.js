@@ -5,6 +5,7 @@ import path from 'path'
 import dotenv from 'dotenv'
 import http from 'http'
 
+
 dotenv.config({ path: path.resolve('./.env') })
 
 console.log('🌍 ENV EMAIL_USER:', process.env.EMAIL_USER);
@@ -13,11 +14,16 @@ console.log('🌍 ENV EMAIL_PASS:', process.env.EMAIL_PASS);
 const app = express()
 const server = http.createServer(app)
 
-app.use(cors())
+app.use(cors({
+  origin: ["http://localhost:3001"],   // allow your frontend dev server
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}))
 app.use(express.json())
 
 import authRoutes from './routes/auth.routes.js'
 import contactRoutes from './routes/contact.routes.js'
+import careerRoutes from './routes/careers.routes.js'
 import feedbackRoutes from './routes/feedback.routes.js'
 import workerRoutes from './routes/worker.routes.js'
 import momentRoutes from './routes/moment.routes.js'
@@ -43,6 +49,7 @@ app.use('/api/contact', contactRoutes)
 app.use('/api/feedback', feedbackRoutes)
 app.use('/api/workers', workerRoutes)
 app.use('/api/moments', momentRoutes)
+app.use('/api/careers', careerRoutes)
 
 // Serve static files from uploads directory
 const uploadsPath = path.join(process.cwd(), 'uploads')

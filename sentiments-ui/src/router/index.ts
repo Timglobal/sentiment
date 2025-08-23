@@ -35,6 +35,7 @@ import AIAssistant from '../views/user-dashboard/AIAssistant.vue'
 import ManageFeedback from '@/views/dashboard/ManageFeedback.vue'
 import AssignPatientsView from '@/views/dashboard/AssignPatientsView.vue'
 import Waitlist from '@/views/Waitlist.vue'
+import Careersview from '@/views/careersview.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -42,6 +43,7 @@ const router = createRouter({
         { path: '/', name: 'home', component: HomeView, meta: { public: true } },
     { path: '/about', name: 'about', component: AboutView, meta: { public: true } },
     { path: '/contact', name: 'contact', component: ContactView, meta: { public: true } },
+    { path: '/careers', name: 'careers', component: Careersview, meta: { public: true }},
     { path: '/privacy-policy', name: 'privacy-policy', component: PrivacyPolicyView, meta: { public: true } },
     { path: '/terms-conditions', name: 'terms-conditions', component: TermsConditionsView, meta: { public: true } },
     { path: '/login', name: 'Login', component: LoginView, meta: { public: true } },

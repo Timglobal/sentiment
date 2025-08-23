@@ -20,5 +20,13 @@ export const getUploader = (folderName = '') => {
     }
     })
 
-return multer({ storage })
+return multer({ storage, fileFilter: (req, file, cb) => {
+    const allowed = ['.pdf', '.doc', '.docx'];
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (!allowed.includes(ext)) {
+      return cb(new Error("Only PDF/DOC/DOCX files are allowed"), false);
+    }
+    cb(null, true);
+  },
+  limits: { fileSize: 5 * 1024 * 1024 } })
 }
