@@ -1,2 +1,2 @@
-[[phases.install]]
-cmd = ["npm i --force"]
+[phases.install]
+cmds=["npm i --force"]
