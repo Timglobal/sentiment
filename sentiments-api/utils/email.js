@@ -64,7 +64,7 @@ export const sendRoomNotification = async (to, subject, message) => {
   }
 
   const mailOptions = {
-    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    from: `"Spotlight App" <${FROM_EMAIL}>`,
     to,
     subject,
     text: message,
@@ -85,7 +85,7 @@ export const sendContactNotification = async ({ name, email, company, whatsapp, 
   }
 
   const mailOptions = {
-    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    from: `"Spotlight App" <${FROM_EMAIL}>`,
     to: ADMIN_EMAIL,  // 👈 who should receive it (set in .env)
     subject: `📩 New Contact Form Message from ${name}`,
     text: `
@@ -114,7 +114,7 @@ export const sendUserConfirmation = async ({ name, email, message }) => {
   }
 
   const mailOptions = {
-    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    from: `"Spotlight App" <${FROM_EMAIL}>`,
     to: email,  // 👈 send directly to the user
     subject: '✅ We received your message!',
     text: `
@@ -155,7 +155,7 @@ try {
   console.log("📎 Attaching CV file:", cv);
 
   const mailOptions = {
-    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    from: `"Spotlight App" <${FROM_EMAIL}>`,
     to: HR_EMAIL, // 👈 HR email in .env
     cc: email,
     subject: `📩 New Career Application: ${role} (${level})`,
@@ -190,7 +190,7 @@ export const sendCareerConfirmation = async ({ name, email, role, level }) => {
   }
 
   const mailOptions = {
-    from: `"Sentiment App" <${FROM_EMAIL}>`,
+    from: `"Spotlight App" <${FROM_EMAIL}>`,
     to: email, // 👈 applicant’s email
     subject: '✅ We received your job application!',
     text: `

@@ -14,49 +14,60 @@
 
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center space-x-8">
-          <router-link 
-            to="/" 
+          <router-link
+            to="/"
             :class="[
               'transition-colors',
-              isActive('/') 
-                ? 'text-blue-600 font-medium' 
+              isActive('/')
+                ? 'text-blue-600 font-medium'
                 : 'text-gray-600 hover:text-gray-900'
             ]"
           >
             Home
           </router-link>
-          <router-link 
-            to="/product" 
+          <router-link
+            to="/product"
             :class="[
               'transition-colors',
-              isActive('/product') 
-                ? 'text-blue-600 font-medium' 
+              isActive('/product')
+                ? 'text-blue-600 font-medium'
                 : 'text-gray-600 hover:text-gray-900'
             ]"
           >
             Product
           </router-link>
-          <router-link 
-            to="/about" 
+          <router-link
+            to="/about"
             :class="[
               'transition-colors',
-              isActive('/about') 
-                ? 'text-blue-600 font-medium' 
+              isActive('/about')
+                ? 'text-blue-600 font-medium'
                 : 'text-gray-600 hover:text-gray-900'
             ]"
           >
             About Us
           </router-link>
-          <router-link 
-            to="/contact" 
+          <router-link
+            to="/contact"
             :class="[
               'transition-colors',
-              isActive('/contact') 
-                ? 'text-blue-600 font-medium' 
+              isActive('/contact')
+                ? 'text-blue-600 font-medium'
                 : 'text-gray-600 hover:text-gray-900'
             ]"
           >
             Contact
+          </router-link>
+          <router-link
+            to="/careers"
+            :class="[
+              'transition-colors',
+              isActive('/careers')
+                ? 'text-blue-600 font-medium'
+                : 'text-gray-600 hover:text-gray-900'
+            ]"
+          >
+            Careers
           </router-link>
         </nav>
 
@@ -167,6 +178,18 @@
               >
                 Contact
               </router-link>
+              <router-link
+                to="/careers"
+                :class="[
+                  'block transition-colors py-3 px-4 rounded-lg text-lg font-medium',
+                  isActive('/careers')
+                    ? 'text-blue-600 bg-blue-50'
+                    : 'text-gray-700 hover:text-blue-600 hover:bg-blue-50'
+                ]"
+                @click="closeMobileMenu"
+              >
+                Careers
+              </router-link>
             </div>
           </nav>
         </div>
@@ -180,8 +203,8 @@
           >
             Login
           </a>
-          <button 
-            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg rounded-lg transition-colors" 
+          <button
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-lg rounded-lg transition-colors"
             @click="goToSignUp"
           >
             Sign Up
@@ -239,7 +262,7 @@ const handleBodyScroll = () => {
 // Setup event listeners
 onMounted(() => {
   document.addEventListener('keydown', handleEscape)
-  
+
   // Watch for menu state changes
   watch(isMobileMenuOpen, () => {
     handleBodyScroll()

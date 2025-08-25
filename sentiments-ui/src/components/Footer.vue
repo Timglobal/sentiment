@@ -51,7 +51,7 @@
           <ul class="space-y-3 text-gray-700">
             <li>
               <router-link to="/careers" class="hover:text-blue-600 transition-colors">
-                careers
+                Careers
               </router-link>
             </li>
             <li>

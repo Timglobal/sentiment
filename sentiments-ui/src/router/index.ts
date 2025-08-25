@@ -173,6 +173,18 @@ const router = createRouter({
     // Catch-all 404 redirect (optional)
     { path: '/:pathMatch(.*)*', redirect: '/' }
   ],
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition // back/forward button restores position
+    }
+
+    if (to.meta.public) {
+      return { top: 0 } // public routes → scroll to top
+    }
+
+    // for dashboard/admin routes → keep current position
+    return {}
+  },
 })
 
 router.beforeEach((to, from, next) => {
