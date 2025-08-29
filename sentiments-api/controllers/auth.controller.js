@@ -49,7 +49,7 @@ export const registerUser = async (req, res) => {
     let companyId;
     let company;
 
-    const acceptedTermsAndConditionAndPrivacyAndPolicy = (req.body.hasOwnProperty("acceptedTermsAndConditionAndPrivacyAndPolicy") && req.body.acceptedTermsAndConditionAndPrivacyAndPolicy === "true")?true:false;
+     const acceptedTermsAndConditionAndPrivacyAndPolicy = (Object.hasOwn(req.body,"acceptedTermsAndConditionAndPrivacyAndPolicy") && req.body.acceptedTermsAndConditionAndPrivacyAndPolicy === "true")?true:false;
     const existing = await User.findOne({ email })
     if (existing) {
       return res.status(409).json({ message: 'User already exists' })
