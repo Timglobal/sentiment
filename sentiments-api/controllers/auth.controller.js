@@ -13,6 +13,7 @@ export const loginUser = async (req, res) => {
     // console.log({user})
 
     if (!user ) {
+      console.log('User not found with email:', email)
       return res.status(401).json({ message: 'Invalid credentials' })
     }
     if (user.company && user.company.companyId.toString() !== companyId) {
@@ -31,6 +32,7 @@ export const loginUser = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch) {
+      console.log('Password mismatch for user:', email)
       return res.status(401).json({ message: 'Invalid credentials' })
     }
 
