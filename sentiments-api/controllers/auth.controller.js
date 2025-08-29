@@ -44,6 +44,7 @@ export const loginUser = async (req, res) => {
 
 export const registerUser = async (req, res) => {
   try {
+    console.log("recieved error")
     const { name, email, password, role } = req.body
     let companyId;
     let company;
@@ -92,7 +93,7 @@ export const registerUser = async (req, res) => {
 
     res.status(201).json({ message: 'User created' })
     } catch (err) {
-    res.status(500).json({ message: 'Error registering user' })
+    res.status(500).json({ message: 'Error registering user',+err?.message })
   }
 }
 
